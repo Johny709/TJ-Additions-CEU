@@ -1,4 +1,4 @@
-### Some tweaks for the [Technological Transcendence](https://www.curseforge.com/minecraft/modpacks/technological-transcendence) Minecraft Modpack.
+### Gregtech CEU Port of [TJ Additions](https://github.com/Johny709/TJAdditions-CE)
 
 ### Features
 - All singleblock fluid slot size increased to 64,000L

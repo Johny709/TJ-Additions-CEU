@@ -1,4 +1,4 @@
-package tt.integration.ae2;
+package tja.integration.ae2;
 
 import appeng.api.definitions.IItemDefinition;
 import appeng.api.definitions.IItems;

@@ -1,4 +1,4 @@
-package tt.mixin.ae2;
+package tja.mixin.ae2;
 
 import appeng.api.definitions.IItemDefinition;
 import appeng.bootstrap.FeatureFactory;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tt.integration.ae2.IApiMaterials;
+import tja.integration.ae2.IApiMaterials;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

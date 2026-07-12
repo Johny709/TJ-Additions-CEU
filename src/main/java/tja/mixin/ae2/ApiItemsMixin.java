@@ -1,4 +1,4 @@
-package tt.mixin.ae2;
+package tja.mixin.ae2;
 
 import appeng.api.definitions.IItemDefinition;
 import appeng.bootstrap.FeatureFactory;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tt.integration.ae2.IApiItems;
+import tja.integration.ae2.IApiItems;
 
 @Mixin(value = ApiItems.class, remap = false)
 public abstract class ApiItemsMixin implements IApiItems {

@@ -1,4 +1,4 @@
-package tt.mixin.gregtech;
+package tja.mixin.gregtech;
 
 import gregtech.api.metatileentity.TieredMetaTileEntity;
 import gregtech.api.metatileentity.WorkableTieredMetaTileEntity;

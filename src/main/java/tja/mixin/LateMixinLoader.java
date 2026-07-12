@@ -1,4 +1,4 @@
-package tt.mixin;
+package tja.mixin;
 
 import com.google.common.collect.ImmutableList;
 import zone.rong.mixinbooter.ILateMixinLoader;

@@ -1,4 +1,4 @@
-package tt.mixin.gregtech;
+package tja.mixin.gregtech;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import gregtech.api.block.IHeatingCoilBlockStats;

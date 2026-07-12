@@ -1,4 +1,4 @@
-package tt;
+package tja;
 
 import appeng.api.config.Upgrades;
 import appeng.api.definitions.IItems;
@@ -8,13 +8,13 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import tt.integration.ae2.IApiItems;
+import tja.integration.ae2.IApiItems;
 
 
 @Mod(modid = TTCore.MOD_ID, name = TTCore.MOD_NAME, version = TTCore.VERSION)
 public class TTCore {
-    public static final String MOD_ID = "ttcore";
-    public static final String MOD_NAME = "TTCore";
+    public static final String MOD_ID = "tja";
+    public static final String MOD_NAME = "TJ Additions CEU";
     public static final String VERSION = "1.0";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 

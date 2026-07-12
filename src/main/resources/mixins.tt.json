@@ -1,5 +1,5 @@
 {
-  "package": "tt.mixin",
+  "package": "tja.mixin",
   "required": true,
   "refmap": "mixins.tt.refmap.json",
   "target": "@env(DEFAULT)",

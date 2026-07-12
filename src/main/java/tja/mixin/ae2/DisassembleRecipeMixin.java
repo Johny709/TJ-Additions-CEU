@@ -1,4 +1,4 @@
-package tt.mixin.ae2;
+package tja.mixin.ae2;
 
 import appeng.api.definitions.IDefinitions;
 import appeng.api.definitions.IItemDefinition;
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tt.integration.ae2.IApiItems;
-import tt.integration.ae2.IApiMaterials;
+import tja.integration.ae2.IApiItems;
+import tja.integration.ae2.IApiMaterials;
 
 import java.util.Map;
 
