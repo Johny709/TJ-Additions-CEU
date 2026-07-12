@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import tja.integration.ae2.IApiItems;
 
 
-@Mod(modid = TTCore.MOD_ID, name = TTCore.MOD_NAME, version = TTCore.VERSION)
-public class TTCore {
+@Mod(modid = TJA.MOD_ID, name = TJA.MOD_NAME, version = TJA.VERSION)
+public class TJA {
     public static final String MOD_ID = "tja";
     public static final String MOD_NAME = "TJ Additions CEU";
     public static final String VERSION = "1.0";

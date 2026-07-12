@@ -1,0 +1,14 @@
+{
+  "package": "tja.mixin",
+  "required": true,
+  "refmap": "mixins.tja.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "gregtech.MetaTileEntityLargeChemicalReactorMixin",
+    "gregtech.WorkableTieredMetaTileEntityMixin"
+  ],
+  "server": [],
+  "client": []
+}
