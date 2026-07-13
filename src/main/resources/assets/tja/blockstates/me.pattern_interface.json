@@ -1,10 +1,10 @@
 {
   "variants": {
     "omnidirectional=true": {
-      "model": "tj:me.pattern_interface"
+      "model": "tja:me.pattern_interface"
     },
     "omnidirectional=false": {
-      "model": "tj:me.pattern_interface_oriented",
+      "model": "tja:me.pattern_interface_oriented",
       "x": 90
     }
   }

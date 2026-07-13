@@ -1,9 +1,9 @@
 {
     "parent": "appliedenergistics2:item/part/part",
     "textures": {
-        "sides": "tj:items/me.part.stocking_fluid_interface_sides",
-        "back": "tj:items/me.part.stocking_fluid_interface_back",
-        "front": "tj:blocks/ae2/me.stocking_fluid_interface"
+        "sides": "tja:items/me.part.stocking_fluid_interface_sides",
+        "back": "tja:items/me.part.stocking_fluid_interface_back",
+        "front": "tja:blocks/ae2/me.stocking_fluid_interface"
     },
     "elements": [
         {

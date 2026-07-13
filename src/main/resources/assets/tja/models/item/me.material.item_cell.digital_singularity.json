@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "tj:items/me.material.item_cell.digital_singularity"
+    "layer0": "tja:items/me.material.item_cell.digital_singularity"
   }
 }

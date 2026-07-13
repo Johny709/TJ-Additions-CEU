@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "particle": "tj:blocks/ae2/me.super_dual_interface",
-    "down": "tj:blocks/ae2/me.super_dual_interface_alternate",
-    "up": "tj:blocks/ae2/me.super_dual_interface",
-    "north": "tj:blocks/ae2/me.super_dual_interface_alternate_arrow",
-    "south": "tj:blocks/ae2/me.super_dual_interface_alternate_arrow",
-    "east": "tj:blocks/ae2/me.super_dual_interface_alternate_arrow",
-    "west": "tj:blocks/ae2/me.super_dual_interface_alternate_arrow"
+    "particle": "tja:blocks/ae2/me.super_dual_interface",
+    "down": "tja:blocks/ae2/me.super_dual_interface_alternate",
+    "up": "tja:blocks/ae2/me.super_dual_interface",
+    "north": "tja:blocks/ae2/me.super_dual_interface_alternate_arrow",
+    "south": "tja:blocks/ae2/me.super_dual_interface_alternate_arrow",
+    "east": "tja:blocks/ae2/me.super_dual_interface_alternate_arrow",
+    "west": "tja:blocks/ae2/me.super_dual_interface_alternate_arrow"
   }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "normal": {
-      "model": "tj:me.crafting_storage.65536k"
+      "model": "tja:me.crafting_storage.65536k"
     }
   }
 }

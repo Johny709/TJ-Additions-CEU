@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "tj:items/me.item_cell.1048m"
+    "layer0": "tja:items/me.item_cell.1048m"
   }
 }

@@ -1,10 +1,10 @@
 {
     "textures": {
-        "sides": "tj:items/me.part.super_interface_sides",
+        "sides": "tja:items/me.part.super_interface_sides",
         "sidesStatus": "appliedenergistics2:parts/monitor_sides_status",
-        "back": "tj:items/me.part.super_interface_back",
-        "front": "tj:blocks/ae2/me.super_interface",
-        "particle": "tj:items/me.part.super_interface_back"
+        "back": "tja:items/me.part.super_interface_back",
+        "front": "tja:blocks/ae2/me.super_interface",
+        "particle": "tja:items/me.part.super_interface_back"
     },
     "elements": [
         {
