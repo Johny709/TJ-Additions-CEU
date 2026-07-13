@@ -13,8 +13,8 @@
     "ae2.MixinDualityFluidInterface",
     "ae2.MixinDualityInterface",
     "ae2.MixinTileCableBus",
-    "gregtech.MetaTileEntityLargeChemicalReactorMixin",
-    "gregtech.WorkableTieredMetaTileEntityMixin"
+    "gregtech.MixinMetaTileEntityLargeChemicalReactor",
+    "gregtech.MixinWorkableTieredMetaTileEntity"
   ],
   "server": [],
   "client": []

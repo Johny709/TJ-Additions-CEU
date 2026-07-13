@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Function;
 
 @Mixin(value = WorkableTieredMetaTileEntity.class, remap = false)
-public abstract class WorkableTieredMetaTileEntityMixin extends TieredMetaTileEntity {
+public abstract class MixinWorkableTieredMetaTileEntity extends TieredMetaTileEntity {
 
     @Final
     @Mutable
     @Shadow
     private Function<Integer, Integer> tankScalingFunction;
 
-    public WorkableTieredMetaTileEntityMixin(ResourceLocation metaTileEntityId, int tier) {
+    public MixinWorkableTieredMetaTileEntity(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
     }
 

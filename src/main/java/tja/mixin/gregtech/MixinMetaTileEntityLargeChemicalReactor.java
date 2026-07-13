@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(value = MetaTileEntityLargeChemicalReactor.class, remap = false)
-public abstract class MetaTileEntityLargeChemicalReactorMixin extends RecipeMapMultiblockController {
+public abstract class MixinMetaTileEntityLargeChemicalReactor extends RecipeMapMultiblockController {
 
     @Unique
     private int coilTier;
 
-    public MetaTileEntityLargeChemicalReactorMixin(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
+    public MixinMetaTileEntityLargeChemicalReactor(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap);
     }
 
