@@ -10,37 +10,39 @@ import appeng.tile.networking.TileCableBus;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import gregtech.api.gui.ModularUI;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.TJ;
-import tj.integration.ae2.ISuperInterface;
-import tj.integration.ae2.blocks.BlockPatternInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.items.item.TJItems;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.TJA;
+import tja.integration.ae2.ISuperInterface;
+import tja.integration.ae2.blocks.BlockPatternInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
+import tja.items.TJAItems;
 
 import javax.annotation.Nonnull;
 
 
-public class PartPatternInterface extends PartInterface implements ITileEntityUI, ISuperInterface {
+public class PartPatternInterface extends PartInterface implements IGuiHolder<SidedPosGuiData>, ISuperInterface {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJ.MODID, "part/me.part.pattern_interface_base");
-
-    @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.pattern_interface_off"));
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_base");
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.pattern_interface_on"));
+    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_off"));
 
     @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.pattern_interface_has_channel"));
+    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_on"));
+
+    @PartModels
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_has_channel"));
 
     public PartPatternInterface(ItemStack is) {
         super(is);
@@ -50,25 +52,20 @@ public class PartPatternInterface extends PartInterface implements ITileEntityUI
     @Override
     public boolean onPartActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
         final TileCableBus tileCableBus = (TileCableBus) this.getTile();
-        if (tileCableBus != null) {
-            if (!player.getEntityWorld().isRemote) {
-                TileEntityHolder holder = new TileEntityHolder(tileCableBus);
-                holder.setFacing(this.getSide().getFacing());
-                holder.openUI((EntityPlayerMP) player);
-            }
-            return true;
+        if (tileCableBus != null && !player.getEntityWorld().isRemote) {
+            GuiFactories.sidedTileEntity().open(player, tileCableBus.getPos(), this.getSide().getFacing());
         }
         return true;
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockPatternInterface.createInterfaceGUI(holder, player, this);
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockPatternInterface.createInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull

@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static tj.items.item.TJItems.UPGRADES;
+import static tja.items.TJAItems.UPGRADES;
 
 public class ItemMaxCapacityUpgrade extends Item {
 

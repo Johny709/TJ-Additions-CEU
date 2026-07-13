@@ -14,27 +14,24 @@ import appeng.core.settings.TickRates;
 import appeng.fluids.tile.TileFluidInterface;
 import appeng.fluids.util.AEFluidStack;
 import appeng.me.GridAccessException;
-import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.ISuperFluidInterface;
-import tj.integration.ae2.blocks.BlockStockingFluidInterface;
-import tj.integration.ae2.helpers.DualitySuperFluidInterface;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
-import tj.mui.widgets.impl.*;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.ISuperFluidInterface;
+import tja.integration.ae2.blocks.BlockStockingFluidInterface;
+import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 
 import javax.annotation.Nonnull;
 
 
-public class TileStockingFluidInterface extends TileFluidInterface implements ITileEntityUI, ISuperFluidInterface {
+public class TileStockingFluidInterface extends TileFluidInterface implements IGuiHolder<PosGuiData>, ISuperFluidInterface {
 
     private int tickTime = 100;
 
@@ -42,14 +39,9 @@ public class TileStockingFluidInterface extends TileFluidInterface implements IT
         ObfuscationReflectionHelper.setPrivateValue(TileFluidInterface.class, this, new DualitySuperFluidInterface(this.getProxy(), this, 36), "duality");
     }
 
-    public void openUI(EntityPlayer player, TileEntity tileEntity) {
-        this.openUI(player, tileEntity, null);
-    }
-
-    public void openUI(EntityPlayer player, TileEntity tileEntity, EnumFacing facing) {
-        TileEntityHolder holder = new TileEntityHolder(tileEntity);
-        holder.setFacing(facing);
-        holder.openUI((EntityPlayerMP) player);
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockStockingFluidInterface.createFluidInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Nonnull
@@ -98,13 +90,8 @@ public class TileStockingFluidInterface extends TileFluidInterface implements IT
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockStockingFluidInterface.createFluidInterfaceGUI(holder, player, this);
-    }
-
-    @Override
     public ItemStack getItemStackRepresentation() {
-        return TJBlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

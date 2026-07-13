@@ -1,45 +1,33 @@
 package tja.integration.ae2.tile;
 
 import appeng.fluids.tile.TileFluidInterface;
-import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.ISuperFluidInterface;
-import tj.integration.ae2.blocks.BlockSuperFluidInterface;
-import tj.integration.ae2.helpers.DualitySuperFluidInterface;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.ISuperFluidInterface;
+import tja.integration.ae2.blocks.BlockSuperFluidInterface;
+import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 
 
-public class TileSuperFluidInterface extends TileFluidInterface implements ITileEntityUI, ISuperFluidInterface {
+public class TileSuperFluidInterface extends TileFluidInterface implements IGuiHolder<PosGuiData>, ISuperFluidInterface {
 
     public TileSuperFluidInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileFluidInterface.class, this, new DualitySuperFluidInterface(this.getProxy(), this, 18), "duality");
     }
 
-    public void openUI(EntityPlayer player, TileEntity tileEntity) {
-        this.openUI(player, tileEntity, null);
-    }
-
-    public void openUI(EntityPlayer player, TileEntity tileEntity, EnumFacing facing) {
-        TileEntityHolder holder = new TileEntityHolder(tileEntity);
-        holder.setFacing(facing);
-        holder.openUI((EntityPlayerMP) player);
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockSuperFluidInterface.createFluidInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJBlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
-    }
-
-    @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockSuperFluidInterface.createFluidInterfaceGUI(holder, player, this);
+        return TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

@@ -25,8 +25,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.blocks.BlockTJCraftingUnit;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.blocks.BlockTJCraftingUnit;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -56,10 +56,10 @@ public class TileTJCraftingStorageTile extends TileCraftingStorageTile {
         if (obj instanceof TileTJCraftingStorageTile) {
             final int storage = ((TileTJCraftingStorageTile) obj).getStorageBytes() / 1024;
             switch (storage) {
-                case 65536: return TJBlocks.CRAFTING_STORAGE_65536K.maybeStack(1).orElse(ItemStack.EMPTY);
-                case 262144: return TJBlocks.CRAFTING_STORAGE_262144K.maybeStack(1).orElse(ItemStack.EMPTY);
-                case 1048576: return TJBlocks.CRAFTING_STORAGE_1048M.maybeStack(1).orElse(ItemStack.EMPTY);
-                case 2097151: return TJBlocks.CRAFTING_STORAGE_SINGULARITY.maybeStack(1).orElse(ItemStack.EMPTY);
+                case 65536: return TJABlocks.CRAFTING_STORAGE_65536K.maybeStack(1).orElse(ItemStack.EMPTY);
+                case 262144: return TJABlocks.CRAFTING_STORAGE_262144K.maybeStack(1).orElse(ItemStack.EMPTY);
+                case 1048576: return TJABlocks.CRAFTING_STORAGE_1048M.maybeStack(1).orElse(ItemStack.EMPTY);
+                case 2097151: return TJABlocks.CRAFTING_STORAGE_SINGULARITY.maybeStack(1).orElse(ItemStack.EMPTY);
                 default: return ItemStack.EMPTY;
             }
         } else return super.getItemFromTile(obj);

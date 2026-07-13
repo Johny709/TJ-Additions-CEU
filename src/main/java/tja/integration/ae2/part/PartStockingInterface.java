@@ -17,39 +17,40 @@ import appeng.parts.misc.PartInterface;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.item.AEItemStack;
-import gregtech.api.gui.ModularUI;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.TJ;
-import tj.integration.ae2.ISuperInterface;
-import tj.integration.ae2.blocks.BlockStockingInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.items.item.TJItems;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
-import tj.mui.widgets.impl.*;
+import tja.TJA;
+import tja.integration.ae2.ISuperInterface;
+import tja.integration.ae2.blocks.BlockStockingInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
+import tja.items.TJAItems;
 
 import javax.annotation.Nonnull;
 
 
-public class PartStockingInterface extends PartInterface implements ITileEntityUI, ISuperInterface {
+public class PartStockingInterface extends PartInterface implements IGuiHolder<SidedPosGuiData>, ISuperInterface {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJ.MODID, "part/me.part.stocking_interface_base");
-
-    @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.stocking_interface_off"));
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_interface_base");
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.stocking_interface_on"));
+    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_interface_off"));
 
     @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.stocking_interface_has_channel"));
+    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_interface_on"));
+
+    @PartModels
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_interface_has_channel"));
 
     private int tickTime = 100;
 
@@ -61,15 +62,15 @@ public class PartStockingInterface extends PartInterface implements ITileEntityU
     @Override
     public boolean onPartActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
         final TileCableBus tileCableBus = (TileCableBus) this.getTile();
-        if (tileCableBus != null) {
-            if (!player.getEntityWorld().isRemote) {
-                TileEntityHolder holder = new TileEntityHolder(tileCableBus);
-                holder.setFacing(this.getSide().getFacing());
-                holder.openUI((EntityPlayerMP) player);
-            }
-            return true;
+        if (tileCableBus != null && !player.getEntityWorld().isRemote) {
+            GuiFactories.sidedTileEntity().open(player, tileCableBus.getPos(), this.getSide().getFacing());
         }
         return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockStockingInterface.createInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Nonnull
@@ -117,13 +118,8 @@ public class PartStockingInterface extends PartInterface implements ITileEntityU
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockStockingInterface.createInterfaceGUI(holder, player, this);
-    }
-
-    @Override
     public ItemStack getItemStackRepresentation() {
-        return TJItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull

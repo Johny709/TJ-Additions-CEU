@@ -16,12 +16,13 @@ import appeng.me.GridAccessException;
 import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.misc.TileInterface;
 import appeng.util.item.AEItemStack;
-import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,20 +30,18 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.ISuperDualInterface;
-import tj.integration.ae2.blocks.BlockStockingDualInterface;
-import tj.integration.ae2.helpers.DualitySuperFluidInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.ISuperDualInterface;
+import tja.integration.ae2.blocks.BlockStockingDualInterface;
+import tja.integration.ae2.helpers.DualitySuperFluidInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class TileStockingDualInterface extends TileInterface implements ITileEntityUI, ISuperDualInterface {
+public class TileStockingDualInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperDualInterface {
 
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 36);
     private int tickTime = 100;
@@ -51,14 +50,9 @@ public class TileStockingDualInterface extends TileInterface implements ITileEnt
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 36, 9), "duality");
     }
 
-    public void openUI(EntityPlayer player, TileEntity tileEntity) {
-        this.openUI(player, tileEntity, null);
-    }
-
-    public void openUI(EntityPlayer player, TileEntity tileEntity, EnumFacing facing) {
-        TileEntityHolder holder = new TileEntityHolder(tileEntity);
-        holder.setFacing(facing);
-        holder.openUI((EntityPlayerMP) player);
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockStockingDualInterface.createDualInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
@@ -134,11 +128,6 @@ public class TileStockingDualInterface extends TileInterface implements ITileEnt
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockStockingDualInterface.createDualInterfaceGUI(holder, player, this);
-    }
-
-    @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return super.hasCapability(capability, facing) || this.dualityFluid.hasCapability(capability, facing);
     }
@@ -157,7 +146,7 @@ public class TileStockingDualInterface extends TileInterface implements ITileEnt
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJBlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

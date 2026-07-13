@@ -12,32 +12,31 @@ import appeng.tile.misc.TileInterface;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.ISuperDualInterface;
-import tj.integration.ae2.blocks.BlockSuperDualInterface;
-import tj.integration.ae2.helpers.DualitySuperFluidInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.ISuperDualInterface;
+import tja.integration.ae2.blocks.BlockSuperDualInterface;
+import tja.integration.ae2.helpers.DualitySuperFluidInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class TileSuperDualInterface extends TileInterface implements ITileEntityUI, ISuperDualInterface {
+public class TileSuperDualInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperDualInterface {
 
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 18);
 
@@ -45,14 +44,9 @@ public class TileSuperDualInterface extends TileInterface implements ITileEntity
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
     }
 
-    public void openUI(EntityPlayer player, TileEntity tileEntity) {
-        this.openUI(player, tileEntity, null);
-    }
-
-    public void openUI(EntityPlayer player, TileEntity tileEntity, EnumFacing facing) {
-        TileEntityHolder holder = new TileEntityHolder(tileEntity);
-        holder.setFacing(facing);
-        holder.openUI((EntityPlayerMP) player);
+    @Override
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockSuperDualInterface.createDualInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
@@ -90,11 +84,6 @@ public class TileSuperDualInterface extends TileInterface implements ITileEntity
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockSuperDualInterface.createDualInterfaceGUI(holder, player, this);
-    }
-
-    @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return super.hasCapability(capability, facing) || this.dualityFluid.hasCapability(capability, facing);
     }
@@ -113,7 +102,7 @@ public class TileSuperDualInterface extends TileInterface implements ITileEntity
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJBlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

@@ -16,9 +16,13 @@ import appeng.tile.networking.TileCableBus;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import gregtech.api.gui.ModularUI;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.GuiFactories;
+import com.cleanroommc.modularui.factory.SidedPosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -27,31 +31,29 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.TJ;
-import tj.integration.ae2.ISuperDualInterface;
-import tj.integration.ae2.blocks.BlockSuperDualInterface;
-import tj.integration.ae2.helpers.DualitySuperFluidInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.items.item.TJItems;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.TJA;
+import tja.integration.ae2.ISuperDualInterface;
+import tja.integration.ae2.blocks.BlockSuperDualInterface;
+import tja.integration.ae2.helpers.DualitySuperFluidInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
+import tja.items.TJAItems;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class PartSuperDualInterface extends PartInterface implements ITileEntityUI, ISuperDualInterface {
+public class PartSuperDualInterface extends PartInterface implements IGuiHolder<SidedPosGuiData>, ISuperDualInterface {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJ.MODID, "part/me.part.super_dual_interface_base");
-
-    @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.super_dual_interface_off"));
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID, "part/me.part.super_dual_interface_base");
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.super_dual_interface_on"));
+    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.super_dual_interface_off"));
 
     @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJ.MODID, "part/me.part.super_dual_interface_has_channel"));
+    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.super_dual_interface_on"));
+
+    @PartModels
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.super_dual_interface_has_channel"));
 
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 18);
 
@@ -63,15 +65,15 @@ public class PartSuperDualInterface extends PartInterface implements ITileEntity
     @Override
     public boolean onPartActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
         final TileCableBus tileCableBus = (TileCableBus) this.getTile();
-        if (tileCableBus != null) {
-            if (!player.getEntityWorld().isRemote) {
-                TileEntityHolder holder = new TileEntityHolder(tileCableBus);
-                holder.setFacing(this.getSide().getFacing());
-                holder.openUI((EntityPlayerMP) player);
-            }
-            return true;
+        if (tileCableBus != null && !player.getEntityWorld().isRemote) {
+            GuiFactories.sidedTileEntity().open(player, tileCableBus.getPos(), this.getSide().getFacing());
         }
         return true;
+    }
+
+    @Override
+    public ModularPanel buildUI(SidedPosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockSuperDualInterface.createDualInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
@@ -107,11 +109,6 @@ public class PartSuperDualInterface extends PartInterface implements ITileEntity
     }
 
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockSuperDualInterface.createDualInterfaceGUI(holder, player, this);
-    }
-
-    @Override
     public boolean hasCapability(Capability<?> capabilityClass) {
         return super.hasCapability(capabilityClass) || this.dualityFluid.hasCapability(capabilityClass, null);
     }
@@ -136,7 +133,7 @@ public class PartSuperDualInterface extends PartInterface implements ITileEntity
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJItems.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAItems.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

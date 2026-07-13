@@ -7,45 +7,33 @@ import appeng.tile.misc.TileInterface;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
-import gregtech.api.gui.ModularUI;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tj.blocks.block.TJBlocks;
-import tj.integration.ae2.ISuperInterface;
-import tj.integration.ae2.blocks.BlockSuperInterface;
-import tj.integration.ae2.helpers.DualitySuperInterface;
-import tj.mui.uifactory.ITileEntityUI;
-import tj.mui.uifactory.TileEntityHolder;
+import tja.blocks.TJABlocks;
+import tja.integration.ae2.ISuperInterface;
+import tja.integration.ae2.blocks.BlockSuperInterface;
+import tja.integration.ae2.helpers.DualitySuperInterface;
 
 
-public class TileSuperInterface extends TileInterface implements ITileEntityUI, ISuperInterface {
+public class TileSuperInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperInterface {
 
     public TileSuperInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
     }
 
-    public void openUI(EntityPlayer player, TileEntity tileEntity) {
-        this.openUI(player, tileEntity, null);
-    }
-
-    public void openUI(EntityPlayer player, TileEntity tileEntity, EnumFacing facing) {
-        TileEntityHolder holder = new TileEntityHolder(tileEntity);
-        holder.setFacing(facing);
-        holder.openUI((EntityPlayerMP) player);
-    }
-
     @Override
-    public ModularUI createUI(TileEntityHolder holder, EntityPlayer player) {
-        return BlockSuperInterface.createInterfaceGUI(holder, player, this);
+    public ModularPanel buildUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        return BlockSuperInterface.createInterfaceGUI(data, syncManager, settings, this);
     }
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJBlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
