@@ -21,10 +21,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
-import tj.TJ;
-import tj.integration.ae2.inventory.TJAppEngNetworkInventory;
-import tj.items.item.TJItems;
-import tj.util.TJItemUtils;
+import tja.TJA;
+import tja.integration.ae2.inventory.TJAppEngNetworkInventory;
+import tja.items.TJAItems;
+import tja.util.TJItemUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -58,7 +58,7 @@ public class DualitySuperInterface extends DualityInterface {
                 }
             }, (IActionSource) mySource.get(this), this, storageSlots, 1024), "storage");
         } catch (IllegalAccessException e) {
-            TJ.logger.error("Error when trying to reflect on class {} for field: storage. {}", DualityInterface.class.getName(), e.getMessage());
+            TJA.LOGGER.error("Error when trying to reflect on class {} for field: storage. {}", DualityInterface.class.getName(), e.getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ public class DualitySuperInterface extends DualityInterface {
             final ItemStack capacity = Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY);
             final ItemStack pattern = Api.INSTANCE.definitions().materials().cardPatternExpansion().maybeStack(1).orElse(ItemStack.EMPTY);
             final ItemStack crafting = Api.INSTANCE.definitions().materials().cardCrafting().maybeStack(1).orElse(ItemStack.EMPTY);
-            final ItemStack maxCapacity = new ItemStack(TJItems.MAX_CAPACITY_UPGRADE);
+            final ItemStack maxCapacity = new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE);
             for (int i = 0; i < this.getSlots(); i++) {
                 final ItemStack stack = this.getStackInSlot(i);
                 if (stack.isItemEqual(capacity)) {
@@ -180,8 +180,8 @@ public class DualitySuperInterface extends DualityInterface {
         @Override
         public boolean allowExtract(IItemHandler iItemHandler, int slot, int i1) {
             final ItemStack stack = iItemHandler.getStackInSlot(slot);
-            if (stack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)) || stack.isItemEqual(new ItemStack(TJItems.MAX_CAPACITY_UPGRADE))) {
-                final boolean hasMaxUpgrade = TJItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
+            if (stack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)) || stack.isItemEqual(new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE))) {
+                final boolean hasMaxUpgrade = TJItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
                 final long threshold = 1024L << (TJItemUtils.extractFromItemHandler(iItemHandler, Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY), Integer.MAX_VALUE, true).getCount() - (hasMaxUpgrade ? 1 : 2)) * 2;
                 for (int i = 0; i < this.duality.getStorage().getSlots(); i++) {
                     final ItemStack itemStack = this.duality.getStorage().getStackInSlot(i);
@@ -206,7 +206,7 @@ public class DualitySuperInterface extends DualityInterface {
             final ItemStack capacity = Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY);
             final ItemStack pattern = Api.INSTANCE.definitions().materials().cardPatternExpansion().maybeStack(1).orElse(ItemStack.EMPTY);
             final ItemStack crafting = Api.INSTANCE.definitions().materials().cardCrafting().maybeStack(1).orElse(ItemStack.EMPTY);
-            final ItemStack maxCapacity = new ItemStack(TJItems.MAX_CAPACITY_UPGRADE);
+            final ItemStack maxCapacity = new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE);
             return itemStack.isItemEqual(capacity) && TJItemUtils.extractFromItemHandler(iItemHandler, capacity, Integer.MAX_VALUE, true).getCount() <= 4 ||
                     (itemStack.isItemEqual(pattern) && TJItemUtils.extractFromItemHandler(iItemHandler, pattern, Integer.MAX_VALUE, true).getCount() <= (duality.getPatterns().getSlots() / 9) - 1) ||
                     (itemStack.isItemEqual(crafting) && TJItemUtils.extractFromItemHandler(iItemHandler, crafting, Integer.MAX_VALUE, true).getCount() <= 1) ||

@@ -7,15 +7,15 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import tj.integration.ae2.me.MachineSets;
-import tj.integration.ae2.part.PartStockingDualInterface;
-import tj.integration.ae2.part.PartStockingFluidInterface;
-import tj.integration.ae2.part.PartSuperDualInterface;
-import tj.integration.ae2.part.PartSuperFluidInterface;
-import tj.integration.ae2.tile.TileStockingDualInterface;
-import tj.integration.ae2.tile.TileStockingFluidInterface;
-import tj.integration.ae2.tile.TileSuperDualInterface;
-import tj.integration.ae2.tile.TileSuperFluidInterface;
+import tja.integration.ae2.me.MachineSets;
+import tja.integration.ae2.part.PartStockingDualInterface;
+import tja.integration.ae2.part.PartStockingFluidInterface;
+import tja.integration.ae2.part.PartSuperDualInterface;
+import tja.integration.ae2.part.PartSuperFluidInterface;
+import tja.integration.ae2.tile.TileStockingDualInterface;
+import tja.integration.ae2.tile.TileStockingFluidInterface;
+import tja.integration.ae2.tile.TileSuperDualInterface;
+import tja.integration.ae2.tile.TileSuperFluidInterface;
 
 @Mixin(value = ContainerFluidInterfaceConfigurationTerminal.class, remap = false)
 public abstract class MixinContainerFluidInterfaceConfigurationTerminal {

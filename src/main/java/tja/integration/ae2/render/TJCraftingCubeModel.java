@@ -8,12 +8,13 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
-import tj.TJ;
-import tj.integration.ae2.blocks.TJCraftingUnitType;
+import tja.TJA;
+import tja.integration.ae2.blocks.TJCraftingUnitType;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.function.Function;
+
 
 public class TJCraftingCubeModel implements IModel {
 
@@ -21,10 +22,10 @@ public class TJCraftingCubeModel implements IModel {
     private static final ResourceLocation RING_SIDE_HOR = new ResourceLocation(AppEng.MOD_ID, "tja/blocks/crafting/ring_side_hor");
     private static final ResourceLocation RING_SIDE_VER = new ResourceLocation(AppEng.MOD_ID, "tja/blocks/crafting/ring_side_ver");
     private static final ResourceLocation LIGHT_BASE = new ResourceLocation(AppEng.MOD_ID, "tja/blocks/crafting/light_base");
-    private static final ResourceLocation CRAFTING_STORAGE_65536K_LIGHT = new ResourceLocation(TJ.MODID, "tja/blocks/ae2/me.crafting_storage.65536k.light");
-    private static final ResourceLocation CRAFTING_STORAGE_262144K_LIGHT = new ResourceLocation(TJ.MODID, "tja/blocks/ae2/me.crafting_storage.262144k.light");
-    private static final ResourceLocation CRAFTING_STORAGE_1048M_LIGHT = new ResourceLocation(TJ.MODID, "tja/blocks/ae2/me.crafting_storage.1048m.light");
-    private static final ResourceLocation CRAFTING_STORAGE_SINGULARITY_LIGHT = new ResourceLocation(TJ.MODID, "tja/blocks/ae2/me.crafting_storage.singularity.light");
+    private static final ResourceLocation CRAFTING_STORAGE_65536K_LIGHT = new ResourceLocation(TJA.MOD_ID, "tja/blocks/ae2/me.crafting_storage.65536k.light");
+    private static final ResourceLocation CRAFTING_STORAGE_262144K_LIGHT = new ResourceLocation(TJA.MOD_ID, "tja/blocks/ae2/me.crafting_storage.262144k.light");
+    private static final ResourceLocation CRAFTING_STORAGE_1048M_LIGHT = new ResourceLocation(TJA.MOD_ID, "tja/blocks/ae2/me.crafting_storage.1048m.light");
+    private static final ResourceLocation CRAFTING_STORAGE_SINGULARITY_LIGHT = new ResourceLocation(TJA.MOD_ID, "tja/blocks/ae2/me.crafting_storage.singularity.light");
 
     private final TJCraftingUnitType type;
 

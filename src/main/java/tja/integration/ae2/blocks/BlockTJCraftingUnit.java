@@ -25,8 +25,8 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tj.integration.ae2.tile.TileTJCraftingStorageTile;
-import tj.rendering.IBlockModel;
+import tja.integration.ae2.tile.TileTJCraftingStorageTile;
+import tja.rendering.IBlockModel;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;

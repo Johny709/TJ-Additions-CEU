@@ -11,7 +11,7 @@ import appeng.fluids.util.AEFluidInventory;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.IAEFluidInventory;
 import net.minecraftforge.fluids.FluidStack;
-import tj.integration.ae2.helpers.IDualitySuperFluidInterface;
+import tja.integration.ae2.helpers.IDualitySuperFluidInterface;
 
 import java.util.function.Supplier;
 

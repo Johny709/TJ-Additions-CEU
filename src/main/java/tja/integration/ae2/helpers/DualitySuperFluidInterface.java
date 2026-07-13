@@ -23,10 +23,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
-import tj.TJ;
-import tj.integration.ae2.inventory.TJAENetworkFluidInventory;
-import tj.items.item.TJItems;
-import tj.util.TJItemUtils;
+import tja.TJA;
+import tja.integration.ae2.inventory.TJAENetworkFluidInventory;
+import tja.items.TJAItems;
+import tja.util.TJItemUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -52,7 +52,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
                 }
             }, (IActionSource) mySource.get(this), this, slots, 64000), "tanks");
         } catch (IllegalAccessException e) {
-            TJ.logger.error("Error when trying to reflect on class {} for field: storage. {}", DualityFluidInterface.class.getName(), e.getMessage());
+            TJA.LOGGER.error("Error when trying to reflect on class {} for field: storage. {}", DualityFluidInterface.class.getName(), e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
                 final ItemStack stack = this.getStackInSlot(i);
                 if (stack.isItemEqual(capacityUpgrade)) {
                     this.installed++;
-                } else if (stack.isItemEqual(new ItemStack(TJItems.MAX_CAPACITY_UPGRADE))) {
+                } else if (stack.isItemEqual(new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE))) {
                     this.installed = 16;
                 }
             }
@@ -150,7 +150,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
 
         @Override
         public boolean allowExtract(IItemHandler iItemHandler, int slot, int i1) {
-            final boolean hasMaxUpgrade = TJItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
+            final boolean hasMaxUpgrade = TJItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
             final long threshold = 64000L << (TJItemUtils.extractFromItemHandler(iItemHandler, Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY), Integer.MAX_VALUE, true).getCount() - (hasMaxUpgrade ? 1 : 2)) * 2;
             for (int i = 0; i < this.duality.getTanks().getSlots(); i++) {
                 final IAEFluidStack iaeFluidStack = this.duality.getTanks().getFluidInSlot(i);
@@ -165,7 +165,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
 
         @Override
         public boolean allowInsert(IItemHandler iItemHandler, int slot, ItemStack itemStack) {
-            final ItemStack maxCapacity = new ItemStack(TJItems.MAX_CAPACITY_UPGRADE);
+            final ItemStack maxCapacity = new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE);
             return itemStack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)) ||
                     (itemStack.isItemEqual(maxCapacity) && TJItemUtils.extractFromItemHandler(iItemHandler, maxCapacity, Integer.MAX_VALUE, true).getCount() <= 1);
         }

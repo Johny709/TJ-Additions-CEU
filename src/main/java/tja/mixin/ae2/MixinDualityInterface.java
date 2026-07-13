@@ -32,8 +32,8 @@ import net.minecraftforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import tj.integration.ae2.helpers.IDualitySuperInterface;
-import tj.integration.ae2.inventory.TJAppEngNetworkInventory;
+import tja.integration.ae2.helpers.IDualitySuperInterface;
+import tja.integration.ae2.inventory.TJAppEngNetworkInventory;
 
 import java.util.EnumMap;
 import java.util.EnumSet;

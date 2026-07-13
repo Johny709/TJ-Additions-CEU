@@ -5,7 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
-import tj.integration.ae2.blocks.BlockTJCraftingUnit;
+import tja.integration.ae2.blocks.BlockTJCraftingUnit;
 
 public class TJLightBakedModel extends TJCraftingCubeBakedModel {
 
