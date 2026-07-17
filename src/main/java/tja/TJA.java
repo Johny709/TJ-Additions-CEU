@@ -4,7 +4,6 @@ import appeng.api.config.Upgrades;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJABlocks;
@@ -14,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tja.machines.TJAMetaTileEntities;
 import tja.rendering.IItemMeshing;
 
 import static tja.items.TJAItems.UPGRADES;
@@ -34,6 +34,7 @@ public class TJA {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("Hello From {}!", MOD_NAME);
+        TJAMetaTileEntities.init(); // initialize it
     }
 
     @Mod.EventHandler
