@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentMap;
 
 public class TJAValues {
 
+    public static final String GREGTECH_MOD_ID = "gregtech";
+    public static final String AE2_MOD_ID = "appliedenergistics2";
     private static final ConcurrentMap<String, Boolean> IS_MOD_LOADED_CACHE = new ConcurrentHashMap<>();
 
     public static boolean isModLoaded(String modid) {
