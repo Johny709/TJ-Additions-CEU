@@ -1,4 +1,15 @@
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)
+tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
+tja.machine.mega_steel_boiler.name=Mega Steel Boiler (MSB)
+tja.machine.mega_titanium_boiler.name=Mega Titanium Boiler (MTB)
+tja.machine.mega_tungstensteel_boiler.name=Mega TungstenSteel Boiler (MTSB)
+
+tja.multiblock.mega_bronze_boiler.description=Mega version of §5Large Bronze Boiler.
+tja.multiblock.mega_steel_boiler.description=Mega version of §5Large Steel Boiler.
+tja.multiblock.mega_titanium_boiler.description=Mega version of §5Large Titanium boiler.
+tja.multiblock.mega_tungstensteel_boiler.description=Mega version of §5Large Tungstensteel Boiler.
+tja.multiblock.mega_boiler.warning=WARNING: Building with freedom wrench is not recommended. The game might crash due to how many blocks there are to build at once!
+tja.multiblock.mega_boiler.parallel.description=Generates §c%sx§7 as much steam as §5Large Boiler.
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 

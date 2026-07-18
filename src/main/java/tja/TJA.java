@@ -34,7 +34,8 @@ public class TJA {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("Hello From {}!", MOD_NAME);
-        TJAMetaTileEntities.init(); // initialize it
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+            TJAMetaTileEntities.init();
     }
 
     @Mod.EventHandler
@@ -51,89 +52,89 @@ public class TJA {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
+            // Item Storage Cells
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_65536K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_65536K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_65536K, 1);
 
-        // Item Storage Cells
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_65536K, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_65536K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_65536K, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_262144K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_262144K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_262144K, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_262144K, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_262144K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_262144K, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_1048M, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_1048M, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_1048M, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_1048M, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_1048M, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_1048M, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_CELL_DIGITAL_SINGULARITY, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_64K, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_65536K, 1);
+            Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
+            Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
 
-        Upgrades.FUZZY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
-        Upgrades.INVERTER.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
-        Upgrades.STICKY.registerItem(TJAItems.ITEM_BLOCK_CONTAINER_SINGULARITY, 1);
+            // Fluid Storage Cells
+            Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_65536K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_65536K, 1);
 
-        // Fluid Storage Cells
-        Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_65536K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_65536K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_262144K, 1);
+            Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_262144K, 1);
 
-        Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_262144K, 1);
-        Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_262144K, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_1048M, 1);
+            Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_1048M, 1);
 
-        Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_1048M, 1);
-        Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_1048M, 1);
+            Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_DIGITAL_SINGULARITY, 1);
+            Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_DIGITAL_SINGULARITY, 1);
 
-        Upgrades.INVERTER.registerItem(TJAItems.FLUID_CELL_DIGITAL_SINGULARITY, 1);
-        Upgrades.STICKY.registerItem(TJAItems.FLUID_CELL_DIGITAL_SINGULARITY, 1);
+            // Super Interfaces
+            Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_INTERFACE, 4);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_INTERFACE, 7);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_INTERFACE, 7);
+            Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_INTERFACE, 1);
+            Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_INTERFACE, 1);
 
-        // Super Interfaces
-        Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_INTERFACE, 4);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_INTERFACE, 7);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_INTERFACE, 7);
-        Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_INTERFACE, 1);
-        Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_INTERFACE, 1);
+            Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_FLUID_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_FLUID_INTERFACE, 4);
 
-        Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_FLUID_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_FLUID_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 4);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 7);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 7);
+            Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 1);
+            Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 1);
 
-        Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 4);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 7);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 7);
-        Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_DUAL_INTERFACE, 1);
-        Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_DUAL_INTERFACE, 1);
+            Upgrades.CAPACITY.registerItem(TJABlocks.PATTERN_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_PATTERN_INTERFACE, 4);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.PATTERN_INTERFACE, 31);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_PATTERN_INTERFACE, 31);
 
-        Upgrades.CAPACITY.registerItem(TJABlocks.PATTERN_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_PATTERN_INTERFACE, 4);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.PATTERN_INTERFACE, 31);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_PATTERN_INTERFACE, 31);
+            Upgrades.CAPACITY.registerItem(TJABlocks.STOCKING_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_STOCKING_INTERFACE, 4);
+            Upgrades.CRAFTING.registerItem(TJABlocks.STOCKING_INTERFACE, 1);
+            Upgrades.CRAFTING.registerItem(TJAItems.PART_STOCKING_INTERFACE, 1);
 
-        Upgrades.CAPACITY.registerItem(TJABlocks.STOCKING_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_STOCKING_INTERFACE, 4);
-        Upgrades.CRAFTING.registerItem(TJABlocks.STOCKING_INTERFACE, 1);
-        Upgrades.CRAFTING.registerItem(TJAItems.PART_STOCKING_INTERFACE, 1);
+            Upgrades.CAPACITY.registerItem(TJABlocks.STOCKING_DUAL_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_STOCKING_DUAL_INTERFACE, 4);
+            Upgrades.CRAFTING.registerItem(TJABlocks.STOCKING_DUAL_INTERFACE, 1);
+            Upgrades.CRAFTING.registerItem(TJAItems.PART_STOCKING_DUAL_INTERFACE, 1);
 
-        Upgrades.CAPACITY.registerItem(TJABlocks.STOCKING_DUAL_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_STOCKING_DUAL_INTERFACE, 4);
-        Upgrades.CRAFTING.registerItem(TJABlocks.STOCKING_DUAL_INTERFACE, 1);
-        Upgrades.CRAFTING.registerItem(TJAItems.PART_STOCKING_DUAL_INTERFACE, 1);
-
-        Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 4);
-        Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 4);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 124);
-        Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 124);
-        Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 1);
-        Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 1);
-
+            Upgrades.CAPACITY.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 4);
+            Upgrades.CAPACITY.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 4);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 124);
+            Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 124);
+            Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 1);
+            Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 1);
+        }
         if (event.getSide() == Side.CLIENT) {
             TJABlocks.TJ_BLOCK_DEFINITION_REGISTRY.forEach((location, blockDefinition) -> {
                 final Block block = blockDefinition.maybeBlock().orElse(null);
