@@ -26,7 +26,7 @@ import net.minecraftforge.items.IItemHandler;
 import tja.TJA;
 import tja.integration.ae2.inventory.TJAENetworkFluidInventory;
 import tja.items.TJAItems;
-import tja.util.TJItemUtils;
+import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -150,8 +150,8 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
 
         @Override
         public boolean allowExtract(IItemHandler iItemHandler, int slot, int i1) {
-            final boolean hasMaxUpgrade = TJItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
-            final long threshold = 64000L << (TJItemUtils.extractFromItemHandler(iItemHandler, Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY), Integer.MAX_VALUE, true).getCount() - (hasMaxUpgrade ? 1 : 2)) * 2;
+            final boolean hasMaxUpgrade = TJAItemUtils.extractFromItemHandler(iItemHandler, new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE), Integer.MAX_VALUE, true).getCount() > 1;
+            final long threshold = 64000L << (TJAItemUtils.extractFromItemHandler(iItemHandler, Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY), Integer.MAX_VALUE, true).getCount() - (hasMaxUpgrade ? 1 : 2)) * 2;
             for (int i = 0; i < this.duality.getTanks().getSlots(); i++) {
                 final IAEFluidStack iaeFluidStack = this.duality.getTanks().getFluidInSlot(i);
                 if (iaeFluidStack == null) continue;
@@ -167,7 +167,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
         public boolean allowInsert(IItemHandler iItemHandler, int slot, ItemStack itemStack) {
             final ItemStack maxCapacity = new ItemStack(TJAItems.MAX_CAPACITY_UPGRADE);
             return itemStack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)) ||
-                    (itemStack.isItemEqual(maxCapacity) && TJItemUtils.extractFromItemHandler(iItemHandler, maxCapacity, Integer.MAX_VALUE, true).getCount() <= 1);
+                    (itemStack.isItemEqual(maxCapacity) && TJAItemUtils.extractFromItemHandler(iItemHandler, maxCapacity, Integer.MAX_VALUE, true).getCount() <= 1);
         }
     }
 }

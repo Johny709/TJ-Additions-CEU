@@ -10,6 +10,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.pattern.PatternMatchContext;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.capability.handler.IMachineHandler;
 
@@ -17,12 +18,12 @@ import java.util.Collections;
 
 public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler {
 
-    private IItemHandlerModifiable importItemInventory;
-    private IItemHandlerModifiable exportItemInventory;
-    private IMultipleTankHandler importFluidTank;
-    private IMultipleTankHandler exportFluidTank;
-    private IEnergyContainer inputEnergyContainer;
-    private IEnergyContainer outputEnergyContainer;
+    protected IItemHandlerModifiable importItemInventory;
+    protected IItemHandlerModifiable exportItemInventory;
+    protected IMultipleTankHandler importFluidTank;
+    protected IMultipleTankHandler exportFluidTank;
+    protected IEnergyContainer inputEnergyContainer;
+    protected IEnergyContainer outputEnergyContainer;
 
     public TJMultiblockControllerBase(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -53,6 +54,21 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
         this.exportFluidTank = new FluidTankList(true);
         this.inputEnergyContainer = new EnergyContainerList(Collections.emptyList());
         this.outputEnergyContainer = new EnergyContainerList(Collections.emptyList());
+    }
+
+    protected int[] getTotalFluidAmount(FluidStack testStack, IMultipleTankHandler multiTank) {
+        int fluidAmount = 0;
+        int fluidCapacity = 0;
+        for (IMultipleTankHandler.ITankEntry tank : multiTank) {
+            if (tank != null) {
+                FluidStack drainStack = tank.drain(testStack, false);
+                if (drainStack != null && drainStack.amount > 0) {
+                    fluidAmount += drainStack.amount;
+                    fluidCapacity += tank.getCapacity();
+                }
+            }
+        }
+        return new int[] { fluidAmount, fluidCapacity };
     }
 
     @Override

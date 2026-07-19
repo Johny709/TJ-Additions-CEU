@@ -4,7 +4,6 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMaps;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -16,7 +15,7 @@ import tja.capability.AbstractWorkableHandler;
 import tja.capability.IHeatInfo;
 import tja.capability.IItemFluidHandlerInfo;
 import tja.capability.handler.IBoilerHandler;
-import tja.util.TJItemUtils;
+import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -36,6 +35,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
     private final List<ItemStack> itemOutput = new ArrayList<>();
     private final Set<FluidStack> lastSearchedFluid = new HashSet<>();
 
+    private FluidStack lastBurnFluid;
     private boolean hasNoWater;
     private int currentTemperature;
     private int waterConsumption;
@@ -105,7 +105,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
     @Override
     protected boolean completeRecipe() {
         if (!this.itemOutput.isEmpty())
-            TJItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), this.itemOutput.remove(0), false);
+            TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), this.itemOutput.remove(0), false);
         if (!this.fluidOutput.isEmpty())
             this.handler.getExportFluidTank().fill(this.fluidOutput.remove(0), true);
         this.itemInput.clear();
@@ -130,6 +130,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         }
         final Recipe dieselRecipe = RecipeMaps.COMBUSTION_GENERATOR_FUELS.findRecipe(GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
         if (dieselRecipe != null) {
+            this.lastBurnFluid = fuelStack;
             fuelStack.amount = (int) Math.ceil(dieselRecipe.getFluidInputs().get(0).getAmount() * CONSUMPTION_MULTIPLIER * this.handler.getParallel() * this.handler.getFuelConsumptionMultiplier() * getThrottleMultiplier());
             if (fuelStack.isFluidStackIdentical(this.handler.getImportFluidTank().drain(fuelStack, false))) {
                 this.fluidInput.add(this.handler.getImportFluidTank().drain(fuelStack, true));
@@ -141,6 +142,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         }
         final Recipe denseFuelRecipe = RecipeMaps.SEMI_FLUID_GENERATOR_FUELS.findRecipe(GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
         if (denseFuelRecipe != null) {
+            this.lastBurnFluid = fuelStack;
             fuelStack.amount = (int) Math.ceil(denseFuelRecipe.getFluidInputs().get(0).getAmount() * CONSUMPTION_MULTIPLIER * this.handler.getParallel() * this.handler.getFuelConsumptionMultiplier() * getThrottleMultiplier());
             if (fuelStack.isFluidStackIdentical(this.handler.getImportFluidTank().drain(fuelStack, false))) {
                 this.fluidInput.add(this.handler.getImportFluidTank().drain(fuelStack, true));
@@ -195,7 +197,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         final double ashBurnTime = COAL_BURNTIME / this.handler.getParallel();
         if (burnTime >= ashBurnTime) {
             final int amount = (int) ((burnTime / ashBurnTime) * Math.max(0.4, Math.random()));
-            this.itemOutput.add(new ItemStack(Item.getByNameOrId("gregtech:meta_item_1"), amount, 2110)); // dark ashes
+            this.itemOutput.add(TJAItemUtils.getItemStackFromName("gregtech:meta_item_1", amount, 2110)); // dark ashes
         }
         return burnTime;
     }
@@ -246,6 +248,10 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         if (capability == CAPABILITY_ITEM_FLUID_HANDLING)
             return CAPABILITY_ITEM_FLUID_HANDLING.cast(this);
         return super.getCapability(capability);
+    }
+
+    public FluidStack getLastBurnFluid() {
+        return this.lastBurnFluid;
     }
 
     public double getThrottleMultiplier() {

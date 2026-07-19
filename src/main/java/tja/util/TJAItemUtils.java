@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 
-public final class TJItemUtils {
+public final class TJAItemUtils {
 
-    private TJItemUtils() {}
+    private TJAItemUtils() {}
 
     /**
      * Tries to insert ItemStack into player's main inventory. Make sure to return a new copy of ItemStack before inserting an item from ItemHandler

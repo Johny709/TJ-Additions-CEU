@@ -2,7 +2,7 @@ package tja.mui;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
-import gregtech.api.metatileentity.multiblock.ui.UISyncer;
+import gregtech.api.metatileentity.multiblock.ui.Operation;
 import gregtech.api.mui.drawable.GTObjectDrawable;
 import gregtech.api.util.KeyUtil;
 import net.minecraft.item.ItemStack;
@@ -19,16 +19,16 @@ public final class MUIUtils {
      * @param stack        the {@link ItemStack} to display.
      * @param recipeLength the recipe length, in ticks.
      */
-    public static void addItemOutputLine(KeyManager keyManager, UISyncer syncer, @Nonnull ItemStack stack, long count, int recipeLength) {
+    public static void addItemOutputLine(KeyManager keyManager, @Nonnull ItemStack stack, long count, int recipeLength) {
         IKey name = KeyUtil.string(TextFormatting.AQUA, stack.getDisplayName());
         IKey amount = KeyUtil.number(TextFormatting.GOLD, count);
         IKey rate = KeyUtil.string(TextFormatting.WHITE,
-                formateRecipeRate(syncer.syncInt(recipeLength), count));
+                formateRecipeRate(recipeLength, count));
 
-        keyManager.add(new GTObjectDrawable(stack, count)
+        keyManager.add(Operation.add(new GTObjectDrawable(stack, count)
                 .asIcon()
                 .asHoverable()
-                .addTooltipLine(formateRecipeData(name, amount, rate)));
+                .addTooltipLine(formateRecipeData(name, amount, rate))));
     }
 
     /**
@@ -37,16 +37,16 @@ public final class MUIUtils {
      * @param stack        a {@link FluidStack}s to display.
      * @param recipeLength the recipe length, in ticks.
      */
-    public static void addFluidOutputLine(KeyManager keyManager, UISyncer syncer, @Nonnull FluidStack stack, long count, int recipeLength) {
+    public static void addFluidOutputLine(KeyManager keyManager, @Nonnull FluidStack stack, long count, int recipeLength) {
         IKey name = KeyUtil.fluid(TextFormatting.AQUA, stack);
         IKey amount = KeyUtil.number(TextFormatting.GOLD, count);
         IKey rate = KeyUtil.string(TextFormatting.WHITE,
-                formateRecipeRate(syncer.syncInt(recipeLength), count));
+                formateRecipeRate(recipeLength, count));
 
-        keyManager.add(new GTObjectDrawable(stack, count)
+        keyManager.add(Operation.add(new GTObjectDrawable(stack, count)
                 .asIcon()
                 .asHoverable()
-                .addTooltipLine(formateRecipeData(name, amount, rate)));
+                .addTooltipLine(formateRecipeData(name, amount, rate))));
     }
 
     public static String formateRecipeRate(int recipeLength, long amount) {

@@ -1,0 +1,217 @@
+package tja.util;
+
+import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.impl.FluidTankList;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
+
+import java.util.function.BiConsumer;
+
+public final class TJAFluidUtils {
+
+    private TJAFluidUtils() {}
+
+    public static final IMultipleTankHandler VOID_TANK = new FluidTankList(true,  new FluidTank(Integer.MAX_VALUE) {
+        @Override
+        public int fill(FluidStack resource, boolean doFill) {
+            return resource.amount;
+        }
+    });
+
+    public static long getFluidAmountFromTanks(FluidStack fluidStack, IMultipleTankHandler tanks) {
+        if (fluidStack == null || tanks == null)
+            return 0;
+        long amount = 0;
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final FluidStack stack = tanks.getTankAt(i).getFluid();
+            if (stack != null && stack.isFluidEqual(fluidStack))
+                amount += stack.amount;
+        }
+        return amount;
+    }
+
+    public static long getFluidCapacityFromTanks(FluidStack fluidStack, IMultipleTankHandler tanks) {
+        if (fluidStack == null || tanks == null)
+            return 0;
+        long capacity = 0;
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            final FluidStack stack = tank.getFluid();
+            if (stack == null || stack.isFluidEqual(fluidStack))
+                capacity += tank.getCapacity();
+        }
+        return capacity;
+    }
+
+    public static long getCapacityFromTanks(IMultipleTankHandler tanks) {
+        long capacity = 0;
+        for (int i = 0; i < tanks.getTanks(); i++)
+            capacity += tanks.getTankAt(i).getCapacity();
+        return capacity;
+    }
+
+    /**
+     *
+     * @param tanks fluid container inventory
+     * @param fluidStack the FluidStack to search and drain. the passed in FluidStack doesn't get modified.
+     * @param amount the amount to drain.
+     * @param doDrain if the fluid should actually be drained from tanks.
+     * @return amount drained.
+     */
+    public static int drainFromTanks(IMultipleTankHandler tanks, FluidStack fluidStack, int amount, boolean doDrain) {
+        if (fluidStack == null || tanks == null)
+            return 0;
+        int amountDrained = 0;
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            final FluidStack slotStack = tank.getFluid();
+            if (slotStack == null) continue;
+            if (slotStack.isFluidEqual(fluidStack)) {
+                final FluidStack drained = tank.drain(amount, doDrain);
+                if (drained != null) {
+                    amountDrained += drained.amount;
+                    amount -= amountDrained;
+                }
+            }
+            if (amount < 1)
+                break;
+        }
+        return amountDrained;
+    }
+
+    /**
+     *
+     * @param tanks fluid container inventory
+     * @param fluidStack the FluidStack to search and drain. the passed in FluidStack doesn't get modified.
+     * @param amount the amount to drain.
+     * @param doDrain if the fluid should actually be drained from tanks.
+     * @return amount drained.
+     */
+    public static long drainFromTanksLong(IMultipleTankHandler tanks, FluidStack fluidStack, long amount, boolean doDrain) {
+        if (fluidStack == null || tanks == null)
+            return 0;
+        long amountDrained = 0;
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            final FluidStack slotStack = tank.getFluid();
+            if (slotStack == null) continue;
+            if (slotStack.isFluidEqual(fluidStack)) {
+                final FluidStack drained = tank.drain((int) Math.min(Integer.MAX_VALUE, amount), doDrain);
+                if (drained != null) {
+                    amountDrained += drained.amount;
+                    amount -= amountDrained;
+                }
+            }
+            if (amount < 1)
+                break;
+        }
+        return amountDrained;
+    }
+
+    /**
+     * Tries to insert into fluid tanks or fluid handler.
+     * @param tanks fluid container inventory
+     * @param fluidStack the FluidStack to insert
+     * @param doFill test to see if the fluid can be inserted without actually inserting the fluid for real.
+     * @return FluidStack reminder. returns with 0 amount when FluidStack is fully inserted. returns the stack unmodified when unable to insert at all.
+     */
+    public static FluidStack fillIntoTanks(IMultipleTankHandler tanks, FluidStack fluidStack, boolean doFill) {
+        if (fluidStack == null || tanks == null)
+            return fluidStack;
+        fluidStack = doFill ? fluidStack : fluidStack.copy();
+        for (int i = 0; i < tanks.getTanks() && fluidStack.amount > 0; i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            final FluidStack slotStack = tank.getFluid();
+            if (slotStack == null) {
+                fluidStack.amount -= tank.fill(fluidStack, doFill);
+            } else if (slotStack.isFluidEqual(fluidStack)) {
+                final int reminder = Math.max(0, tank.getCapacity() - slotStack.amount);
+                final int inserted = Math.min(fluidStack.amount, reminder);
+                fluidStack.amount -= inserted;
+                if (doFill) {
+                    slotStack.amount += inserted;
+                }
+            }
+        }
+        return fluidStack;
+    }
+
+    /**
+     * Tries to insert into fluid tanks or fluid handler.
+     * @param tanks fluid container inventory
+     * @param fluidStack the FluidStack to insert. the passed in FluidStack doesn't get modified.
+     * @param amount the amount of fluid to insert.
+     * @param doFill test to see if the fluid can be inserted without actually inserting the fluid for real.
+     * @return amount filled.
+     */
+    public static long fillIntoTanksLong(IMultipleTankHandler tanks, FluidStack fluidStack, long amount, boolean doFill) {
+        if (fluidStack == null || tanks == null)
+            return 0;
+        long filled = 0;
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            FluidStack slotStack = tank.getFluid();
+            if (slotStack == null) {
+                slotStack = fluidStack.copy();
+                slotStack.amount = (int) Math.min(Integer.MAX_VALUE, amount);
+                final int inserted = tank.fill(slotStack, doFill);
+                filled += inserted;
+                amount -= inserted;
+            } else if (slotStack.isFluidEqual(fluidStack)) {
+                final int reminder = Math.max(0, tank.getCapacity() - slotStack.amount);
+                final int inserted = (int) Math.min(amount, reminder);
+                filled += inserted;
+                amount -= inserted;
+                if (doFill) {
+                    slotStack.amount += inserted;
+                }
+            }
+            if (amount < 1) break;
+        }
+        return filled;
+    }
+
+    /**
+     * Tries to insert into fluid tanks or fluid handler. Only recommended for client-side simulations.
+     * @param tanks fluid container inventory
+     * @param fluidStack the FluidStack to insert
+     * @param doFill test to see if the item can be inserted without actually inserting the fluid for real.
+     * @param beforeInsertedCallback runs callback before the fluid gets inserted.
+     * @param afterInsertedCallback runs callback after the fluid has been inserted.
+     * @return FluidStack reminder. returns with 0 amount when FluidStack is fully inserted. returns the stack unmodified when unable to insert at all.
+     */
+    public static FluidStack fillIntoTanksWithCallback(IMultipleTankHandler tanks, FluidStack fluidStack, boolean doFill, BiConsumer<Integer, FluidStack> beforeInsertedCallback, BiConsumer<Integer, FluidStack> afterInsertedCallback) {
+        if (fluidStack == null || tanks == null)
+            return fluidStack;
+        fluidStack = doFill ? fluidStack : fluidStack.copy();
+        for (int i = 0; i < tanks.getTanks() && fluidStack.amount > 0; i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            final FluidStack slotStack = tank.getFluid();
+            if (slotStack == null) {
+                beforeInsertedCallback.accept(i, fluidStack);
+                fluidStack.amount -= tank.fill(fluidStack, doFill);
+                afterInsertedCallback.accept(i, fluidStack);
+            } else if (slotStack.isFluidEqual(fluidStack)) {
+                beforeInsertedCallback.accept(i, fluidStack);
+                final int reminder = Math.max(0, tank.getCapacity() - slotStack.amount);
+                final int inserted = Math.min(fluidStack.amount, reminder);
+                fluidStack.amount -= inserted;
+                if (doFill) {
+                    slotStack.amount += inserted;
+                }
+                afterInsertedCallback.accept(i, fluidStack);
+            }
+        }
+        return fluidStack;
+    }
+
+    public static boolean findFluidFromTanks(IMultipleTankHandler tanks, FluidStack fluidStack) {
+        for (int i = 0; i < tanks.getTanks(); i++) {
+            final IFluidTank tank = tanks.getTankAt(i);
+            if (tank.getFluid() != null && tank.getFluid().isFluidEqual(fluidStack))
+                return true;
+        }
+        return false;
+    }
+}
