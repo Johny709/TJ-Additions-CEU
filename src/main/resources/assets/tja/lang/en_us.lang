@@ -13,6 +13,8 @@ tja.multiblock.mega_boiler.parallel.description=Generates §c%sx§7 as much stea
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 
+machine.universal.consuming=Consuming:
+
 item.me.material.item_cell.65536k.name=§165536k§f ME Storage Component
 item.me.material.item_cell.262144k.name=§b262144k§f ME Storage Component
 item.me.material.item_cell.1048m.name=§51048m§f ME Storage Component

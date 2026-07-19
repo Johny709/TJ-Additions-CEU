@@ -264,6 +264,10 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         return this.throttlePercentage;
     }
 
+    public int getProduction() {
+        return this.steamProduction;
+    }
+
     @Override
     public long heat() {
         return this.currentTemperature;

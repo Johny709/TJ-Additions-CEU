@@ -8,17 +8,22 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.BoilerType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.capability.handler.IBoilerHandler;
 import tja.capability.workables.MegaBoilerRecipeLogic;
+import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +36,7 @@ public class MetaTileEntityMegaBoiler extends MultiblockWithDisplayBase implemen
         super(metaTileEntityId);
         this.boilerType = boilerType;
         this.reinitializeStructurePattern();
+        this.recipeLogic.setActiveConsumer(this::setLastActive);
     }
 
     @Override
@@ -84,6 +90,48 @@ public class MetaTileEntityMegaBoiler extends MultiblockWithDisplayBase implemen
     public void invalidateStructure() {
         super.invalidateStructure();
         this.recipeLogic.invalidate();
+    }
+
+    @Override
+    protected void configureDisplayText(MultiblockUIBuilder builder) {
+        builder.addCustom((key, syncer) -> {
+                    key.add(KeyUtil.lang(syncer.syncString("gregtech.multiblock.hpca.temperature"), syncer.syncLong(this.recipeLogic.heat())));
+                    key.add(KeyUtil.lang(syncer.syncString("gregtech.multiblock.large_boiler.steam_output"), syncer.syncInt(this.recipeLogic.getProduction())));
+                })
+                .addProgressLine(this.recipeLogic.getProgress(), this.recipeLogic.getMaxProgress())
+                .setWorkingStatus(this.recipeLogic.isWorkingEnabled(), this.recipeLogic.isActive())
+                .addCustom((key, syncer) -> {
+                    if (!syncer.syncBoolean(this.recipeLogic.getFluidInputs().isEmpty()) || syncer.syncBoolean(this.recipeLogic.getItemInputs().isEmpty()))
+                        key.add(KeyUtil.lang(syncer.syncString("machine.universal.consuming")));
+                    for (FluidStack fluidStack : this.recipeLogic.getFluidInputs()) {
+                        fluidStack = syncer.syncFluidStack(fluidStack);
+                        assert fluidStack != null;
+                        final long count = syncer.syncLong(fluidStack.amount);
+                        final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
+                        MUIUtils.addFluidOutputLine(key, syncer, fluidStack, count, maxProgress);
+                    }
+                    for (ItemStack stack : this.recipeLogic.getItemInputs()) {
+                        stack = syncer.syncItemStack(stack);
+                        final long count = syncer.syncLong(stack.getCount());
+                        final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
+                        MUIUtils.addItemOutputLine(key, syncer, stack, count, maxProgress);
+                    }
+                    if (!syncer.syncBoolean(this.recipeLogic.getFluidOutputs().isEmpty()) || !syncer.syncBoolean(this.recipeLogic.getItemOutputs().isEmpty()))
+                        key.add(KeyUtil.lang(syncer.syncString("gregtech.gui.multiblock.recipe_producing")));
+                    for (FluidStack fluidStack : this.recipeLogic.getFluidOutputs()) {
+                        fluidStack = syncer.syncFluidStack(fluidStack);
+                        assert fluidStack != null;
+                        final long count = syncer.syncLong(fluidStack.amount);
+                        final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
+                        MUIUtils.addFluidOutputLine(key, syncer, fluidStack, count, maxProgress);
+                    }
+                    for (ItemStack stack : this.recipeLogic.getItemOutputs()) {
+                        stack = syncer.syncItemStack(stack);
+                        final long count = syncer.syncLong(stack.getCount());
+                        final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
+                        MUIUtils.addItemOutputLine(key, syncer, stack, count, maxProgress);
+                    }
+                });
     }
 
     @Override
