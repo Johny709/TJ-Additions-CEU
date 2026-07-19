@@ -7,10 +7,10 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
@@ -23,11 +23,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.capability.handler.IBoilerHandler;
 import tja.capability.workables.MegaBoilerRecipeLogic;
+import tja.machines.controllers.TJMultiblockControllerBase;
 import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class MetaTileEntityMegaBoiler extends MultiblockWithDisplayBase implements IBoilerHandler {
+public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase implements IBoilerHandler {
 
     private final MegaBoilerRecipeLogic recipeLogic = new MegaBoilerRecipeLogic(this);
     private final BoilerType boilerType;
@@ -78,6 +80,11 @@ public class MetaTileEntityMegaBoiler extends MultiblockWithDisplayBase implemen
                         .or(abilities(MultiblockAbility.MUFFLER_HATCH).setExactLimit(1)))
                 .where('P', states(this.boilerType.pipeState))
                 .build();
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes() {
+        return super.getMatchingShapes();
     }
 
     @Override
