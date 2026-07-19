@@ -1,12 +1,16 @@
 package tja;
 
 import appeng.api.config.Upgrades;
+import gregtech.api.capability.SimpleCapabilityManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJABlocks;
+import tja.capability.IHeatInfo;
+import tja.capability.IItemFluidHandlerInfo;
+import tja.capability.IRecipeInfo;
 import tja.items.TJAItems;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -36,6 +40,9 @@ public class TJA {
         LOGGER.info("Hello From {}!", MOD_NAME);
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
             TJAMetaTileEntities.init();
+        SimpleCapabilityManager.registerCapabilityWithNoDefault(IHeatInfo.class);
+        SimpleCapabilityManager.registerCapabilityWithNoDefault(IRecipeInfo.class);
+        SimpleCapabilityManager.registerCapabilityWithNoDefault(IItemFluidHandlerInfo.class);
     }
 
     @Mod.EventHandler
