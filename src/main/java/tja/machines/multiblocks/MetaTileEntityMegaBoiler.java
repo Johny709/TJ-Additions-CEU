@@ -13,6 +13,7 @@ import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.mui.GTGuiTextures;
+import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.sync.FixedIntArraySyncValue;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -33,7 +34,6 @@ import tja.machines.controllers.TJMultiblockControllerBase;
 import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -113,10 +113,10 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
                 .setWorkingStatus(this.recipeLogic.isWorkingEnabled(), this.recipeLogic.isActive())
                 .addCustom((key, syncer) -> {
                     if (!syncer.syncBoolean(this.isStructureFormed())) return;
-                    final Collection<FluidStack> fluidInputs = syncer.syncCollection(this.recipeLogic.getFluidInputs(), ByteBufAdapters.FLUID_STACK);
-                    final Collection<ItemStack> itemInputs = syncer.syncCollection(this.recipeLogic.getItemInputs(), ByteBufAdapters.ITEM_STACK);
-                    final Collection<FluidStack> fluidOutputs = syncer.syncCollection(this.recipeLogic.getFluidOutputs(), ByteBufAdapters.FLUID_STACK);
-                    final Collection<ItemStack> itemOutputs = syncer.syncCollection(this.recipeLogic.getItemOutputs(), ByteBufAdapters.ITEM_STACK);
+                    final List<FluidStack> fluidInputs = syncer.syncCollection(this.recipeLogic.getFluidInputs(), ByteBufAdapters.FLUID_STACK);
+                    final List<ItemStack> itemInputs = syncer.syncCollection(this.recipeLogic.getItemInputs(), ByteBufAdapters.ITEM_STACK);
+                    final List<FluidStack> fluidOutputs = syncer.syncCollection(this.recipeLogic.getFluidOutputs(), ByteBufAdapters.FLUID_STACK);
+                    final List<ItemStack> itemOutputs = syncer.syncCollection(this.recipeLogic.getItemOutputs(), ByteBufAdapters.ITEM_STACK);
                     final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
                     if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
                         key.add(KeyUtil.lang(syncer.syncString("machine.universal.consuming")));
@@ -126,8 +126,10 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
                     for (ItemStack stack : itemInputs) {
                         MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
                     }
-                    if (!fluidOutputs.isEmpty() || !itemOutputs.isEmpty())
+                    if (!fluidOutputs.isEmpty() || !itemOutputs.isEmpty()) {
+                        key.add(KeyUtil.lang("")); // new line
                         key.add(KeyUtil.lang(syncer.syncString("gregtech.gui.multiblock.recipe_producing")));
+                    }
                     for (FluidStack fluidStack : fluidOutputs) {
                         MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
                     }
@@ -183,37 +185,43 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
     }
 
     @Override
+    public GTGuiTheme getUITheme() {
+        return this.boilerType == BoilerType.BRONZE ? GTGuiTheme.BRONZE : this.boilerType == BoilerType.STEEL ? GTGuiTheme.STEEL : super.getUITheme();
+    }
+
+    @Override
     public void registerBars(List<UnaryOperator<TemplateBarBuilder>> bars, PanelSyncManager panelSyncManager) {
+        final FluidStack water = Materials.Water.getFluid(Integer.MAX_VALUE);
         final FixedIntArraySyncValue heatSyncValue = new FixedIntArraySyncValue(() -> new int[]{(int) this.recipeLogic.heat(), (int) this.recipeLogic.maxHeat()}, null);
         panelSyncManager.syncValue("boiler_heat_bar", heatSyncValue);
-        final FixedIntArraySyncValue waterSyncValue = new FixedIntArraySyncValue(() -> this.getTotalFluidAmount(Materials.Water.getFluid(1), this.importFluidTank), null);
+        final FixedIntArraySyncValue waterSyncValue = new FixedIntArraySyncValue(() -> this.getTotalFluidAmount(water, this.importFluidTank), null);
         panelSyncManager.syncValue("boiler_water_bar", waterSyncValue);
         final FixedIntArraySyncValue fuelSyncValue = new FixedIntArraySyncValue(() -> this.getTotalFluidAmount(this.recipeLogic.getLastBurnFluid(), this.importFluidTank), null);
         panelSyncManager.syncValue("boiler_fuel_bar", fuelSyncValue);
-        bars.add(bar -> bar.progress(() -> heatSyncValue.getValue(1) == 0 ? 0 : (double) heatSyncValue.getValue(0) / heatSyncValue.getValue(1))
+        final String lastBurnFluid = this.recipeLogic.getLastBurnFluid() != null ? this.recipeLogic.getLastBurnFluid().getLocalizedName() : "";
+        bars.add(bar -> bar.progress(() -> heatSyncValue.getValue(1) == 0 ? 0 : 1.0 * heatSyncValue.getValue(0) / heatSyncValue.getValue(1))
                 .texture(GTGuiTextures.PROGRESS_BAR_BOILER_HEAT)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
                         if (heatSyncValue.getValue(1) != 0)
-                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.heat", heatSyncValue.getValue(0), heatSyncValue.getValue(1), (double) heatSyncValue.getValue(0) / heatSyncValue.getValue(1)));
+                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.heat", heatSyncValue.getValue(0), heatSyncValue.getValue(1), 100 * heatSyncValue.getValue(0) / heatSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
-        bars.add(bar -> bar.progress(() -> waterSyncValue.getValue(1) == 0 ? 0 : (double) waterSyncValue.getValue(0) / waterSyncValue.getValue(1))
+        bars.add(bar -> bar.progress(() -> waterSyncValue.getValue(1) == 0 ? 0 : 1.0 * waterSyncValue.getValue(0) / waterSyncValue.getValue(1))
                 .texture(GTGuiTextures.PROGRESS_BAR_LCE_OXYGEN)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
                         if (waterSyncValue.getValue(1) != 0)
-                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.fluid", waterSyncValue.getValue(0), waterSyncValue.getValue(1), (double) waterSyncValue.getValue(0) / waterSyncValue.getValue(1)));
+                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.fluid", water.getLocalizedName(), waterSyncValue.getValue(0), waterSyncValue.getValue(1), 100 * waterSyncValue.getValue(0) / waterSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
-        bars.add(bar -> bar.progress(() -> fuelSyncValue.getValue(1) == 0 ? 0 : (double) fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1))
+        bars.add(bar -> bar.progress(() -> fuelSyncValue.getValue(1) == 0 ? 0 : 1.0 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1))
                 .texture(GTGuiTextures.PROGRESS_BAR_LCE_FUEL)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
-                        if (fuelSyncValue.getValue(1) != 0) {
-                            tooltip.add(KeyUtil.lang("tj.multiblocks.bars.fuel", fuelSyncValue.getValue(0), fuelSyncValue.getValue(1), (double) fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1)));
-                        } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
-                    }
+                        if (fuelSyncValue.getValue(1) != 0)
+                            tooltip.add(KeyUtil.lang("tj.multiblocks.bars.fuel", lastBurnFluid, fuelSyncValue.getValue(0), fuelSyncValue.getValue(1), 100 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1)));
+                    } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
     }
 }

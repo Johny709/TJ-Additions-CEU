@@ -6,6 +6,7 @@ import gregtech.api.capability.impl.ItemHandlerList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.capability.workables.BasicEnergyHandler;
@@ -35,5 +36,9 @@ public class TJAValues {
         boolean isLoaded = Loader.instance().getIndexedModList().containsKey(modid);
         IS_MOD_LOADED_CACHE.put(modid, isLoaded);
         return isLoaded;
+    }
+
+    public static boolean isClientSide() {
+        return FMLCommonHandler.instance().getSide().isClient();
     }
 }

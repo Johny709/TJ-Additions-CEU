@@ -70,6 +70,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
      */
     @Override
     public void update() {
+        if (this.metaTileEntity.getWorld().isRemote) return;
         if (!this.isWorking) {
             this.stopRecipe();
             return;
@@ -233,6 +234,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         return capability == GregtechTileCapabilities.CAPABILITY_WORKABLE ? GregtechTileCapabilities.CAPABILITY_WORKABLE.cast(this) : null;
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "RecipeWorkable";

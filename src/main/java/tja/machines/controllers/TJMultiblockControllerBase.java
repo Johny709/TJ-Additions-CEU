@@ -59,12 +59,14 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     protected int[] getTotalFluidAmount(FluidStack testStack, IMultipleTankHandler multiTank) {
         int fluidAmount = 0;
         int fluidCapacity = 0;
-        for (IMultipleTankHandler.ITankEntry tank : multiTank) {
-            if (tank != null) {
-                FluidStack drainStack = tank.drain(testStack, false);
-                if (drainStack != null && drainStack.amount > 0) {
-                    fluidAmount += drainStack.amount;
-                    fluidCapacity += tank.getCapacity();
+        if (multiTank != null) {
+            for (IMultipleTankHandler.ITankEntry tank : multiTank) {
+                if (tank != null) {
+                    FluidStack drainStack = tank.drain(testStack, false);
+                    if (drainStack != null && drainStack.amount > 0) {
+                        fluidAmount += drainStack.amount;
+                        fluidCapacity += tank.getCapacity();
+                    }
                 }
             }
         }
