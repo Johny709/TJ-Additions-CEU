@@ -75,5 +75,6 @@ dependencies {
     implementation("curse.maven:random-complement-1198138:8025976")
     implementation("curse.maven:supercritical-1185871:7864560")
     implementation("curse.maven:baubles-227083:2518667")
+    implementation("curse.maven:groovyscript-687577:7925117")
     api("com.cleanroommc:modularui:3.1.6") { transitive = false }
 }

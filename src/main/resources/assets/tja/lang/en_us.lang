@@ -68,3 +68,18 @@ tile.me.crafting_storage.singularity.name=§dDigital Singularity Crafting Storag
 
 tile.me.stocking_interface.auto_pull=Auto-Pull from ME mode will automatically stock the first 36 items in the ME system
 tile.me.stocking_fluid_interface.auto_pull=Auto-Pull from ME mode will automatically stock the first 36 fluids in the ME system
+
+tile.cell_battery.lv.name=LV Power Cell
+tile.cell_battery.mv.name=MV Power Cell
+tile.cell_battery.hv.name=HV Power Cell
+tile.cell_battery.ev.name=EV Power Cell
+tile.cell_battery.iv.name=IV Power Cell
+tile.cell_battery.luv.name=LuV Power Cell
+tile.cell_battery.zpm.name=ZPM Power Cell
+tile.cell_battery.uv.name=UV Power Cell
+tile.cell_battery.uhv.name=UHV Power Cell
+tile.cell_battery.uev.name=UEV Power Cell
+tile.cell_battery.uiv.name=UIV Power Cell
+tile.cell_battery.uxv.name=UXV Power Cell
+tile.cell_battery.opv.name=OPV Power Cell
+tile.cell_battery.max.name=MAX Power Cell

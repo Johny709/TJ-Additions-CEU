@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJABlocks;
+import tja.blocks.TJAMetaBlocks;
 import tja.capability.IHeatInfo;
 import tja.capability.IItemFluidHandlerInfo;
 import tja.capability.IRecipeInfo;
@@ -38,8 +39,10 @@ public class TJA {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("Hello From {}!", MOD_NAME);
-        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             TJAMetaTileEntities.init();
+            TJAMetaBlocks.init();
+        }
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IHeatInfo.class);
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IRecipeInfo.class);
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IItemFluidHandlerInfo.class);
@@ -47,14 +50,16 @@ public class TJA {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        UPGRADES.put(TJABlocks.SUPER_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.SUPER_FLUID_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.SUPER_DUAL_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.PATTERN_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.STOCKING_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.STOCKING_FLUID_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.STOCKING_DUAL_INTERFACE.maybeItem().orElse(null), 1);
-        UPGRADES.put(TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeItem().orElse(null), 1);
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
+            UPGRADES.put(TJABlocks.SUPER_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.SUPER_FLUID_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.SUPER_DUAL_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.PATTERN_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.STOCKING_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.STOCKING_FLUID_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.STOCKING_DUAL_INTERFACE.maybeItem().orElse(null), 1);
+            UPGRADES.put(TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeItem().orElse(null), 1);
+        }
     }
 
     @Mod.EventHandler
@@ -141,13 +146,13 @@ public class TJA {
             Upgrades.PATTERN_EXPANSION.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 124);
             Upgrades.CRAFTING.registerItem(TJABlocks.SUPER_ULTIMATE_INTERFACE, 1);
             Upgrades.CRAFTING.registerItem(TJAItems.PART_SUPER_ULTIMATE_INTERFACE, 1);
-        }
-        if (event.getSide() == Side.CLIENT) {
-            TJABlocks.TJ_BLOCK_DEFINITION_REGISTRY.forEach((location, blockDefinition) -> {
-                final Block block = blockDefinition.maybeBlock().orElse(null);
-                if (block instanceof IItemMeshing)
-                    Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(blockDefinition.maybeItem().orElseThrow(() -> new NullPointerException("Item not found")), 0, new ModelResourceLocation(location, "inventory"));
-            });
+            if (event.getSide() == Side.CLIENT) {
+                TJABlocks.TJ_BLOCK_DEFINITION_REGISTRY.forEach((location, blockDefinition) -> {
+                    final Block block = blockDefinition.maybeBlock().orElse(null);
+                    if (block instanceof IItemMeshing)
+                        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(blockDefinition.maybeItem().orElseThrow(() -> new NullPointerException("Item not found")), 0, new ModelResourceLocation(location, "inventory"));
+                });
+            }
         }
     }
 }

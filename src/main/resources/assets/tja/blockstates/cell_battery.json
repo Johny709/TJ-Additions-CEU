@@ -1,0 +1,113 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_bottom_top",
+    "textures": {
+      "bottom": "gregtech:blocks/rendering_error",
+      "top": "gregtech:blocks/rendering_error",
+      "side": "gregtech:blocks/rendering_error"
+    }
+  },
+  "variants": {
+    "variant": {
+      "lv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.lv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.lv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.lv_top"
+        }
+      },
+      "mv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.mv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.mv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.mv_top"
+        }
+      },
+      "hv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.hv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.hv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.hv_top"
+        }
+      },
+      "ev": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.ev",
+          "bottom": "tja:blocks/casings/cell_battery/cell.ev_top",
+          "top": "tja:blocks/casings/cell_battery/cell.ev_top"
+        }
+      },
+      "iv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.iv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.iv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.iv_top"
+        }
+      },
+      "luv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.luv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.luv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.luv_top"
+        }
+      },
+      "zpm": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.zpm",
+          "bottom": "tja:blocks/casings/cell_battery/cell.zpm_top",
+          "top": "tja:blocks/casings/cell_battery/cell.zpm_top"
+        }
+      },
+      "uv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.uv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.uv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.uv_top"
+        }
+      },
+      "uhv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.uhv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.uhv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.uhv_top"
+        }
+      },
+      "uev": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.uev",
+          "bottom": "tja:blocks/casings/cell_battery/cell.uev_top",
+          "top": "tja:blocks/casings/cell_battery/cell.uev_top"
+        }
+      },
+      "uiv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.uiv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.uiv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.uiv_top"
+        }
+      },
+      "uxv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.uxv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.uxv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.uxv_top"
+        }
+      },
+      "opv": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.opv",
+          "bottom": "tja:blocks/casings/cell_battery/cell.opv_top",
+          "top": "tja:blocks/casings/cell_battery/cell.opv_top"
+        }
+      },
+      "max": {
+        "textures": {
+          "side": "tja:blocks/casings/cell_battery/cell.max",
+          "bottom": "tja:blocks/casings/cell_battery/cell.max_top",
+          "top": "tja:blocks/casings/cell_battery/cell.max_top"
+        }
+      }
+    }
+  }
+}

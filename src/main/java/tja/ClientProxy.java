@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.blocks.TJABlocks;
+import tja.blocks.TJAMetaBlocks;
 import tja.items.TJAItems;
 import tja.rendering.BakedModelLoader;
 import tja.rendering.IBlockModel;
@@ -37,6 +38,7 @@ public class ClientProxy {
         });
         TJAItems.TJ_ITEM_REGISTRY.forEach((location, item) -> ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(location, "inventory")));
         TJAItems.TJ_ITEM_DEFINITION_REGISTRY.forEach((location, itemDefinition) -> ModelLoader.setCustomModelResourceLocation(itemDefinition.maybeItem().orElseThrow(() -> new NullPointerException("Item not found")), 0, new ModelResourceLocation(location, "inventory")));
+        TJAMetaBlocks.registerItemModels();
     }
 
     @SubscribeEvent
