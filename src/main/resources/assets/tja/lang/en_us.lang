@@ -83,3 +83,5 @@ tile.cell_battery.uiv.name=UIV Power Cell
 tile.cell_battery.uxv.name=UXV Power Cell
 tile.cell_battery.opv.name=OPV Power Cell
 tile.cell_battery.max.name=MAX Power Cell
+
+metaitem.supra_solar_panel.name=Supra Solar Panel (MAX)

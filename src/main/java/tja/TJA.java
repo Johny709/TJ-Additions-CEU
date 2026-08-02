@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tja.items.TJAMetaItems;
 import tja.machines.TJAMetaTileEntities;
 import tja.rendering.IItemMeshing;
 
@@ -42,6 +43,7 @@ public class TJA {
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             TJAMetaTileEntities.init();
             TJAMetaBlocks.init();
+            TJAMetaItems.init();
         }
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IHeatInfo.class);
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IRecipeInfo.class);
