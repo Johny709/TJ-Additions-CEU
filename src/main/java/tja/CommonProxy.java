@@ -3,6 +3,7 @@ package tja;
 import gregtech.api.GregTechAPI;
 import gregtech.api.block.VariantItemBlock;
 import gregtech.api.metatileentity.registry.MTEManager;
+import gregtech.api.unification.material.event.MaterialEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -15,6 +16,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import tja.blocks.TJABlocks;
 import tja.blocks.TJAMetaBlocks;
 import tja.items.TJAItems;
+import tja.materials.TJAMaterials;
 import tja.recipes.TJARecipes;
 
 import java.util.function.Function;
@@ -46,7 +48,14 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerMTERegistry(MTEManager.MTERegistryEvent event) {
-        GregTechAPI.mteManager.createRegistry(TJA.MOD_ID);
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+            GregTechAPI.mteManager.createRegistry(TJA.MOD_ID);
+    }
+
+    @SubscribeEvent
+    public static void registerGTMaterials(MaterialEvent event) {
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+            TJAMaterials.init();
     }
 
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {
