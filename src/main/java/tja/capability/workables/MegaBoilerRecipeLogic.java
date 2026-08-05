@@ -4,6 +4,8 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.unification.OreDictUnifier;
+import gregtech.api.unification.ore.OrePrefix;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -197,7 +199,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         final double ashBurnTime = COAL_BURNTIME / this.handler.getParallel();
         if (burnTime >= ashBurnTime) {
             final int amount = (int) ((burnTime / ashBurnTime) * Math.max(0.4, Math.random()));
-            this.itemOutput.add(TJAItemUtils.getItemStackFromName("gregtech:meta_item_1", amount, 2110)); // dark ashes
+            this.itemOutput.add(OreDictUnifier.get(OrePrefix.dust, DarkAsh, amount)); // dark ashes
         }
         return burnTime;
     }
