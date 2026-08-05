@@ -1,6 +1,6 @@
 package tja.capability;
 
-public interface IRecipeInfo {
+public interface IRecipeInfo extends IItemFluidHandlerInfo {
 
     boolean hasProblem();
 

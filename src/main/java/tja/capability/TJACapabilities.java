@@ -10,4 +10,7 @@ public final class TJACapabilities {
 
     @CapabilityInject(IItemFluidHandlerInfo.class)
     public static Capability<IItemFluidHandlerInfo> CAPABILITY_ITEM_FLUID_HANDLING = null;
+
+    @CapabilityInject(IRecipeInfo.class)
+    public static Capability<IRecipeInfo> CAPABILITY_RECIPE_INFO = null;
 }

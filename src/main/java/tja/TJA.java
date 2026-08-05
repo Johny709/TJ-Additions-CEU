@@ -12,6 +12,8 @@ import tja.blocks.TJAMetaBlocks;
 import tja.capability.IHeatInfo;
 import tja.capability.IItemFluidHandlerInfo;
 import tja.capability.IRecipeInfo;
+import tja.capability.TJASimpleCapabilityManager;
+import tja.integration.theoneprobe.TheOneProbeModule;
 import tja.items.TJAItems;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -44,6 +46,7 @@ public class TJA {
             TJAMetaTileEntities.init();
             TJAMetaBlocks.init();
             TJAMetaItems.init();
+            TJASimpleCapabilityManager.init();
         }
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IHeatInfo.class);
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IRecipeInfo.class);
@@ -52,6 +55,8 @@ public class TJA {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        if (TJAValues.isModLoaded(TJAValues.THEONEPROBE_MOD_ID))
+            TheOneProbeModule.init();
         if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
             UPGRADES.put(TJABlocks.SUPER_INTERFACE.maybeItem().orElse(null), 1);
             UPGRADES.put(TJABlocks.SUPER_FLUID_INTERFACE.maybeItem().orElse(null), 1);
