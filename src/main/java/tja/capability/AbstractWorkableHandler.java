@@ -188,16 +188,18 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         this.metaTileEntity.scheduleRenderUpdate();
     }
 
-    public void writeInitialData(PacketBuffer buffer) {
-        buffer.writeBoolean(this.isActive);
-        buffer.writeBoolean(this.hasProblem);
-        buffer.writeBoolean(this.isWorking);
+    @Override
+    public void writeInitialSyncData(@Nonnull PacketBuffer buf) {
+        buf.writeBoolean(this.isActive);
+        buf.writeBoolean(this.hasProblem);
+        buf.writeBoolean(this.isWorking);
     }
 
-    public void receiveInitialData(PacketBuffer buffer) {
-        this.isActive = buffer.readBoolean();
-        this.hasProblem = buffer.readBoolean();
-        this.isWorking = buffer.readBoolean();
+    @Override
+    public void receiveInitialSyncData(@Nonnull PacketBuffer buf) {
+        this.isActive = buf.readBoolean();
+        this.hasProblem = buf.readBoolean();
+        this.isWorking = buf.readBoolean();
     }
 
     @Nonnull
