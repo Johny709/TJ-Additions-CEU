@@ -11,9 +11,9 @@ tja.multiblock.mega_tungstensteel_boiler.description=Mega version of §5Large Tu
 tja.multiblock.mega_boiler.warning=WARNING: Building with freedom wrench is not recommended. The game might crash due to how many blocks there are to build at once!
 tja.multiblock.mega_boiler.parallel.description=Generates §c%sx§7 as much steam as §5Large Boiler.
 
-tj.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
-tj.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)
-tj.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
+tja.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
+tja.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)
+tja.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 

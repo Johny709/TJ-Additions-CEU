@@ -5,6 +5,7 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -34,6 +35,7 @@ import tja.machines.controllers.TJMultiblockControllerBase;
 import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -46,7 +48,7 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
         super(metaTileEntityId);
         this.boilerType = boilerType;
         this.reinitializeStructurePattern();
-        this.recipeLogic.setActiveConsumer(this::setLastActive);
+        this.recipeLogic.setActiveConsumer(this::replaceVariantBlocksActive);
     }
 
     @Override
@@ -113,10 +115,20 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
                 .setWorkingStatus(this.recipeLogic.isWorkingEnabled(), this.recipeLogic.isActive())
                 .addCustom((key, syncer) -> {
                     if (!syncer.syncBoolean(this.isStructureFormed())) return;
-                    final List<FluidStack> fluidInputs = syncer.syncCollection(this.recipeLogic.getFluidInputs(), ByteBufAdapters.FLUID_STACK);
-                    final List<ItemStack> itemInputs = syncer.syncCollection(this.recipeLogic.getItemInputs(), ByteBufAdapters.ITEM_STACK);
-                    final List<FluidStack> fluidOutputs = syncer.syncCollection(this.recipeLogic.getFluidOutputs(), ByteBufAdapters.FLUID_STACK);
-                    final List<ItemStack> itemOutputs = syncer.syncCollection(this.recipeLogic.getItemOutputs(), ByteBufAdapters.ITEM_STACK);
+                    List<FluidStack> fluidInputs = new ArrayList<>();
+                    List<ItemStack> itemInputs = new ArrayList<>();
+                    List<FluidStack> fluidOutputs = new ArrayList<>();
+                    List<ItemStack> itemOutputs = new ArrayList<>();
+                    if (!this.getWorld().isRemote) {
+                        fluidInputs.addAll(this.recipeLogic.getFluidInputs());
+                        itemInputs.addAll(this.recipeLogic.getItemInputs());
+                        fluidOutputs.addAll(this.recipeLogic.getFluidOutputs());
+                        itemOutputs.addAll(this.recipeLogic.getItemOutputs());
+                    }
+                    fluidInputs = syncer.syncCollection(fluidInputs, ByteBufAdapters.FLUID_STACK);
+                    itemInputs = syncer.syncCollection(itemInputs, ByteBufAdapters.ITEM_STACK);
+                    fluidOutputs = syncer.syncCollection(fluidOutputs, ByteBufAdapters.FLUID_STACK);
+                    itemOutputs = syncer.syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
                     final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
                     if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
                         key.add(KeyUtil.lang(syncer.syncString("machine.universal.consuming")));
@@ -198,21 +210,22 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
         panelSyncManager.syncValue("boiler_water_bar", waterSyncValue);
         final FixedIntArraySyncValue fuelSyncValue = new FixedIntArraySyncValue(() -> this.getTotalFluidAmount(this.recipeLogic.getLastBurnFluid(), this.importFluidTank), null);
         panelSyncManager.syncValue("boiler_fuel_bar", fuelSyncValue);
-        final String lastBurnFluid = this.recipeLogic.getLastBurnFluid() != null ? this.recipeLogic.getLastBurnFluid().getLocalizedName() : "";
+        final StringSyncValue lastBurnFluidValue = new StringSyncValue(() -> this.recipeLogic.getLastBurnFluid() != null ? this.recipeLogic.getLastBurnFluid().getLocalizedName() : "");
+        panelSyncManager.syncValue("last_burn_fluid", lastBurnFluidValue);
         bars.add(bar -> bar.progress(() -> heatSyncValue.getValue(1) == 0 ? 0 : 1.0 * heatSyncValue.getValue(0) / heatSyncValue.getValue(1))
-                .texture(GTGuiTextures.PROGRESS_BAR_BOILER_HEAT)
+                .texture(GTGuiTextures.PROGRESS_BAR_FUSION_HEAT)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
                         if (heatSyncValue.getValue(1) != 0)
-                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.heat", heatSyncValue.getValue(0), heatSyncValue.getValue(1), 100 * heatSyncValue.getValue(0) / heatSyncValue.getValue(1)));
+                            tooltip.add(KeyUtil.lang("tja.multiblock.bars.heat", heatSyncValue.getValue(0), heatSyncValue.getValue(1), 100 * heatSyncValue.getValue(0) / heatSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
         bars.add(bar -> bar.progress(() -> waterSyncValue.getValue(1) == 0 ? 0 : 1.0 * waterSyncValue.getValue(0) / waterSyncValue.getValue(1))
-                .texture(GTGuiTextures.PROGRESS_BAR_LCE_OXYGEN)
+                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
                         if (waterSyncValue.getValue(1) != 0)
-                            tooltip.add(KeyUtil.lang("tj.multiblock.bars.fluid", water.getLocalizedName(), waterSyncValue.getValue(0), waterSyncValue.getValue(1), 100 * waterSyncValue.getValue(0) / waterSyncValue.getValue(1)));
+                            tooltip.add(KeyUtil.lang("tja.multiblock.bars.fluid", water.getLocalizedName(), waterSyncValue.getValue(0), waterSyncValue.getValue(1), 100 * waterSyncValue.getValue(0) / waterSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
         bars.add(bar -> bar.progress(() -> fuelSyncValue.getValue(1) == 0 ? 0 : 1.0 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1))
@@ -220,7 +233,7 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
                         if (fuelSyncValue.getValue(1) != 0)
-                            tooltip.add(KeyUtil.lang("tj.multiblocks.bars.fuel", lastBurnFluid, fuelSyncValue.getValue(0), fuelSyncValue.getValue(1), 100 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1)));
+                            tooltip.add(KeyUtil.lang("tja.multiblock.bars.fuel", lastBurnFluidValue.getStringValue(), fuelSyncValue.getValue(0), fuelSyncValue.getValue(1), 100 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
     }
