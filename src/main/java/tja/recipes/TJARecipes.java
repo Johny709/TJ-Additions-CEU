@@ -2,6 +2,8 @@ package tja.recipes;
 
 import com.fulltrix.gcyl.item.GCYLCoreItems;
 import com.fulltrix.gcyl.materials.GCYLMaterials;
+import gregtech.api.GTValues;
+import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Material;
@@ -34,6 +36,18 @@ public class TJARecipes {
                     .output(TJAMetaTileEntities.MEGA_COKE_OVEN)
                     .EUt(30).duration(1200)
                     .buildAndRegister();
+            // mega boilers
+            for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
+                MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);
+                RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                        .input(largeBoiler, 64)
+                        .input(largeBoiler, 64)
+                        .input(largeBoiler, 64)
+                        .input(largeBoiler, 64)
+                        .output(TJAMetaTileEntities.MEGA_BOILERS.get(i))
+                        .EUt(GTValues.VAOC[i + (i == 0 ? 1 : 2)]).duration(1200)
+                        .buildAndRegister();
+            }
             // lv - max power cells
             final List<Material> powerCellPlates = new ArrayList<>(Arrays.asList(Materials.Iron, Materials.WroughtIron, Materials.Lead, Materials.Titanium,
                     Materials.TungstenSteel, Materials.Iridium, Materials.NaquadahAlloy, Materials.Tritanium, Materials.Seaborgium));
