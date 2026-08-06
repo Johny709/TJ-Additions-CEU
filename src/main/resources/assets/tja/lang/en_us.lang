@@ -92,5 +92,8 @@ tile.cell_battery.uxv.name=UXV Power Cell
 tile.cell_battery.opv.name=OPV Power Cell
 tile.cell_battery.max.name=MAX Power Cell
 
+metaitem.creative_cover.tooltip.1=§dCreative Only
+
 metaitem.supra_solar_panel.name=Supra Solar Panel (MAX)
-metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra solar panel§7 is placed in.
+metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra Solar Panel§7 is placed in.
+metaitem.creative_energy_cover.name=Creative Energy Cover
