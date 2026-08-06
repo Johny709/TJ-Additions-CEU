@@ -1,4 +1,4 @@
-package tja.items.behaviors;
+package tja.items.covers;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;

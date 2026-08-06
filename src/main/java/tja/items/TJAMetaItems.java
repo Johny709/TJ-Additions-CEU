@@ -6,6 +6,7 @@ public final class TJAMetaItems {
 
     public static MetaItem<?>.MetaValueItem SUPRA_SOLAR_PANEL;
     public static MetaItem<?>.MetaValueItem CREATIVE_ENERGY_COVER;
+    public static MetaItem<?>.MetaValueItem CREATIVE_ITEM_COVER;
 
     public static void init() {
         final TJAMetaItem1 tjaMetaItem1 = new TJAMetaItem1();
