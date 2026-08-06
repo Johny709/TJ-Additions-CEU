@@ -1,7 +1,7 @@
 package tja;
 
 import appeng.api.config.Upgrades;
-import gregtech.api.capability.SimpleCapabilityManager;
+import codechicken.lib.texture.TextureUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -9,10 +9,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJABlocks;
 import tja.blocks.TJAMetaBlocks;
-import tja.capability.IHeatInfo;
-import tja.capability.IRecipeInfo;
 import tja.capability.TJASimpleCapabilityManager;
 import tja.integration.theoneprobe.TheOneProbeModule;
+import tja.items.TJACoverBehaviors;
 import tja.items.TJAItems;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -22,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import tja.items.TJAMetaItems;
 import tja.machines.TJAMetaTileEntities;
 import tja.rendering.IItemMeshing;
+import tja.textures.TJATextures;
 
 import static tja.items.TJAItems.UPGRADES;
 
@@ -46,11 +46,15 @@ public class TJA {
             TJAMetaBlocks.init();
             TJAMetaItems.init();
             TJASimpleCapabilityManager.init();
+            if (event.getSide() == Side.CLIENT)
+                TextureUtils.addIconRegister(TJATextures::register);
         }
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+            TJACoverBehaviors.init();
         if (TJAValues.isModLoaded(TJAValues.THEONEPROBE_MOD_ID)) {
             TheOneProbeModule.registerElements();
             TheOneProbeModule.init();

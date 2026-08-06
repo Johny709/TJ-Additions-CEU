@@ -93,3 +93,4 @@ tile.cell_battery.opv.name=OPV Power Cell
 tile.cell_battery.max.name=MAX Power Cell
 
 metaitem.supra_solar_panel.name=Supra Solar Panel (MAX)
+metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra solar panel§7 is placed in.
