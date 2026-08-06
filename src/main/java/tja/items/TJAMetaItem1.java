@@ -5,6 +5,7 @@ import gregtech.api.items.metaitem.StandardMetaItem;
 import net.minecraft.util.ResourceLocation;
 import tja.TJA;
 import tja.items.behaviors.CreativeEnergyCoverBehavior;
+import tja.items.behaviors.CreativeFluidCoverBehavior;
 import tja.items.behaviors.CreativeItemCoverBehavior;
 import tja.items.behaviors.SupraSolarPanelBehavior;
 
@@ -15,6 +16,7 @@ public class TJAMetaItem1 extends StandardMetaItem {
         TJAMetaItems.SUPRA_SOLAR_PANEL = this.addItem(0, "supra_solar_panel").addComponents(new SupraSolarPanelBehavior());
         TJAMetaItems.CREATIVE_ENERGY_COVER = this.addItem(1, "creative_energy_cover").addComponents(new CreativeEnergyCoverBehavior());
         TJAMetaItems.CREATIVE_ITEM_COVER = this.addItem(2, "creative_item_cover").addComponents(new CreativeItemCoverBehavior());
+        TJAMetaItems.CREATIVE_FLUID_COVER = this.addItem(3, "creative_fluid_cover").addComponents(new CreativeFluidCoverBehavior());
     }
 
     @Override

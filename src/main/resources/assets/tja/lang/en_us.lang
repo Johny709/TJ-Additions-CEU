@@ -96,7 +96,10 @@ tile.cell_battery.max.name=MAX Power Cell
 metaitem.creative_cover.tooltip.1=§dCreative Only
 
 metaitem.supra_solar_panel.name=Supra Solar Panel (MAX)
-metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra Solar Panel§7 is placed in.
 metaitem.creative_energy_cover.name=Creative Energy Cover
 metaitem.creative_item_cover.name=Creative Item Cover
+metaitem.creative_fluid_cover.name=Creative Fluid Cover
+
+metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra Solar Panel§7 is placed in.
 metaitem.creative_item_cover.tooltip.1=Provides unlimited §6items.§7 Put or drag §6items§7 into slots to generate them. throughput is determined by §6item's§7 current stack size. §fClick§7 on slot to adjust throughput.
+metaitem.creative_fluid_cover.tooltip.1=Provides unlimited §bfluids.§7 Put or drag §bfluids§7 into slots to generate them. §bClick§7 on fluid slot to change fluid amount.
