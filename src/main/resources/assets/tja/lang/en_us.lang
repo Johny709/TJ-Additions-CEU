@@ -22,6 +22,7 @@ tja.machine.universal.work_paused=§eWork Paused.
 tja.machine.universal.has_problems=§6Has Problems.
 tja.machine.universal.idling=§7Idling.
 tja.machine.universal.running=§aRunning.
+tja.machine.universal.ticks=Ticks: §b%s
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 
