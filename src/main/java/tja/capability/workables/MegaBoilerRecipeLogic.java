@@ -15,7 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import tja.capability.AbstractWorkableHandler;
 import tja.capability.IHeatInfo;
-import tja.capability.IItemFluidHandlerInfo;
 import tja.capability.handler.IBoilerHandler;
 import tja.util.TJAItemUtils;
 
@@ -24,9 +23,8 @@ import java.util.*;
 
 import static gregtech.api.unification.material.Materials.*;
 import static tja.capability.TJACapabilities.CAPABILITY_HEAT;
-import static tja.capability.TJACapabilities.CAPABILITY_ITEM_FLUID_HANDLING;
 
-public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandler> implements IHeatInfo, IItemFluidHandlerInfo {
+public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandler> implements IHeatInfo {
 
     private static final int CONSUMPTION_MULTIPLIER = 100;
     private static final int BOILING_TEMPERATURE = 100;
@@ -247,8 +245,6 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
     public <T> T getCapability(Capability<T> capability) {
         if (capability == CAPABILITY_HEAT)
             return CAPABILITY_HEAT.cast(this);
-        if (capability == CAPABILITY_ITEM_FLUID_HANDLING)
-            return CAPABILITY_ITEM_FLUID_HANDLING.cast(this);
         return super.getCapability(capability);
     }
 
@@ -286,21 +282,25 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
         return this.handler.getMaxTemperature();
     }
 
+    @Nonnull
     @Override
     public List<ItemStack> getItemInputs() {
         return this.itemInput;
     }
 
+    @Nonnull
     @Override
     public List<ItemStack> getItemOutputs() {
         return this.itemOutput;
     }
 
+    @Nonnull
     @Override
     public List<FluidStack> getFluidInputs() {
         return this.fluidInput;
     }
 
+    @Nonnull
     @Override
     public List<FluidStack> getFluidOutputs() {
         return this.fluidOutput;

@@ -6,7 +6,6 @@ public class TJASimpleCapabilityManager {
 
     public static void init() {
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IHeatInfo.class);
-        SimpleCapabilityManager.registerCapabilityWithNoDefault(IItemFluidHandlerInfo.class);
         SimpleCapabilityManager.registerCapabilityWithNoDefault(IRecipeInfo.class);
     }
 }

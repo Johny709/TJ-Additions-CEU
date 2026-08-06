@@ -231,6 +231,8 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
 
     @Override
     public <T> T getCapability(Capability<T> capability) {
+        if (capability == TJACapabilities.CAPABILITY_RECIPE_INFO)
+            return TJACapabilities.CAPABILITY_RECIPE_INFO.cast(this);
         if (capability == GregtechTileCapabilities.CAPABILITY_CONTROLLABLE)
             return GregtechTileCapabilities.CAPABILITY_CONTROLLABLE.cast(this);
         return capability == GregtechTileCapabilities.CAPABILITY_WORKABLE ? GregtechTileCapabilities.CAPABILITY_WORKABLE.cast(this) : null;
