@@ -3,18 +3,32 @@ package tja.machines.multiblocks;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
+import com.cleanroommc.modularui.api.GuiAxis;
+import com.cleanroommc.modularui.api.IPanelHandler;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.ItemDrawable;
+import com.cleanroommc.modularui.drawable.Rectangle;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.utils.Color;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.SliderWidget;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
+import gregtech.api.mui.GTGuis;
 import gregtech.api.mui.sync.FixedIntArraySyncValue;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -24,8 +38,8 @@ import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.BoilerType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +49,6 @@ import tja.machines.controllers.TJMultiblockControllerBase;
 import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -108,97 +121,18 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addCustom((key, syncer) -> {
                     if (!syncer.syncBoolean(this.isStructureFormed())) return;
-                    key.add(KeyUtil.lang(syncer.syncString("gregtech.multiblock.hpca.temperature"), syncer.syncLong(this.recipeLogic.heat())));
-                    key.add(KeyUtil.lang(syncer.syncString("gregtech.multiblock.large_boiler.steam_output"), syncer.syncInt(this.recipeLogic.getProduction())));
+                    key.add(KeyUtil.lang("gregtech.fluid.temperature", syncer.syncLong(this.recipeLogic.heat())));
+                    key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.large_boiler.steam_output", syncer.syncString(String.format("§b%s L/t", this.recipeLogic.getProduction()))));
+                    key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.large_boiler.efficiency", syncer.syncString(String.format("§a%s%%", this.getHeatEfficiencyMultiplier() * 100))));
+                    key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.large_boiler.throttle", syncer.syncString(String.format("§a%s%%", this.recipeLogic.getThrottleEfficiency() * 100))));
                 })
                 .addProgressLine(this.recipeLogic.getProgress(), this.recipeLogic.getMaxProgress())
+                .addRunningPerfectlyLine(this.recipeLogic.isActive())
                 .setWorkingStatus(this.recipeLogic.isWorkingEnabled(), this.recipeLogic.isActive())
                 .addCustom((key, syncer) -> {
                     if (!syncer.syncBoolean(this.isStructureFormed())) return;
-                    List<FluidStack> fluidInputs = new ArrayList<>();
-                    List<ItemStack> itemInputs = new ArrayList<>();
-                    List<FluidStack> fluidOutputs = new ArrayList<>();
-                    List<ItemStack> itemOutputs = new ArrayList<>();
-                    if (!this.getWorld().isRemote) {
-                        fluidInputs.addAll(this.recipeLogic.getFluidInputs());
-                        itemInputs.addAll(this.recipeLogic.getItemInputs());
-                        fluidOutputs.addAll(this.recipeLogic.getFluidOutputs());
-                        itemOutputs.addAll(this.recipeLogic.getItemOutputs());
-                    }
-                    fluidInputs = syncer.syncCollection(fluidInputs, ByteBufAdapters.FLUID_STACK);
-                    itemInputs = syncer.syncCollection(itemInputs, ByteBufAdapters.ITEM_STACK);
-                    fluidOutputs = syncer.syncCollection(fluidOutputs, ByteBufAdapters.FLUID_STACK);
-                    itemOutputs = syncer.syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
-                    final int maxProgress = syncer.syncInt(this.recipeLogic.getMaxProgress());
-                    if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
-                        key.add(KeyUtil.lang(syncer.syncString("machine.universal.consuming")));
-                    for (FluidStack fluidStack : fluidInputs) {
-                        MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
-                    }
-                    for (ItemStack stack : itemInputs) {
-                        MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
-                    }
-                    if (!fluidOutputs.isEmpty() || !itemOutputs.isEmpty()) {
-                        key.add(KeyUtil.lang("")); // new line
-                        key.add(KeyUtil.lang(syncer.syncString("gregtech.gui.multiblock.recipe_producing")));
-                    }
-                    for (FluidStack fluidStack : fluidOutputs) {
-                        MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
-                    }
-                    for (ItemStack stack : itemOutputs) {
-                        MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
-                    }
+                    MUIUtils.addRecipeInputOutputLine(key, syncer, this.recipeLogic, this.getWorld());
                 });
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
-        super.renderMetaTileEntity(renderState, translation, pipeline);
-        Textures.MULTIBLOCK_WORKABLE_OVERLAY.renderOrientedState(renderState, translation, pipeline, this.frontFacing, this.recipeLogic.isActive(), this.recipeLogic.isWorkingEnabled());
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return this.boilerType.casingRenderer;
-    }
-
-    @Override
-    public double getHeatEfficiencyMultiplier() {
-        final int efficiency = this.boilerType == BoilerType.TUNGSTENSTEEL ? 32 : this.boilerType == BoilerType.TITANIUM ? 31 : this.boilerType == BoilerType.STEEL ? 30 : 28;
-        final double temperature = this.recipeLogic.heat() / (this.getMaxTemperature() * 1.0);
-        return 1.0 + Math.round(efficiency * temperature) / 100.0;
-    }
-
-    @Override
-    public double getFuelConsumptionMultiplier() {
-        return this.boilerType == BoilerType.TUNGSTENSTEEL ? 5.4 : this.boilerType == BoilerType.TITANIUM ? 3.0 : this.boilerType == BoilerType.STEEL ? 1.6 : 1.0;
-    }
-
-    @Override
-    public int getBaseSteamOutput() {
-        return this.boilerType.steamPerTick();
-    }
-
-    @Override
-    public int getMaxTemperature() {
-        return this.boilerType == BoilerType.TUNGSTENSTEEL ? 7800 : this.boilerType == BoilerType.TITANIUM ? 3700 : this.boilerType == BoilerType.STEEL ? 1600 : 900;
-    }
-
-    @Override
-    public int getParallel() {
-        return 512;
-    }
-
-    @Override
-    public int getProgressBarCount() {
-        return 3;
-    }
-
-    @Override
-    public GTGuiTheme getUITheme() {
-        return this.boilerType == BoilerType.BRONZE ? GTGuiTheme.BRONZE : this.boilerType == BoilerType.STEEL ? GTGuiTheme.STEEL : super.getUITheme();
     }
 
     @Override
@@ -236,5 +170,143 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
                             tooltip.add(KeyUtil.lang("tja.multiblock.bars.fuel", lastBurnFluidValue.getStringValue(), fuelSyncValue.getValue(0), fuelSyncValue.getValue(1), 100 * fuelSyncValue.getValue(0) / fuelSyncValue.getValue(1)));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
+    }
+
+    @Override
+    protected MultiblockUIFactory createUIFactory() {
+        return super.createUIFactory()
+                .createFlexButton((guiData, syncManager) -> {
+                    final IPanelHandler throttle = syncManager.syncedPanel("throttle_panel", true, this::makeThrottlePanel);
+
+                    return new ButtonWidget<>()
+                            .size(18)
+                            .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY.asIcon().size(16))
+                            .addTooltipLine(IKey.lang("gregtech.multiblock.large_boiler.throttle_button.tooltip"))
+                            .onMousePressed(i -> {
+                                if (throttle.isPanelOpen()) {
+                                    throttle.closePanel();
+                                } else {
+                                    throttle.openPanel();
+                                }
+                                return true;
+                            });
+                });
+    }
+
+    private ModularPanel makeThrottlePanel(PanelSyncManager syncManager, IPanelHandler syncHandler) {
+        final StringSyncValue throttleValue = new StringSyncValue(() -> this.recipeLogic.getThrottlePercentage() + "%", str -> {
+            try {
+                if (str.charAt(str.length() - 1) == '%') {
+                    str = str.substring(0, str.length() - 1);
+                }
+                this.recipeLogic.setThrottlePercentage(Integer.parseInt(str));
+            } catch (NumberFormatException ignored) {
+
+            }
+        });
+        final DoubleSyncValue sliderValue = new DoubleSyncValue(() -> (double) this.recipeLogic.getThrottlePercentage() / 100,
+                d -> this.recipeLogic.setThrottlePercentage((int) (d * 100)));
+
+        return GTGuis.createPopupPanel("boiler_throttle", 116, 53)
+                .child(Flow.row()
+                        .pos(4, 4)
+                        .height(16)
+                        .coverChildrenWidth()
+                        .child(new ItemDrawable(getStackForm())
+                                .asWidget()
+                                .size(16)
+                                .marginRight(4))
+                        .child(IKey.lang("gregtech.multiblock.large_boiler.throttle.title")
+                                .asWidget()
+                                .heightRel(1.0f)))
+                .child(Flow.row()
+                        .top(20)
+                        .margin(4, 0)
+                        .coverChildrenHeight()
+                        .child(new SliderWidget()
+                                .background(new Rectangle().color(Color.BLACK.brighter(2)).asIcon()
+                                        .height(8))
+                                .bounds(0, 1)
+                                .setAxis(GuiAxis.X)
+                                .value(sliderValue)
+                                .widthRel(0.7f)
+                                .height(20))
+                        // todo switch this text field with GTTextFieldWidget in PR #2700
+                        .child(new TextFieldWidget()
+                                .widthRel(0.3f)
+                                .height(20)
+                                // TODO proper color
+                                .setTextColor(Color.WHITE.darker(1))
+                                .setValidator(str -> {
+                                    if (str.charAt(str.length() - 1) == '%') {
+                                        str = str.substring(0, str.length() - 1);
+                                    }
+
+                                    try {
+                                        long l = Long.parseLong(str);
+                                        if (l < 0) l = 0;
+                                        else if (l > 100) l = 100;
+                                        return String.valueOf(l);
+                                    } catch (NumberFormatException ignored) {
+                                        return throttleValue.getValue();
+                                    }
+                                })
+                                .value(throttleValue)
+                                .background(GTGuiTextures.DISPLAY)));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
+        super.renderMetaTileEntity(renderState, translation, pipeline);
+        Textures.MULTIBLOCK_WORKABLE_OVERLAY.renderOrientedState(renderState, translation, pipeline, this.frontFacing, this.recipeLogic.isActive(), this.recipeLogic.isWorkingEnabled());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        if (sourcePart instanceof IMultiblockAbilityPart) {
+            final MultiblockAbility<?> ability = ((IMultiblockAbilityPart<?>) sourcePart).getAbility();
+            if (ability == MultiblockAbility.EXPORT_FLUIDS)
+                return this.boilerType.casingRenderer;
+        }
+        return sourcePart == null ? this.boilerType.casingRenderer : this.recipeLogic.isActive() ? this.boilerType.fireboxActiveRenderer : this.boilerType.fireboxIdleRenderer;
+    }
+
+    @Override
+    public double getHeatEfficiencyMultiplier() {
+        final int efficiency = this.boilerType == BoilerType.TUNGSTENSTEEL ? 32 : this.boilerType == BoilerType.TITANIUM ? 31 : this.boilerType == BoilerType.STEEL ? 30 : 28;
+        final double temperature = this.recipeLogic.heat() / (this.getMaxTemperature() * 1.0);
+        return 1.0 + Math.round(efficiency * temperature) / 100.0;
+    }
+
+    @Override
+    public double getFuelConsumptionMultiplier() {
+        return this.boilerType == BoilerType.TUNGSTENSTEEL ? 5.4 : this.boilerType == BoilerType.TITANIUM ? 3.0 : this.boilerType == BoilerType.STEEL ? 1.6 : 1.0;
+    }
+
+    @Override
+    public int getBaseSteamOutput() {
+        return this.boilerType.steamPerTick();
+    }
+
+    @Override
+    public int getMaxTemperature() {
+        return this.boilerType == BoilerType.TUNGSTENSTEEL ? 7800 : this.boilerType == BoilerType.TITANIUM ? 3700 : this.boilerType == BoilerType.STEEL ? 1600 : 900;
+    }
+
+    @Override
+    public int getParallel() {
+        return 512;
+    }
+
+    @Override
+    public int getProgressBarCount() {
+        return 3;
+    }
+
+    @Override
+    public GTGuiTheme getUITheme() {
+        return this.boilerType == BoilerType.BRONZE ? GTGuiTheme.BRONZE : this.boilerType == BoilerType.STEEL ? GTGuiTheme.STEEL : super.getUITheme();
     }
 }

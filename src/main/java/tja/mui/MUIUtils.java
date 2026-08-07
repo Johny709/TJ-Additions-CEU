@@ -1,17 +1,55 @@
 package tja.mui;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.Operation;
+import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.drawable.GTObjectDrawable;
 import gregtech.api.util.KeyUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import tja.capability.IRecipeInfo;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MUIUtils {
+    
+    public static void addRecipeInputOutputLine(KeyManager key, UISyncer syncer, IRecipeInfo recipeInfo, World world) {
+        List<FluidStack> fluidInputs = new ArrayList<>();
+        List<ItemStack> itemInputs = new ArrayList<>();
+        List<FluidStack> fluidOutputs = new ArrayList<>();
+        List<ItemStack> itemOutputs = new ArrayList<>();
+        if (!world.isRemote) {
+            fluidInputs.addAll(recipeInfo.getFluidInputs());
+            itemInputs.addAll(recipeInfo.getItemInputs());
+            fluidOutputs.addAll(recipeInfo.getFluidOutputs());
+            itemOutputs.addAll(recipeInfo.getItemOutputs());
+        }
+        fluidInputs = syncer.syncCollection(fluidInputs, ByteBufAdapters.FLUID_STACK);
+        itemInputs = syncer.syncCollection(itemInputs, ByteBufAdapters.ITEM_STACK);
+        fluidOutputs = syncer.syncCollection(fluidOutputs, ByteBufAdapters.FLUID_STACK);
+        itemOutputs = syncer.syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
+        final int maxProgress = syncer.syncInt(recipeInfo.getMaxProgress());
+        if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
+            key.add(KeyUtil.lang(TextFormatting.GRAY, "machine.universal.consuming"));
+        for (FluidStack fluidStack : fluidInputs)
+            MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
+        for (ItemStack stack : itemInputs)
+            MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
+        if (!fluidOutputs.isEmpty() || !itemOutputs.isEmpty()) {
+            key.add(KeyUtil.lang("")); // new line
+            key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.gui.multiblock.recipe_producing"));
+        }
+        for (FluidStack fluidStack : fluidOutputs)
+            MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
+        for (ItemStack stack : itemOutputs)
+            MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
+    }
 
     /**
      * Add an item output of a recipe to the display.

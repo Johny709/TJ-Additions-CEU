@@ -262,6 +262,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
 
     public void setThrottlePercentage(int throttlePercentage) {
         this.throttlePercentage = throttlePercentage;
+        this.metaTileEntity.markDirty();
     }
 
     public int getThrottlePercentage() {
