@@ -11,6 +11,7 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
 import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -75,12 +76,13 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed / 2)));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
-        final ModularPanel panel = ModularPanel.defaultPanel("creative_item_cover_gui", 176, 187);
+        final ModularPanel panel = ModularPanel.defaultPanel("creative_fluid_cover_gui", 176, 187);
         for (int i = 0; i < this.fluidFilter.getTanks(); i++) {
             panel.child(new FluidSlot()
                     .left(61 + (18 * (i % 3)))
                     .top(25 + (18 * (i / 3)))
-                    .syncHandler(this.fluidFilter.getTankAt(i).getDelegate()));
+                    .syncHandler(new FluidSlotSyncHandler(this.fluidFilter.getTankAt(i).getDelegate())
+                            .phantom(true)));
         }
         return panel.bindPlayerInventory()
                 .child(new RichTextWidget()
