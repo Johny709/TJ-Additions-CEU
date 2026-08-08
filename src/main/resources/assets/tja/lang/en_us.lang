@@ -3,6 +3,9 @@ tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
 tja.machine.mega_steel_boiler.name=Mega Steel Boiler (MSB)
 tja.machine.mega_titanium_boiler.name=Mega Titanium Boiler (MTB)
 tja.machine.mega_tungstensteel_boiler.name=Mega TungstenSteel Boiler (MTSB)
+tja.machine.industrial_fusion_reactor.mk1.name=Industrial Fusion Reactor Controller MK1 (IFRC1)
+tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Controller MK2 (IFRC2)
+tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
 
 tja.multiblock.mega_bronze_boiler.description=Mega version of §5Large Bronze Boiler.
 tja.multiblock.mega_steel_boiler.description=Mega version of §5Large Steel Boiler.
@@ -10,6 +13,11 @@ tja.multiblock.mega_titanium_boiler.description=Mega version of §5Large Titaniu
 tja.multiblock.mega_tungstensteel_boiler.description=Mega version of §5Large Tungstensteel Boiler.
 tja.multiblock.mega_boiler.warning=WARNING: Building with freedom wrench is not recommended. The game might crash due to how many blocks there are to build at once!
 tja.multiblock.mega_boiler.parallel.description=Generates §c%sx§7 as much steam as §5Large Boiler.
+
+tja.multiblock.parallel.layer.increment=Increased slices to: §b%,d
+tja.multiblock.parallel.layer.decrement=Decreased slices to: §b%,d
+tja.multiblock.parallel.layer.increment.fail=Already reached slices layers: §b%,d
+tja.multiblock.parallel.layer.decrement.fail=Already reached slices layers: §b%,d
 
 tja.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
 tja.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)

@@ -12,6 +12,8 @@ public class TJAMaterials {
         Materials.Tritanium.addFlags(MaterialFlags.GENERATE_DOUBLE_PLATE);
         Materials.Seaborgium.addFlags(MaterialFlags.GENERATE_DOUBLE_PLATE);
         Materials.Bohrium.addFlags(MaterialFlags.GENERATE_DOUBLE_PLATE);
+        Materials.Einsteinium.addFlags(MaterialFlags.GENERATE_DENSE);
+        Materials.Mendelevium.addFlags(MaterialFlags.GENERATE_DENSE);
         if (TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID)) {
             GCYLMaterials.Adamantium.addFlags(MaterialFlags.GENERATE_DOUBLE_PLATE);
             GCYLMaterials.Vibranium.addFlags(MaterialFlags.GENERATE_DOUBLE_PLATE);

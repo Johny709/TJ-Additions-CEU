@@ -22,6 +22,7 @@ public class TJAValues {
     public static final String AE2_MOD_ID = "appliedenergistics2";
     public static final String GCYL_MOD_ID = "gcyl";
     public static final String THEONEPROBE_MOD_ID = "theoneprobe";
+    public static final String SUPERCRITICAL_MOD_ID = "supercritical";
     public static final BlockPos DUMMY_POS = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final IFluidTank DUMMY_TANK = new FluidTank(0);
     public static final BasicEnergyHandler DUMMY_ENERGY = new BasicEnergyHandler(0);
