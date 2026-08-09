@@ -1,5 +1,6 @@
 package tja.integration.theoneprobe;
 
+import gregtech.api.GTValues;
 import gregtech.integration.theoneprobe.provider.CapabilityInfoProvider;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -12,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
 import tja.integration.theoneprobe.impl.ElementFluidStack;
+import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -29,6 +31,10 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         final List<ItemStack> itemOutputs = recipeInfo.getItemOutputs();
         final List<FluidStack> fluidInputs = recipeInfo.getFluidInputs();
         final List<FluidStack> fluidOutputs = recipeInfo.getFluidOutputs();
+        if (recipeInfo.getEnergyPerTick() > 0)
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + String.format("{*tja.machine.universal.eut[*%s;%s*]*}",
+                    recipeInfo.getEnergyPerTick(),
+                    GTValues.VOCNF[TJAUtility.getTierFromVoltage(recipeInfo.getEnergyPerTick())]));
         if (recipeInfo.hasProblem()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + "{*tja.machine.universal.has_problems*}");
         } else if (recipeInfo.isActive()) {
