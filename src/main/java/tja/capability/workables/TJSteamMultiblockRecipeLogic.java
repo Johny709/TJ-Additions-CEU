@@ -42,6 +42,11 @@ public class TJSteamMultiblockRecipeLogic extends MultiblockRecipeLogic {
     }
 
     @Override
+    protected long getMaxParallelVoltage() {
+        return GTValues.V[GTValues.LV] * this.getParallelLimit();
+    }
+
+    @Override
     public long getMaxVoltage() {
         return GTValues.V[GTValues.LV];
     }
