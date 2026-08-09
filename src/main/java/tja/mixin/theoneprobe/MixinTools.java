@@ -19,7 +19,6 @@ public abstract class MixinTools {
             final String middle = s.substring(0, startFormat);
             final String[] format = s.substring(startFormat + 2, endFormat).split(";");
             return I18n.format(middle, format);
-        }
-        return original.call(s);
+        } else return original.call(s);
     }
 }

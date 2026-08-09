@@ -130,6 +130,7 @@ public class TJARecipes {
                         .input(MetaItems.EMITTER_UV, 16)
                         .input(OrePrefix.plateDense, Materials.Mendelevium, 7)
                         .input(OrePrefix.plateDense, Materials.Seaborgium, 7)
+                        .input(OrePrefix.circuit, MarkerMaterials.Tier.UHV, 64)
                         .input(MetaTileEntities.FUSION_REACTOR[2])
                         .fluidInputs(Materials.SolderingAlloy.getFluid(5760), Materials.Lubricant.getFluid(16000),
                                 Materials.Copernicium.getFluid(5760), Materials.Meitnerium.getFluid(5760))

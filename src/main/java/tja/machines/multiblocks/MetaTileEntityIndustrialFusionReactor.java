@@ -56,14 +56,20 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+import tja.capability.IRecipeInfo;
+import tja.capability.TJACapabilities;
 import tja.machines.controllers.TJExtendableMultiblockController;
 
 import javax.annotation.Nonnull;
@@ -279,7 +285,7 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
     public void renderMetaTileEntity(double x, double y, double z, float partialTicks) {
         if (this.hasFusionRingColor() && !this.registeredBloomRenderTicket) {
             this.registeredBloomRenderTicket = true;
-            BloomEffectUtil.registerBloomRender(FusionBloomSetup.INSTANCE, getBloomType(), this, this);
+            BloomEffectUtil.registerBloomRender(IndustrialFusionBloomSetup.INSTANCE, getBloomType(), this, this);
         }
     }
 
@@ -298,8 +304,8 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
         EnumFacing.Axis axis = RelativeDirection.UP.getRelativeFacing(getFrontFacing(), getUpwardsFacing(), isFlipped())
                 .getAxis();
 
-        buffer.begin(GL11.GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
         for (int i = 0; i < this.slices; i++) {
+            buffer.begin(GL11.GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
             RenderBufferHelper.renderRing(buffer,
                     getPos().getX() - context.cameraX() + relativeBack.getXOffset() * 7 + 0.5,
                     getPos().getY() + (i * 2) - context.cameraY() + relativeBack.getYOffset() * 7 + 0.5,
@@ -314,6 +320,13 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
     @SideOnly(Side.CLIENT)
     public boolean shouldRenderBloomEffect(@Nonnull EffectRenderContext context) {
         return this.hasFusionRingColor() && context.camera().isBoundingBoxInFrustum(getRenderBoundingBox());
+    }
+
+    @Override
+    public void receiveCustomData(int dataId, PacketBuffer buf) {
+        super.receiveCustomData(dataId, buf);
+        if (dataId == GregtechDataCodes.UPDATE_COLOR)
+            this.fusionRingColor = buf.readVarInt();
     }
 
     @Override
@@ -395,7 +408,7 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
         return this.heat;
     }
 
-    public class IndustrialFusionRecipeLogic extends MultiblockRecipeLogic {
+    public class IndustrialFusionRecipeLogic extends MultiblockRecipeLogic implements IRecipeInfo {
 
         public IndustrialFusionRecipeLogic(MetaTileEntityIndustrialFusionReactor tileEntity) {
             super(tileEntity);
@@ -485,12 +498,41 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
         public int getParallelLimit() {
             return getSlices();
         }
+
+        @Override
+        public <T> T getCapability(Capability<T> capability) {
+            if (capability == TJACapabilities.CAPABILITY_RECIPE_INFO)
+                return TJACapabilities.CAPABILITY_RECIPE_INFO.cast(this);
+            return super.getCapability(capability);
+        }
+
+        @Nonnull
+        @Override
+        public List<FluidStack> getFluidOutputs() {
+            return this.fluidOutputs;
+        }
+
+        @Nonnull
+        @Override
+        public List<ItemStack> getItemOutputs() {
+            return this.itemOutputs;
+        }
+
+        @Override
+        public boolean hasProblem() {
+            return false;
+        }
+
+        @Override
+        public long getEnergyPerTick() {
+            return 0; // already handled by other TOP info provider
+        }
     }
 
     @SideOnly(Side.CLIENT)
-    private static final class FusionBloomSetup implements IRenderSetup {
+    private static final class IndustrialFusionBloomSetup implements IRenderSetup {
 
-        private static final FusionBloomSetup INSTANCE = new FusionBloomSetup();
+        private static final IndustrialFusionBloomSetup INSTANCE = new IndustrialFusionBloomSetup();
 
         float lastBrightnessX;
         float lastBrightnessY;
