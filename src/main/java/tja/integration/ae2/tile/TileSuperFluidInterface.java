@@ -31,9 +31,10 @@ public class TileSuperFluidInterface extends TileFluidInterface implements IGuiH
     }
 
     @Override
-    public void setPriority(String text, String id) {
-        this.getDualityFluidInterface().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(text))));
+    public boolean setPriority(String priority) {
+        this.getDualityFluidInterface().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
+        return true;
     }
 
     @Override

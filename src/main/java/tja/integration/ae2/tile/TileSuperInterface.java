@@ -10,10 +10,14 @@ import com.circulation.random_complement.common.interfaces.RCIConfigurableObject
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.blocks.TJABlocks;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockSuperInterface;
@@ -24,6 +28,12 @@ public class TileSuperInterface extends TileInterface implements IGuiHolder<PosG
 
     public TileSuperInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(TJA.MOD_ID, mainPanel);
     }
 
     @Override
@@ -50,7 +60,7 @@ public class TileSuperInterface extends TileInterface implements IGuiHolder<PosG
 
     @Override
     public void setInterfaceTerminal(boolean interfaceTerminal) {
-        this.getInterfaceDuality().getConfigManager().putSetting(Settings.INTERFACE_TERMINAL, interfaceTerminal ? YesNo.YES : YesNo.NO);
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.INTERFACE_TERMINAL, interfaceTerminal ? YesNo.NO : YesNo.YES);
         this.markDirty();
     }
 
@@ -99,9 +109,10 @@ public class TileSuperInterface extends TileInterface implements IGuiHolder<PosG
     }
 
     @Override
-    public void setPriority(String text, String id) {
-        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(text))));
+    public boolean setPriority(String priority) {
+        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
+        return true;
     }
 
     @Override

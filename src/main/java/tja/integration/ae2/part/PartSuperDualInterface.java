@@ -215,9 +215,10 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
     }
 
     @Override
-    public void setPriority(String text, String id) {
-        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(text))));
+    public boolean setPriority(String priority) {
+        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.getTile().markDirty();
+        return true;
     }
 
     @Override

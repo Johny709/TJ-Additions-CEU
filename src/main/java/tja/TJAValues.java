@@ -23,6 +23,7 @@ public class TJAValues {
     public static final String GCYL_MOD_ID = "gcyl";
     public static final String THEONEPROBE_MOD_ID = "theoneprobe";
     public static final String SUPERCRITICAL_MOD_ID = "supercritical";
+    public static final String RANDOM_COMPLEMENT_MOD_ID = "random_complement";
     public static final BlockPos DUMMY_POS = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final IFluidTank DUMMY_TANK = new FluidTank(0);
     public static final BasicEnergyHandler DUMMY_ENERGY = new BasicEnergyHandler(0);
@@ -30,6 +31,8 @@ public class TJAValues {
     public static final IItemHandlerModifiable DUMMY_ITEM_HANDLER = new ItemHandlerList(Collections.emptyList());
     public static final DecimalFormat thousandFormat = new DecimalFormat(",###");
     public static final DecimalFormat thousandTwoPlaceFormat = new DecimalFormat(",##0.00");
+    public static final String[] LOCKING_MODE_TOOLTIP_TITLE = new String[]{"gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode"};
+    public static final String[] LOCKING_MODE_TOOLTIP_DESCRIPTION = new String[]{"gui.tooltips.appliedenergistics2.LockCraftingModeNone", "gui.tooltips.appliedenergistics2.LockCraftingUntilRedstonePulse", "gui.tooltips.appliedenergistics2.LockCraftingWhileRedstoneHigh", "gui.tooltips.appliedenergistics2.LockCraftingWhileRedstoneLow", "gui.tooltips.appliedenergistics2.LockCraftingUntilResultReturned"};
     private static final ConcurrentMap<String, Boolean> IS_MOD_LOADED_CACHE = new ConcurrentHashMap<>();
 
     public static boolean isModLoaded(String modid) {

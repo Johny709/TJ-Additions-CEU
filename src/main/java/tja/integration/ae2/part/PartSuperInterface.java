@@ -15,6 +15,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJA;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockSuperInterface;
@@ -57,6 +60,12 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
             GuiFactories.sidedTileEntity().open(player, tileCableBus.getPos(), this.getSide().getFacing());
         }
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(TJA.MOD_ID, mainPanel);
     }
 
     @Override
@@ -95,7 +104,7 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
 
     @Override
     public void setInterfaceTerminal(boolean interfaceTerminal) {
-        this.getInterfaceDuality().getConfigManager().putSetting(Settings.INTERFACE_TERMINAL, interfaceTerminal ? YesNo.YES : YesNo.NO);
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.INTERFACE_TERMINAL, interfaceTerminal ? YesNo.NO : YesNo.YES);
         this.getTile().markDirty();
     }
 
@@ -144,9 +153,10 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
     }
 
     @Override
-    public void setPriority(String text, String id) {
-        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(text))));
+    public boolean setPriority(String priority) {
+        this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.getTile().markDirty();
+        return true;
     }
 
     @Override

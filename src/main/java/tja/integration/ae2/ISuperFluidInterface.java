@@ -7,7 +7,7 @@ import appeng.helpers.IPriorityHost;
 
 public interface ISuperFluidInterface extends ICustomNameObject, IPriorityHost, IFluidInterfaceHost, IConfigurableFluidInventory {
 
-    void setPriority(String priority, String id);
+    boolean setPriority(String priority);
 
     void setAutoPull(boolean autoPull);
 
