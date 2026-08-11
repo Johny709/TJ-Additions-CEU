@@ -34,7 +34,5 @@ public interface ISuperInterface extends ICustomNameObject, IPriorityHost, IInte
         return 1;
     }
 
-    default void setTickTime(String tickTime, String id) {
-
-    }
+    default void setTickTime(String tickTime, String id) {}
 }

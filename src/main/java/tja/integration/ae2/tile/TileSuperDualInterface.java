@@ -13,6 +13,8 @@ import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.client.buttonsetting.IntelligentBlocking;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
@@ -38,6 +40,10 @@ import java.util.List;
 
 public class TileSuperDualInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperDualInterface {
 
+    public static final IDrawable INTERFACE_TAB_TEXTURE = new ItemDrawable(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+
+    public static final IDrawable FLUID_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 18);
 
     public TileSuperDualInterface() {
@@ -57,18 +63,6 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
 
     @Nonnull
     @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.dualityFluid.getTickingRequest(node).isSleeping, true);
-    }
-
-    @Nonnull
-    @Override
-    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
-        return TickRateModulation.values()[Math.max(this.dualityFluid.tickingRequest(node, ticksSinceLastCall).ordinal(), super.tickingRequest(node, ticksSinceLastCall).ordinal())];
-    }
-
-    @Nonnull
-    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         final NBTTagCompound compound = new NBTTagCompound();
@@ -81,6 +75,18 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         this.dualityFluid.readFromNBT(data.getCompoundTag("dualityFluid"));
+    }
+
+    @Nonnull
+    @Override
+    public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
+        return TickRateModulation.values()[Math.max(super.tickingRequest(node, ticksSinceLastCall).ordinal(), this.dualityFluid.tickingRequest(node, ticksSinceLastCall).ordinal())];
+    }
+
+    @Nonnull
+    @Override
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.dualityFluid.getTickingRequest(node).isSleeping, true);
     }
 
     @Override
@@ -186,5 +192,15 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     @Override
     public void setAutoPull(boolean autoPull) {
         // No such features
+    }
+
+    @Override
+    public IDrawable getItemTabTexture() {
+        return INTERFACE_TAB_TEXTURE;
+    }
+
+    @Override
+    public IDrawable getFluidTabTexture() {
+        return FLUID_INTERFACE_TAB_TEXTURE;
     }
 }

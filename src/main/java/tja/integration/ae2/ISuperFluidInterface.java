@@ -15,7 +15,5 @@ public interface ISuperFluidInterface extends ICustomNameObject, IPriorityHost, 
         return 1;
     }
 
-    default void setTickTime(String tickTime, String id) {
-
-    }
+    default void setTickTime(String tickTime, String id) {}
 }

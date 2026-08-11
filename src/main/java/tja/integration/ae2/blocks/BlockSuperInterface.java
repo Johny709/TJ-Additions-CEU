@@ -43,6 +43,7 @@ import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class BlockSuperInterface extends BlockInterface {
 
@@ -82,6 +83,9 @@ public class BlockSuperInterface extends BlockInterface {
         final BooleanSyncValue intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superInterface::setIntelligentBlocking);
         syncManager.syncValue("intelligent_blocking", intelligentBlocking);
 
+        final Flow upgradeArea = Flow.row();
+        settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
+
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
         return ModularPanel.defaultPanel("me.super_interface.gui", 176, 292)
                 .child(new RichTextWidget()
@@ -107,13 +111,13 @@ public class BlockSuperInterface extends BlockInterface {
                         .key('S', i -> new ItemSlot()
                                 .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getStorage(), i))
                         .build().pos(7, 34))
-                .child(Flow.row()
+                .child(upgradeArea
                         .left(179)
                         .size(32, 194)
                         .background(GuiTextures.MC_BACKGROUND)
                         .children(10, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
-                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
+                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                 .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
                 .child(new ScrollWidget<>(new VerticalScrollData() {{
                      this.setScrollSize(144);
@@ -125,17 +129,6 @@ public class BlockSuperInterface extends BlockInterface {
                                         .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
                                         .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getPatterns(), i)
                                         .setEnabledIf(itemSlot -> i / 9 <= ((DualitySuperInterface.DualityUpgradeInventory) superInterface.getInterfaceDuality().getInventoryByName("upgrades")).getInstalledUpgrades(Upgrades.PATTERN_EXPANSION)))))
-                .child(new ButtonWidget<>()
-                        .left(154)
-                        .size(22)
-                        .background(TJAGuiTextures.INTERFACE_SETTINGS_BASE_EDGE_RIGHT)
-                        .tooltip(richTooltip -> richTooltip.addLine(IKey.lang("gui.appliedenergistics2.Priority")))
-                        .onMousePressed(mouseButton -> {
-                            if (prioritySettings.isPanelOpen()) {
-                                prioritySettings.closePanel();
-                            } else prioritySettings.openPanel();
-                            return true;
-                        }))
                 .child(new ToggleButton()
                         .pos(-18, 8)
                         .size(16)
@@ -247,6 +240,17 @@ public class BlockSuperInterface extends BlockInterface {
                             richTooltip.addLine(IKey.lang("gui.action.DIVIDE_3.name"));
                             richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_3.text")
                                     .style(TextFormatting.GRAY));
+                        }))
+                .child(new ButtonWidget<>()
+                        .left(154)
+                        .size(22)
+                        .background(TJAGuiTextures.INTERFACE_SETTINGS_BASE_EDGE_RIGHT, TJAGuiTextures.CERTUS_QUARTZ_WRENCH)
+                        .tooltip(richTooltip -> richTooltip.addLine(IKey.lang("gui.appliedenergistics2.Priority")))
+                        .onMousePressed(mouseButton -> {
+                            if (prioritySettings.isPanelOpen()) {
+                                prioritySettings.closePanel();
+                            } else prioritySettings.openPanel();
+                            return true;
                         }))
                 .bindPlayerInventory();
     }

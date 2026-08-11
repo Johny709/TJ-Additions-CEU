@@ -15,6 +15,7 @@ import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
+import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
@@ -35,6 +36,7 @@ import tja.mui.TJAGuiTextures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
 
 public class BlockSuperFluidInterface extends BlockFluidInterface {
@@ -60,6 +62,10 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
     public static ModularPanel createFluidInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperFluidInterface superFluidInterface) {
         final StringSyncValue interfaceName = new StringSyncValue(superFluidInterface::getCustomInventoryName);
         syncManager.syncValue("interface_name", interfaceName);
+
+        final Flow upgradeArea = Flow.row();
+        settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
+
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.fluid_interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createFluidPriorityPanel(panelBuilder, subPanel, superFluidInterface));
         return ModularPanel.defaultPanel("me.super_fluid_interface.gui", 176, 292)
                 .child(new RichTextWidget()
@@ -67,6 +73,12 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
                         .size(162, 18)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(interfaceName.getStringValue())))
+                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Config"))
+                        .pos(7, 23))
+                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.StoredFluids"))
+                        .pos(7, 181))
+                .child(new TextWidget<>(IKey.lang("container.inventory"))
+                        .pos(7, 198))
                 .child(SlotGroupWidget.builder()
                         .row("CCCCCCCCC")
                         .row("TTTTTTTTT")
@@ -83,18 +95,18 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
                                 .background(GuiTextures.SLOT_ITEM)
                                 .syncHandler((IMultiFluidTankHandler) superFluidInterface.getDualityFluidInterface().getTanks(), i))
                         .build().pos(7, 34))
-                .child(Flow.row()
+                .child(upgradeArea
                         .left(179)
                         .size(32, 194)
                         .background(GuiTextures.MC_BACKGROUND)
                         .children(4, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
-                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
+                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                 .slot((IItemHandlerModifiable) superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)))
                 .child(new ButtonWidget<>()
                         .left(154)
                         .size(22)
-                        .background(TJAGuiTextures.INTERFACE_SETTINGS_BASE_EDGE_RIGHT)
+                        .background(TJAGuiTextures.INTERFACE_SETTINGS_BASE_EDGE_RIGHT, TJAGuiTextures.CERTUS_QUARTZ_WRENCH)
                         .tooltip(richTooltip -> richTooltip.addLine(IKey.lang("gui.appliedenergistics2.Priority")))
                         .onMousePressed(mouseButton -> {
                             if (prioritySettings.isPanelOpen()) {
