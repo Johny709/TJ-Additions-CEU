@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import tja.TJA;
+import tja.integration.ae2.inventory.TJAAEFluidInventory;
 import tja.integration.ae2.inventory.TJAENetworkFluidInventory;
 import tja.items.TJAItems;
 import tja.util.TJAItemUtils;
@@ -40,7 +41,7 @@ public class DualitySuperFluidInterface extends DualityFluidInterface {
         this.getConfigManager().registerSetting(Settings.BLOCK, YesNo.NO);
 
         ObfuscationReflectionHelper.setPrivateValue(DualityFluidInterface.class, this, new IAEFluidStack[slots], "requireWork");
-        ObfuscationReflectionHelper.setPrivateValue(DualityFluidInterface.class, this, new AEFluidInventory(this, slots), "config");
+        ObfuscationReflectionHelper.setPrivateValue(DualityFluidInterface.class, this, new TJAAEFluidInventory(this, slots), "config");
         ObfuscationReflectionHelper.setPrivateValue(DualityFluidInterface.class, this, new DualityFluidUpgradeInventory(this, 4), "upgrades");
         try {
             final Field mySource = ObfuscationReflectionHelper.findField(DualityFluidInterface.class, "mySource");
