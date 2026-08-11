@@ -136,10 +136,9 @@ public class PartPatternInterface extends PartInterface implements IGuiHolder<Si
     }
 
     @Override
-    public boolean setPriority(String priority) {
+    public void setPriority(String priority) {
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.getTile().markDirty();
-        return true;
     }
 
     @Override

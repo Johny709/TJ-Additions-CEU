@@ -112,9 +112,8 @@ public class TileStockingFluidInterface extends TileFluidInterface implements IG
     }
 
     @Override
-    public boolean setPriority(String priority) {
+    public void setPriority(String priority) {
         this.getDualityFluidInterface().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
-        return true;
     }
 }

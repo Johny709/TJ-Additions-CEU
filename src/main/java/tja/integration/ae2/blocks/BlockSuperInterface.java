@@ -81,6 +81,7 @@ public class BlockSuperInterface extends BlockInterface {
         syncManager.syncValue("blocking_mode_ex", blockingModeEx);
         final BooleanSyncValue intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superInterface::setIntelligentBlocking);
         syncManager.syncValue("intelligent_blocking", intelligentBlocking);
+
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
         return ModularPanel.defaultPanel("me.super_interface.gui", 176, 292)
                 .child(new RichTextWidget()

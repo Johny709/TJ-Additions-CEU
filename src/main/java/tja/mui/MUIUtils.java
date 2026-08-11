@@ -5,6 +5,7 @@ import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
+import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -114,8 +115,24 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ISuperInterface superInterface) {
-        final StringSyncValue priorityValue = new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority);
-        syncManager.syncValue("priority", priorityValue);
+        syncManager.syncValue("priority", new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority));
+        syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))));
+        syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 10))));
+        syncManager.syncValue("priority_add_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 100))));
+        syncManager.syncValue("priority_add_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1000))));
+        syncManager.syncValue("priority_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1))));
+        syncManager.syncValue("priority_sub_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 10))));
+        syncManager.syncValue("priority_sub_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 100))));
+        syncManager.syncValue("priority_sub_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1000))));
+
         return ModularPanel.defaultPanel("me.interface.priority.panel", 162, 100)
                 .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Priority"))
                         .pos(7, 7))
@@ -132,7 +149,8 @@ public final class MUIUtils {
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .onMousePressed(mouseButton -> {
-                            panelHandler.closePanel();
+                            if (panelHandler.isPanelOpen())
+                                panelHandler.openPanel();
                             return true;
                         }))
                 .child(new ButtonWidget<>()
@@ -141,55 +159,55 @@ public final class MUIUtils {
                         .overlay(IKey.str("+1"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))))
+                        .syncHandler("priority_add_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 20)
                         .size(30, 20)
                         .overlay(IKey.str("+10"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 10))))
+                        .syncHandler("priority_add_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 20)
                         .size(35, 20)
                         .overlay(IKey.str("+100"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 100))))
+                        .syncHandler("priority_add_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 20)
                         .size(40, 20)
                         .overlay(IKey.str("+1000"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1000))))
+                        .syncHandler("priority_add_1000"))
                 .child(new ButtonWidget<>()
                         .pos(7, 70)
                         .size(25, 20)
                         .overlay(IKey.str("-1"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1))))
+                        .syncHandler("priority_sub_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 70)
                         .size(30, 20)
                         .overlay(IKey.str("-10"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 10))))
+                        .syncHandler("priority_sub_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 70)
                         .size(35, 20)
                         .overlay(IKey.str("-100"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 100))))
+                        .syncHandler("priority_sub_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 70)
                         .size(40, 20)
                         .overlay(IKey.str("-1000"))
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .onMousePressed(mouseButton -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1000))));
+                        .syncHandler("priority_sub_1000"));
     }
 }

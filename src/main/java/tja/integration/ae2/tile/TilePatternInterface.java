@@ -91,10 +91,9 @@ public class TilePatternInterface extends TileInterface implements IGuiHolder<Po
     }
 
     @Override
-    public boolean setPriority(String priority) {
+    public void setPriority(String priority) {
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
-        return true;
     }
 
     @Override

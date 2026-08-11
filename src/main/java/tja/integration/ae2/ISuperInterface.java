@@ -26,7 +26,7 @@ public interface ISuperInterface extends ICustomNameObject, IPriorityHost, IInte
 
     String getStackSize(int index);
 
-    boolean setPriority(String priority);
+    void setPriority(String priority);
 
     void setAutoPull(boolean autoPull);
 
