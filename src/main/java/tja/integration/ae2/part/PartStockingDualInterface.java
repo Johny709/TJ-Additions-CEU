@@ -21,6 +21,8 @@ import appeng.tile.inventory.AppEngInternalAEInventory;
 import appeng.tile.networking.TileCableBus;
 import appeng.util.item.AEItemStack;
 import com.cleanroommc.modularui.api.IGuiHolder;
+import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -29,19 +31,27 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import tja.TJA;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockStockingDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.items.TJAItems;
+import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -60,12 +70,19 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_dual_interface_has_channel"));
 
+    public static final IDrawable INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+
+    public static final IDrawable FLUID_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 36);
+    private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
 
     public PartStockingDualInterface(ItemStack is) {
         super(is);
         ObfuscationReflectionHelper.setPrivateValue(PartInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 36, 9), "duality");
+        this.getInterfaceDuality().getConfigManager().registerSetting(Settings.STICKY_MODE, YesNo.NO);
+        this.getDualityFluidInterface().getConfigManager().registerSetting(Settings.STICKY_MODE, YesNo.NO);
     }
 
     @Override
@@ -88,10 +105,24 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
         this.dualityFluid.gridChanged();
     }
 
-    @Nonnull
     @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), this.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO && this.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
+    public void writeToNBT(NBTTagCompound data) {
+        super.writeToNBT(data);
+        final NBTTagCompound compound = new NBTTagCompound();
+        this.dualityFluid.writeToNBT(compound);
+        data.setTag("dualityFluid", compound);
+        data.setInteger("tickTime", this.tickTime);
+        data.setInteger("autoOutputItem", this.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal());
+        data.setInteger("autoOutputFluid", this.getDualityFluidInterface().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        this.dualityFluid.readFromNBT(data.getCompoundTag("dualityFluid"));
+        this.tickTime = Math.max(1, data.getInteger("tickTime"));
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.STICKY_MODE, YesNo.values()[data.getInteger("autoOutputItem")]);
+        this.getDualityFluidInterface().getConfigManager().putSetting(Settings.STICKY_MODE, YesNo.values()[data.getInteger("autoOutputFluid")]);
     }
 
     @Nonnull
@@ -117,6 +148,29 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
                 }
             } catch (GridAccessException ignored) {}
         }
+        if (this.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE) == YesNo.YES) {
+            final BlockPos pos = this.getTile().getPos();
+            for (EnumFacing facing : this.getTargets()) {
+                this.interfacePos.setPos(pos.getX(), pos.getY(), pos.getZ());
+                final TileEntity tileEntity = this.getTile().getWorld().getTileEntity(this.interfacePos.move(facing));
+                if (tileEntity != null) {
+                    final IItemHandler itemHandler = this.getInterfaceDuality().getStorage();
+                    final IItemHandler destItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+                    if (destItemHandler != null) {
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                            final ItemStack stack = itemHandler.getStackInSlot(i);
+                            if (!stack.isEmpty()) {
+                                final int inserted = TJAItemUtils.insertIntoItemHandler(destItemHandler, stack, true).getCount();
+                                final int extract = stack.getCount() - inserted;
+                                if (extract < 1) continue;
+                                final ItemStack otherStack = itemHandler.extractItem(i, extract, false);
+                                TJAItemUtils.insertIntoItemHandler(destItemHandler, otherStack, false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (this.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK) == YesNo.YES) {
             try {
                 int index = 0;
@@ -133,23 +187,35 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
                 }
             } catch (GridAccessException ignored) {}
         }
+        if (this.getDualityFluidInterface().getConfigManager().getSetting(Settings.STICKY_MODE) == YesNo.YES) {
+            final BlockPos pos = this.getTile().getPos();
+            for (EnumFacing facing : this.getTargets()) {
+                this.interfacePos.setPos(pos.getX(), pos.getY(), pos.getZ());
+                final TileEntity tileEntity = this.getTile().getWorld().getTileEntity(this.interfacePos.move(facing));
+                if (tileEntity != null) {
+                    final IFluidHandler fluidHandler = this.getDualityFluidInterface().getTanks();
+                    final IFluidHandler destFluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+                    if (destFluidHandler != null) {
+                        for (IFluidTankProperties tank : fluidHandler.getTankProperties()) {
+                            FluidStack fluidStack = tank.getContents();
+                            if (fluidStack != null) {
+                                fluidStack = fluidHandler.drain(fluidStack, false);
+                                if (fluidStack == null) continue;
+                                fluidStack.amount = destFluidHandler.fill(fluidStack, true);
+                                fluidHandler.drain(fluidStack, true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return TickRateModulation.values()[Math.max(tickRateModulation.ordinal(), this.tickTime > ticksSinceLastCall ? TickRateModulation.SLOWER.ordinal() : this.tickTime < ticksSinceLastCall ? TickRateModulation.FASTER.ordinal() : TickRateModulation.SAME.ordinal())];
     }
 
+    @Nonnull
     @Override
-    public void writeToNBT(NBTTagCompound data) {
-        super.writeToNBT(data);
-        final NBTTagCompound compound = new NBTTagCompound();
-        this.dualityFluid.writeToNBT(compound);
-        data.setTag("dualityFluid", compound);
-        data.setInteger("tickTime", this.tickTime);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound data) {
-        super.readFromNBT(data);
-        this.dualityFluid.readFromNBT(data.getCompoundTag("dualityFluid"));
-        this.tickTime = Math.max(1, data.getInteger("tickTime"));
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.dualityFluid.getTickingRequest(node).isSleeping && this.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO && this.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
     }
 
     @Override
@@ -199,6 +265,24 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     @Override
     public void setItemAutoPull(boolean blockingMode) {
         this.getInterfaceDuality().getConfigManager().putSetting(Settings.BLOCK, blockingMode ? YesNo.YES : YesNo.NO);
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public void setFluidAutoPull(boolean autoPull) {
+        this.getDualityFluidInterface().getConfigManager().putSetting(Settings.BLOCK, autoPull ? YesNo.YES : YesNo.NO);
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public void setItemAutoPush(boolean autoPush) {
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.STICKY_MODE, autoPush ? YesNo.YES : YesNo.NO);
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public void setFluidAutoPush(boolean autoPush) {
+        this.getDualityFluidInterface().getConfigManager().putSetting(Settings.STICKY_MODE, autoPush ? YesNo.YES : YesNo.NO);
         this.getTile().markDirty();
     }
 
@@ -269,5 +353,15 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     public void setPriority(String priority) {
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.getTile().markDirty();
+    }
+
+    @Override
+    public IDrawable getItemTabTexture() {
+        return INTERFACE_TAB_TEXTURE;
+    }
+
+    @Override
+    public IDrawable getFluidTabTexture() {
+        return FLUID_INTERFACE_TAB_TEXTURE;
     }
 }
