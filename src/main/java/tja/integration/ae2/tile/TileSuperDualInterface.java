@@ -190,11 +190,6 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
-        // No such features
-    }
-
-    @Override
     public IDrawable getItemTabTexture() {
         return INTERFACE_TAB_TEXTURE;
     }

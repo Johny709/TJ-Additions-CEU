@@ -37,7 +37,7 @@ public class TileSuperFluidInterface extends TileFluidInterface implements IGuiH
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
+    public void setFluidAutoPull(boolean autoPull) {
         // No such features
     }
 }

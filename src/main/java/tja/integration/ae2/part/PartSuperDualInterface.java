@@ -227,11 +227,6 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
-        // No such feature
-    }
-
-    @Override
     public IDrawable getItemTabTexture() {
         return INTERFACE_TAB_TEXTURE;
     }

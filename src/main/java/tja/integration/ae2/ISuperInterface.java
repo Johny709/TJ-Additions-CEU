@@ -28,11 +28,13 @@ public interface ISuperInterface extends ICustomNameObject, IPriorityHost, IInte
 
     void setPriority(String priority);
 
-    void setAutoPull(boolean autoPull);
+    default void setItemAutoPull(boolean autoPull) {}
+
+    default void setItemAutoPush(boolean autoPush) {}
 
     default int getTickTime() {
         return 1;
     }
 
-    default void setTickTime(String tickTime, String id) {}
+    default void setTickTime(String tickTime) {}
 }

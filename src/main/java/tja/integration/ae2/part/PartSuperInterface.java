@@ -157,9 +157,4 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.getTile().markDirty();
     }
-
-    @Override
-    public void setAutoPull(boolean autoPull) {
-        // No such feature
-    }
 }

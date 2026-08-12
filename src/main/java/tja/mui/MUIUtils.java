@@ -306,4 +306,100 @@ public final class MUIUtils {
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_sub_1000"));
     }
+
+    public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ISuperInterface superInterface) {
+        syncManager.syncValue("tick", new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime));
+        syncManager.syncValue("tick_add_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() + 1))));
+        syncManager.syncValue("tick_add_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() + 10))));
+        syncManager.syncValue("tick_add_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() + 100))));
+        syncManager.syncValue("tick_add_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() + 1000))));
+        syncManager.syncValue("tick_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() - 1))));
+        syncManager.syncValue("tick_sub_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() - 10))));
+        syncManager.syncValue("tick_sub_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() - 100))));
+        syncManager.syncValue("tick_sub_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getPriority() - 1000))));
+
+        return ModularPanel.defaultPanel("me.interface.tick.panel", 162, 100)
+                .child(new TextWidget<>(IKey.lang("tja.machine.universal.ticks.operation"))
+                        .pos(7, 7))
+                .child(new TextFieldWidget()
+                        .pos(7, 46)
+                        .size(148, 18)
+                        .setMaxLength(11)
+                        .autoUpdateOnChange(true)
+                        .syncHandler("tick"))
+                .child(new ButtonWidget<>()
+                        .pos(140, 4)
+                        .size(12)
+                        .overlay(GuiTextures.CLOSE)
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .onMousePressed(mouseButton -> {
+                            panelHandler.closePanel();
+                            return true;
+                        }))
+                .child(new ButtonWidget<>()
+                        .pos(7, 20)
+                        .size(25, 20)
+                        .overlay(IKey.str("+1"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_add_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 20)
+                        .size(30, 20)
+                        .overlay(IKey.str("+10"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_add_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 20)
+                        .size(35, 20)
+                        .overlay(IKey.str("+100"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_add_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 20)
+                        .size(40, 20)
+                        .overlay(IKey.str("+1000"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_add_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(7, 70)
+                        .size(25, 20)
+                        .overlay(IKey.str("-1"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_sub_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 70)
+                        .size(30, 20)
+                        .overlay(IKey.str("-10"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_sub_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 70)
+                        .size(35, 20)
+                        .overlay(IKey.str("-100"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_sub_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 70)
+                        .size(40, 20)
+                        .overlay(IKey.str("-1000"))
+                        .background(GuiTextures.MC_BUTTON)
+                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                        .syncHandler("tick_sub_1000"));
+    }
 }

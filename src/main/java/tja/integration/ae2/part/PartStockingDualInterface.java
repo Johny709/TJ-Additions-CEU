@@ -197,7 +197,7 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     }
 
     @Override
-    public void setAutoPull(boolean blockingMode) {
+    public void setItemAutoPull(boolean blockingMode) {
         this.getInterfaceDuality().getConfigManager().putSetting(Settings.BLOCK, blockingMode ? YesNo.YES : YesNo.NO);
         this.getTile().markDirty();
     }
@@ -255,8 +255,8 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     }
 
     @Override
-    public void setTickTime(String text, String id) {
-        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(text)));
+    public void setTickTime(String tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.getTile().markDirty();
     }
 

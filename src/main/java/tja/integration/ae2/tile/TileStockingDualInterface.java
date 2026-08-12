@@ -160,7 +160,7 @@ public class TileStockingDualInterface extends TileInterface implements IGuiHold
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
+    public void setItemAutoPull(boolean autoPull) {
         this.getInterfaceDuality().getConfigManager().putSetting(Settings.BLOCK, autoPull ? YesNo.YES : YesNo.NO);
         this.markDirty();
     }
@@ -218,8 +218,8 @@ public class TileStockingDualInterface extends TileInterface implements IGuiHold
     }
 
     @Override
-    public void setTickTime(String text, String id) {
-        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(text)));
+    public void setTickTime(String tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.markDirty();
     }
 

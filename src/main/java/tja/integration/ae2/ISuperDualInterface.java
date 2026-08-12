@@ -11,8 +11,8 @@ public interface ISuperDualInterface extends ISuperInterface, ISuperFluidInterfa
     }
 
     @Override
-    default void setTickTime(String tickTime, String id) {
-        ISuperInterface.super.setTickTime(tickTime, id);
+    default void setTickTime(String tickTime) {
+        ISuperInterface.super.setTickTime(tickTime);
     }
 
     default IDrawable getItemTabTexture() {

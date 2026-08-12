@@ -32,6 +32,7 @@ tja.machine.universal.idling=§7Idling.
 tja.machine.universal.running=§aRunning.
 tja.machine.universal.ticks=Ticks: §b%s
 tja.machine.universal.eut=Using §c%s §fEU/t §a(%s§a)
+tja.machine.universal.ticks.operation=Ticks Per Operation
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 
@@ -84,8 +85,10 @@ tile.me.crafting_storage.262144k.name=§b262144k§f Crafting Storage
 tile.me.crafting_storage.1048m.name=§51048m§f Crafting Storage
 tile.me.crafting_storage.singularity.name=§dDigital Singularity Crafting Storage
 
-tile.me.stocking_interface.auto_pull=Auto-Pull from ME mode will automatically stock the first 36 items in the ME system
-tile.me.stocking_fluid_interface.auto_pull=Auto-Pull from ME mode will automatically stock the first 36 fluids in the ME system
+tile.me.stocking_interface.auto_pull=Auto Pull
+tile.me.stocking_interface.auto_pull.description=Auto-Pull from ME mode will automatically stock the first 36 items in the ME system
+tile.me.stocking_fluid_interface.auto_pull=Auto Push
+tile.me.stocking_fluid_interface.auto_pull.description=Auto-Pull from ME mode will automatically stock the first 36 fluids in the ME system
 
 tile.cell_battery.lv.name=LV Power Cell
 tile.cell_battery.mv.name=MV Power Cell

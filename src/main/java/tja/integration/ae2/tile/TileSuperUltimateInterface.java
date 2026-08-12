@@ -184,7 +184,7 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
     }
 
     @Override
-    public void setTickTime(String tickTime, String id) {
+    public void setTickTime(String tickTime) {
         this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.markDirty();
     }
@@ -195,7 +195,7 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
+    public void setItemAutoPull(boolean autoPull) {
         this.getInterfaceDuality().getConfigManager().putSetting(Settings.BLOCK, autoPull ? YesNo.YES : YesNo.NO);
         this.markDirty();
     }

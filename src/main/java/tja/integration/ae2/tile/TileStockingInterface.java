@@ -20,21 +20,29 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import tja.blocks.TJABlocks;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockStockingInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
+import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
 
 
 public class TileStockingInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperInterface {
 
+    private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
 
     public TileStockingInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 36, 9), "duality");
+        this.getInterfaceDuality().getConfigManager().registerSetting(Settings.STICKY_MODE, YesNo.NO);
     }
 
     @Override
@@ -44,8 +52,18 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
 
     @Nonnull
     @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), this.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
+    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+        super.writeToNBT(data);
+        data.setInteger("tickTime", this.tickTime);
+        data.setInteger("autoOutputItem", this.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal());
+        return data;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        this.tickTime = Math.max(1, data.getInteger("tickTime"));
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.STICKY_MODE, YesNo.values()[data.getInteger("autoOutputItem")]);
     }
 
     @Nonnull
@@ -71,21 +89,36 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
                 }
             } catch (GridAccessException ignored) {}
         }
+        if (this.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE) == YesNo.YES) {
+            final BlockPos pos = this.getTile().getPos();
+            for (EnumFacing facing : this.getTargets()) {
+                this.interfacePos.setPos(pos.getX(), pos.getY(), pos.getZ());
+                final TileEntity tileEntity = this.getTile().getWorld().getTileEntity(this.interfacePos.move(facing));
+                if (tileEntity != null) {
+                    final IItemHandler itemHandler = this.getInterfaceDuality().getStorage();
+                    final IItemHandler destItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+                    if (destItemHandler != null) {
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                            final ItemStack stack = itemHandler.getStackInSlot(i);
+                            if (!stack.isEmpty()) {
+                                final int inserted = TJAItemUtils.insertIntoItemHandler(destItemHandler, stack, true).getCount();
+                                final int extract = stack.getCount() - inserted;
+                                if (extract < 1) continue;
+                                final ItemStack otherStack = itemHandler.extractItem(i, extract, false);
+                                TJAItemUtils.insertIntoItemHandler(destItemHandler, otherStack, false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return TickRateModulation.values()[Math.max(tickRateModulation.ordinal(), this.tickTime > ticksSinceLastCall ? TickRateModulation.SLOWER.ordinal() : this.tickTime < ticksSinceLastCall ? TickRateModulation.FASTER.ordinal() : TickRateModulation.SAME.ordinal())];
     }
 
     @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
-        super.writeToNBT(data);
-        data.setInteger("tickTime", this.tickTime);
-        return data;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound data) {
-        super.readFromNBT(data);
-        this.tickTime = Math.max(1, data.getInteger("tickTime"));
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
     }
 
     @Override
@@ -94,7 +127,7 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
     }
 
     @Override
-    public void setAutoPull(boolean blockingMode) {
+    public void setItemAutoPull(boolean blockingMode) {
         this.getInterfaceDuality().getConfigManager().putSetting(Settings.BLOCK, blockingMode ? YesNo.YES : YesNo.NO);
         this.markDirty();
     }
@@ -152,8 +185,8 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
     }
 
     @Override
-    public void setTickTime(String text, String id) {
-        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(text)));
+    public void setTickTime(String tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.markDirty();
     }
 

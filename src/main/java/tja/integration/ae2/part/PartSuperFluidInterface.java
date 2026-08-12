@@ -82,7 +82,7 @@ public class PartSuperFluidInterface extends PartFluidInterface implements IGuiH
     }
 
     @Override
-    public void setAutoPull(boolean autoPull) {
+    public void setFluidAutoPull(boolean autoPull) {
         // No such feature
     }
 }
