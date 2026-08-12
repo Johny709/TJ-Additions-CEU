@@ -133,6 +133,12 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
     }
 
     @Override
+    public void setItemAutoPush(boolean autoPush) {
+        this.getInterfaceDuality().getConfigManager().putSetting(Settings.STICKY_MODE, autoPush ? YesNo.YES : YesNo.NO);
+        this.getTile().markDirty();
+    }
+
+    @Override
     public void setBlockingMode(boolean blockingMode) {
         // No pattern slots
     }
