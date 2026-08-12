@@ -22,4 +22,8 @@ public interface ISuperDualInterface extends ISuperInterface, ISuperFluidInterfa
     default IDrawable getFluidTabTexture() {
         return UITexture.EMPTY;
     }
+
+    default IDrawable getExtraTabTexture() {
+        return UITexture.EMPTY;
+    }
 }

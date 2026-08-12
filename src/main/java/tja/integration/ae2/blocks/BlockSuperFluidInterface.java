@@ -97,7 +97,7 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
                         .build().pos(7, 34))
                 .child(upgradeArea
                         .left(179)
-                        .size(32, 194)
+                        .size(32, 86)
                         .background(GuiTextures.MC_BACKGROUND)
                         .children(4, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))

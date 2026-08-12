@@ -196,7 +196,7 @@ public class BlockStockingDualInterface extends BlockInterface {
                                         .build().pos(7, 34))
                                 .child(fluidUpgradeArea
                                         .left(179)
-                                        .size(32, 194)
+                                        .size(32, 86)
                                         .background(GuiTextures.MC_BACKGROUND)
                                         .children(4, i -> new ItemSlot()
                                                 .pos(7, 7 + (18 * i))
@@ -206,7 +206,7 @@ public class BlockStockingDualInterface extends BlockInterface {
                                         .pos(-18, 60)
                                         .size(16)
                                         .stateBackground(TJAGuiTextures.TOGGLE_AUTO_PULL)
-                                        .syncHandler("auto_pull")
+                                        .syncHandler("fluid_auto_pull")
                                         .tooltipDynamic(richTooltip -> {
                                             richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull"));
                                             richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull.description")
@@ -216,7 +216,7 @@ public class BlockStockingDualInterface extends BlockInterface {
                                         .pos(-18, 78)
                                         .size(16)
                                         .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
-                                        .syncHandler("auto_push")
+                                        .syncHandler("fluid_auto_push")
                                         .tooltipDynamic(richTooltip -> {
                                             richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push"));
                                             richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push.description")
