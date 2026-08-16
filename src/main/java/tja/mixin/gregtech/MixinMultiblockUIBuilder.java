@@ -10,11 +10,13 @@ import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.ingredients.GTRecipeInput;
 import gregtech.api.util.KeyUtil;
 import it.unimi.dsi.fastutil.objects.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -82,11 +84,18 @@ public abstract class MixinMultiblockUIBuilder {
         }
         this.addKey(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.consuming"), Operation::addLine);
         for (Object2ObjectMap.Entry<ItemStack[], Counter> entry : itemInputMap.object2ObjectEntrySet()) {
-            this.addItemOutputLine(entry.getKey()[0], entry.getValue().getValue() * p, maxProgress);
+            this.addItemOutputLine(this.tJ_Additions_CEU$getItemStackOreDict(entry.getKey()), entry.getValue().getValue() * p, maxProgress);
         }
         for (Object2ObjectMap.Entry<FluidStack, Counter> entry : fluidInputMap.object2ObjectEntrySet()) {
             this.addFluidOutputLine(entry.getKey(), entry.getValue().getValue() * p, maxProgress);
         }
         this.addEmptyLine();
+    }
+
+    @Unique
+    private ItemStack tJ_Additions_CEU$getItemStackOreDict(ItemStack[] itemStacks) {
+        final long ticks = this.isServer() ? 0 : Minecraft.getMinecraft().world.getTotalWorldTime();
+        final int index = (int) Math.min(itemStacks.length - 1, ticks % (itemStacks.length * 20L) / 20);
+        return itemStacks[index];
     }
 }
