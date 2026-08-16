@@ -33,7 +33,7 @@ import java.util.function.Function;
 public abstract class MixinMultiblockUIBuilder {
 
     @Shadow
-    private MultiblockUIBuilder.InternalSyncer syncer;
+    abstract MultiblockUIBuilder.InternalSyncer getSyncer();
 
     @Shadow
     protected abstract boolean isServer();
@@ -64,16 +64,16 @@ public abstract class MixinMultiblockUIBuilder {
             fluidInputs.addAll(trimmed.getFluidInputs());
         }
 
-        itemInputs = this.syncer.syncCollection(itemInputs,
+        itemInputs = this.getSyncer().syncCollection(itemInputs,
                 GTByteBufAdapters.makeAdapter(buffer -> GTRecipeInput.readFromNBT(buffer.readCompoundTag()),
                         (buffer, value) -> buffer.writeCompoundTag(GTRecipeInput.writeToNBT(value))));
-        fluidInputs = this.syncer.syncCollection(fluidInputs,
+        fluidInputs = this.getSyncer().syncCollection(fluidInputs,
                 GTByteBufAdapters.makeAdapter(buffer -> GTRecipeInput.readFromNBT(buffer.readCompoundTag()),
                         (buffer, value) -> buffer.writeCompoundTag(GTRecipeInput.writeToNBT(value))));
 
         // map identical items and fluids together to get total amount.
-        final Object2ObjectMap<ItemStack[], Counter> itemInputMap = new Object2ObjectOpenCustomHashMap<>(Strategies.INGREDIENT_STRATEGY);
-        final Object2ObjectMap<FluidStack, Counter> fluidInputMap = new Object2ObjectOpenHashMap<>();
+        final Object2ObjectMap<ItemStack[], Counter> itemInputMap = new Object2ObjectLinkedOpenCustomHashMap<>(Strategies.INGREDIENT_STRATEGY);
+        final Object2ObjectMap<FluidStack, Counter> fluidInputMap = new Object2ObjectLinkedOpenHashMap<>();
         for (GTRecipeInput itemInput : itemInputs) {
             itemInputMap.computeIfAbsent(itemInput.getInputStacks(), k -> new Counter(0))
                     .increment(itemInput.getAmount());
