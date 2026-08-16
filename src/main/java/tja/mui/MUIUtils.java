@@ -47,7 +47,7 @@ public final class MUIUtils {
         itemOutputs = syncer.syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
         final int maxProgress = syncer.syncInt(recipeInfo.getMaxProgress());
         if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
-            key.add(KeyUtil.lang(TextFormatting.GRAY, "machine.universal.consuming"));
+            key.add(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.consuming"));
         for (FluidStack fluidStack : fluidInputs)
             MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
         for (ItemStack stack : itemInputs)

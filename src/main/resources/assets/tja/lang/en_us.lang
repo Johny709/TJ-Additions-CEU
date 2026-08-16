@@ -33,10 +33,9 @@ tja.machine.universal.running=§aRunning.
 tja.machine.universal.ticks=Ticks: §b%s
 tja.machine.universal.eut=Using §c%s §fEU/t §a(%s§a)
 tja.machine.universal.ticks.operation=Ticks Per Operation
+tja.machine.universal.consuming=Consuming:
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
-
-machine.universal.consuming=Consuming:
 
 item.me.material.item_cell.65536k.name=§165536k§f ME Storage Component
 item.me.material.item_cell.262144k.name=§b262144k§f ME Storage Component
