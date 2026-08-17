@@ -4,11 +4,13 @@ import com.fulltrix.gcyl.item.GCYLCoreItems;
 import com.fulltrix.gcyl.materials.GCYLMaterials;
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
@@ -19,6 +21,7 @@ import tja.blocks.BlockBatteryCell;
 import tja.blocks.TJAMetaBlocks;
 import tja.items.TJAMetaItems;
 import tja.machines.TJAMetaTileEntities;
+import tja.util.TJAItemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +33,19 @@ public class TJARecipes {
         final boolean isGregicalityLoaded = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID);
         final boolean isSuperCriticalLoaded = TJAValues.isModLoaded(TJAValues.SUPERCRITICAL_MOD_ID);
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
+            final List<Material> materials = new ArrayList<>(Arrays.asList(Materials.WroughtIron, Materials.Steel, Materials.Aluminium, Materials.StainlessSteel,
+                    Materials.Titanium, Materials.TungstenSteel, Materials.RhodiumPlatedPalladium, Materials.Duranium, Materials.Tritanium));
+            final List<Material> cableMaterials = new ArrayList<>(Arrays.asList(Materials.RedAlloy, Materials.Tin, Materials.Copper, Materials.Gold,
+                    Materials.Aluminium, Materials.Platinum, Materials.Niobium, Materials.Naquadah, Materials.NaquadahAlloy));
+            final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
+                    MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV, MarkerMaterials.Tier.UHV,
+                    MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV, MarkerMaterials.Tier.MAX};
+            if (isGregicalityLoaded) {
+                materials.addAll(Arrays.asList(Materials.Seaborgium, Materials.Bohrium, GCYLMaterials.Quantum, GCYLMaterials.BlackTitanium,
+                        GCYLMaterials.HeavyQuarkDegenerateMatter, Materials.Neutronium));
+                cableMaterials.addAll(Arrays.asList(GCYLMaterials.AbyssalAlloy, GCYLMaterials.TitanSteel, GCYLMaterials.BlackTitanium,
+                        GCYLMaterials.NaquadriaticTaranium, Materials.Neutronium, GCYLMaterials.CosmicNeutronium));
+            }
             // mega coke oven
             RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
                     .input(MetaTileEntities.COKE_OVEN, 64)
@@ -72,6 +88,17 @@ public class TJARecipes {
                         .outputs(TJAMetaBlocks.BATTERY_CELL.getItemVariant(BlockBatteryCell.CasingType.values()[i]))
                         .EUt(15L << i * 2).duration(1200)
                         .buildAndRegister();
+            }
+            // fluid samplers
+            for (int i = 0; i < TJAMetaTileEntities.FLUID_SAMPLERS.size(); i++) {
+                if (i > 8 && !isGregicalityLoaded) continue;
+                ModHandler.addShapedRecipe("fluid_sampler." + GTValues.VN[i], TJAMetaTileEntities.FLUID_SAMPLERS.get(i).getStackForm(),
+                        "GGG", "PHP", "CDC",
+                        'G', TJAItemUtils.getItemStackFromName("minecraft:glass"),
+                        'P', new UnificationEntry(OrePrefix.plate, materials.get(i)),
+                        'H', MetaTileEntities.HULL[i].getStackForm(),
+                        'C', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials.get(i)),
+                        'D', new UnificationEntry(OrePrefix.toolHeadDrill, materials.get(i)));
             }
             if (isGregicalityLoaded) {
                 // supra solar panel (max)

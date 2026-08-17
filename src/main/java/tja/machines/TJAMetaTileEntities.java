@@ -10,8 +10,10 @@ import tja.TJA;
 import tja.machines.multiblocks.MetaTileEntityIndustrialFusionReactor;
 import tja.machines.multiblocks.MetaTileEntityMegaBoiler;
 import tja.machines.multiblocks.MetaTileEntityMegaCokeOven;
+import tja.machines.singleblocks.MetaTileEntityFluidSampler;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 public final class TJAMetaTileEntities {
 
@@ -26,10 +28,25 @@ public final class TJAMetaTileEntities {
 
     public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
+    /** occupies id range 1000 - 1014 */
+    public static final List<MetaTileEntity> FLUID_SAMPLERS = mteList(1000, i -> new MetaTileEntityFluidSampler(resource("fluid_sampler." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization
         // only works if there's no exceptions or errors.
+    }
+
+    private static List<MetaTileEntity> mteList(int startId, IntFunction<MetaTileEntity> metaTileEntityIntFunction) {
+        return mteList(startId, 15, metaTileEntityIntFunction);
+    }
+
+    private static List<MetaTileEntity> mteList(int startId, int end, IntFunction<MetaTileEntity> metaTileEntityIntFunction) {
+        final ImmutableList.Builder<MetaTileEntity> builder = ImmutableList.builder();
+        for (int i = 0; i < end; i++) {
+            final MetaTileEntity metaTileEntity = metaTileEntityIntFunction.apply(i);
+            builder.add(MetaTileEntities.registerMetaTileEntity(startId + i, metaTileEntity));
+        }
+        return builder.build();
     }
 
     private static ResourceLocation resource(String locale) {

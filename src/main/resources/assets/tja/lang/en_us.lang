@@ -1,3 +1,19 @@
+tja.machine.fluid_sampler.ulv.name=Primitive Fluid Sampler
+tja.machine.fluid_sampler.lv.name=Basic Fluid Sampler
+tja.machine.fluid_sampler.mv.name=Advanced Fluid Sampler
+tja.machine.fluid_sampler.hv.name=Advanced Fluid Sampler II
+tja.machine.fluid_sampler.ev.name=Advanced Fluid Sampler III
+tja.machine.fluid_sampler.iv.name=Elite Fluid Sampler
+tja.machine.fluid_sampler.luv.name=Elite Fluid Sampler II
+tja.machine.fluid_sampler.zpm.name=Elite Fluid Sampler III
+tja.machine.fluid_sampler.uv.name=Ultimate Fluid Sampler
+tja.machine.fluid_sampler.uhv.name=Epic Fluid Sampler
+tja.machine.fluid_sampler.uev.name=Epic Fluid Sampler II
+tja.machine.fluid_sampler.uiv.name=Epic Fluid Sampler III
+tja.machine.fluid_sampler.uxv.name=Epic Fluid Sampler IV
+tja.machine.fluid_sampler.opv.name=Legendary Fluid Sampler
+tja.machine.fluid_sampler.max.name=Max Fluid Sampler
+
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)
 tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
 tja.machine.mega_steel_boiler.name=Mega Steel Boiler (MSB)
@@ -6,6 +22,8 @@ tja.machine.mega_tungstensteel_boiler.name=Mega TungstenSteel Boiler (MTSB)
 tja.machine.industrial_fusion_reactor.mk1.name=Industrial Fusion Reactor Controller MK1 (IFRC1)
 tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Controller MK2 (IFRC2)
 tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
+
+tja.machine.fluid_sampler.yield=Yield: %,d
 
 tja.multiblock.mega_bronze_boiler.description=Mega version of §5Large Bronze Boiler.
 tja.multiblock.mega_steel_boiler.description=Mega version of §5Large Steel Boiler.
