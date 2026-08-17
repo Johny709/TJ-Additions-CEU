@@ -75,10 +75,12 @@ public abstract class MixinMultiblockUIBuilder {
         final Object2ObjectMap<ItemStack[], Counter> itemInputMap = new Object2ObjectLinkedOpenCustomHashMap<>(Strategies.INGREDIENT_STRATEGY);
         final Object2ObjectMap<FluidStack, Counter> fluidInputMap = new Object2ObjectLinkedOpenHashMap<>();
         for (GTRecipeInput itemInput : itemInputs) {
+            if (itemInput == null) continue;
             itemInputMap.computeIfAbsent(itemInput.getInputStacks(), k -> new Counter(0))
                     .increment(itemInput.getAmount());
         }
         for (GTRecipeInput fluidInput : fluidInputs) {
+            if (fluidInput == null) continue;
             fluidInputMap.computeIfAbsent(fluidInput.getInputFluidStack(), k -> new Counter(0))
                     .increment(fluidInput.getAmount());
         }
