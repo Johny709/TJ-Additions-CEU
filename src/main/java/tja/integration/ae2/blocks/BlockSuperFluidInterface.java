@@ -19,6 +19,8 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +30,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.tile.TileSuperFluidInterface;
 import tja.mui.MUIUtils;
@@ -62,6 +63,8 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
     public static ModularPanel createFluidInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperFluidInterface superFluidInterface) {
         final StringSyncValue interfaceName = new StringSyncValue(superFluidInterface::getCustomInventoryName);
         syncManager.syncValue("interface_name", interfaceName);
+
+        syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 1, true));
 
         final Flow upgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
@@ -102,7 +105,8 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
                         .children(4, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot((IItemHandlerModifiable) superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)))
+                                .slot(new ModularSlot(superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
+                                        .slotGroup("upgrade_inventory"))))
                 .child(new ButtonWidget<>()
                         .left(154)
                         .size(22)

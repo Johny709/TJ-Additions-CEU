@@ -22,6 +22,8 @@ import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,6 +83,10 @@ public class BlockPatternInterface extends BlockInterface {
         final BooleanSyncValue intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superInterface::setIntelligentBlocking);
         syncManager.syncValue("intelligent_blocking", intelligentBlocking);
 
+        syncManager.registerSlotGroup(new SlotGroup("pattern_inventory", 9, 0, true));
+        syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 2, 1, true));
+        syncManager.registerSlotGroup(new SlotGroup("storage_inventory", 9, 2, true));
+
         final Widget<?> upgradeBackground = new Widget<>();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeBackground);
 
@@ -99,7 +105,8 @@ public class BlockPatternInterface extends BlockInterface {
                         .pos(7, 34)
                         .size(162, 72)
                         .gridOfSizeWidth(superInterface.getInterfaceDuality().getStorage().getSlots(), 9, (x, y, i) -> new ItemSlot()
-                                .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getStorage(), i)))
+                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getStorage(), i)
+                                        .slotGroup("storage_inventory"))))
                 .child(new Grid()
                         .pos(7, 123)
                         .size(166, 72)
@@ -108,7 +115,8 @@ public class BlockPatternInterface extends BlockInterface {
                         }})
                         .gridOfSizeWidth(superInterface.getInterfaceDuality().getPatterns().getSlots(), 9, (x, y, i) -> new ItemSlot()
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
-                                .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getPatterns(), i)))
+                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getPatterns(), i)
+                                        .slotGroup("pattern_inventory"))))
                 .child(upgradeBackground
                         .left(179)
                         .size(50, 194)
@@ -121,7 +129,8 @@ public class BlockPatternInterface extends BlockInterface {
                         }})
                         .gridOfSizeWidth(superInterface.getInterfaceDuality().getInventoryByName("upgrades").getSlots(), 2, (x, y, i) -> new ItemSlot()
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
+                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                        .slotGroup("upgrade_inventory"))))
                 .child(new ToggleButton()
                         .pos(-18, 8)
                         .size(16)

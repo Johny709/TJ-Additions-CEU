@@ -20,10 +20,7 @@ import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import com.cleanroommc.modularui.widgets.slot.FluidSlot;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
+import com.cleanroommc.modularui.widgets.slot.*;
 import gregtech.api.mui.sync.PagedWidgetSyncHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
@@ -35,7 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.TJAValues;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.tile.TileSuperUltimateInterface;
@@ -94,6 +90,11 @@ public class BlockSuperUltimateInterface extends BlockInterface {
         syncManager.syncValue("fluid_auto_push", fluidAutoPushValue);
         final PagedWidget.Controller controller = new PagedWidget.Controller();
         syncManager.syncValue("controller", new PagedWidgetSyncHandler(controller));
+
+        syncManager.registerSlotGroup(new SlotGroup("pattern_inventory", 9, 0, true));
+        syncManager.registerSlotGroup(new SlotGroup("item_upgrade_inventory", 4, 1, true));
+        syncManager.registerSlotGroup(new SlotGroup("fluid_upgrade_inventory", 1, 1, true));
+        syncManager.registerSlotGroup(new SlotGroup("storage_inventory", 9, 2, true));
 
         final Flow patternUpgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(patternUpgradeArea);
@@ -160,7 +161,8 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                         }})
                                         .gridOfSizeWidth(superDualInterface.getInterfaceDuality().getPatterns().getSlots(), 9, (x, y, i) -> new ItemSlot()
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
-                                                .slot((IItemHandlerModifiable) superDualInterface.getInterfaceDuality().getPatterns(), i)))
+                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getPatterns(), i)
+                                                        .slotGroup("pattern_inventory"))))
                                 .child(patternUpgradeArea
                                         .left(209)
                                         .size(86, 194)
@@ -173,7 +175,8 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                         }})
                                         .gridOfSizeWidth(superDualInterface.getInterfaceDuality().getInventoryByName("upgrades").getSlots(), 4, (x, y, i) -> new ItemSlot()
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                                .slot((IItemHandlerModifiable) superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
+                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                                        .slotGroup("item_upgrade_inventory"))))
                                 .child(new ToggleButton()
                                         .pos(-18, 8)
                                         .size(16)
@@ -322,7 +325,8 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                                         .syncHandler(new PhantomItemSlotSH(new ModularSlot(superDualInterface.getInterfaceDuality().getConfig(), i)
                                                                 .ignoreMaxStackSize(true))))
                                                 .key('S', i -> new ItemSlot()
-                                                        .slot((IItemHandlerModifiable) superDualInterface.getInterfaceDuality().getStorage(), i))
+                                                        .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getStorage(), i)
+                                                                .slotGroup("storage_inventory")))
                                                 .build()))
                                 .child(itemUpgradeArea
                                         .left(209)
@@ -332,7 +336,8 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                         .pos(216, 7)
                                         .children(10, i -> new ItemSlot()
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                                .slot((IItemHandlerModifiable) superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
+                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                                        .slotGroup("item_uprade_inventory"))))
                                 .child(new ToggleButton()
                                         .pos(-18, 8)
                                         .size(16)
@@ -400,7 +405,8 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                         .pos(216, 7)
                                         .children(4, i -> new ItemSlot()
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                                .slot((IItemHandlerModifiable) superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
+                                                .slot(new ModularSlot(superDualInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
+                                                        .slotGroup("fluid_upgrade_inventory"))))
                                 .child(new ToggleButton()
                                         .pos(-18, 8)
                                         .size(16)

@@ -18,6 +18,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
+import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.tile.TileStockingInterface;
 import tja.mui.MUIUtils;
@@ -66,6 +66,9 @@ public class BlockStockingInterface extends BlockInterface {
         final BooleanSyncValue autoPushValue = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal() == 0, superInterface::setItemAutoPush);
         syncManager.syncValue("auto_push", autoPushValue);
 
+        syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 1, true));
+        syncManager.registerSlotGroup(new SlotGroup("storage_inventory", 9, 2, true));
+
         final Flow upgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
 
@@ -95,7 +98,8 @@ public class BlockStockingInterface extends BlockInterface {
                                 .syncHandler(new PhantomItemSlotSH(new ModularSlot(superInterface.getInterfaceDuality().getConfig(), i)
                                         .ignoreMaxStackSize(true))))
                         .key('S', i -> new ItemSlot()
-                                .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getStorage(), i))
+                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getStorage(), i)
+                                        .slotGroup("storage_inventory")))
                         .build().pos(7, 34))
                 .child(upgradeArea
                         .left(179)
@@ -104,7 +108,8 @@ public class BlockStockingInterface extends BlockInterface {
                         .children(10, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot((IItemHandlerModifiable) superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)))
+                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                        .slotGroup("upgrade_inventory"))))
                 .child(new ToggleButton()
                         .pos(-18, 35)
                         .size(16)
