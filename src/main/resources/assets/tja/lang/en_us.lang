@@ -52,6 +52,11 @@ tja.machine.universal.ticks=Ticks: §b%s
 tja.machine.universal.eut=Using §c%s §fEU/t §a(%s§a)
 tja.machine.universal.ticks.operation=Ticks Per Operation
 tja.machine.universal.consuming=Consuming:
+tja.machine.universal.tooltip.shift=[Press shift for more info]
+tja.machine.universal.tooltip.shifted=[Showing more tooltips]
+tja.machine.universal.tooltip.page=[Page: %s / %s]
+tja.machine.universal.tooltip.page_info=§f[Press tab to turn page]
+tja.machine.universal.tooltip.more_jei=Full tooltip can also be viewed in JEI info page.
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 
@@ -96,6 +101,13 @@ tile.me.stocking_interface.name=ME Stocking Interface
 tile.me.stocking_fluid_interface.name=ME Stocking Fluid Interface
 tile.me.stocking_dual_interface.name=ME Stocking Dual Interface
 tile.me.super_ultimate_interface.name=ME Super Ultimate Interface
+
+tile.me.super_interface.description=Warning: Slot click is broken. Transfer items by shift-clicking or slots may lock up.
+tile.me.super_interface.pattern_slots=Pattern Slots: §a%,d
+tile.me.super_interface.storage_slots=Storage Slots: §6%,d
+tile.me.super_interface.upgrade_slots=Upgrade Slots: §e%,d
+tile.me.super_fluid_interface.fluid_tanks=Fluid Tanks: §b%,d
+tile.me.super_fluid_interface.upgrade_slots=Fluid Upgrade Slots: §e%,d
 
 tile.me.crafting_storage.65536k.name=§165536k§f Crafting Storage
 tile.me.crafting_storage.262144k.name=§b262144k§f Crafting Storage
