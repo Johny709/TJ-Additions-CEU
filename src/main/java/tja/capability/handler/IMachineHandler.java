@@ -5,20 +5,20 @@ import gregtech.api.capability.IMultipleTankHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.util.TJAEnergyUtils;
 import tja.util.TJAFluidUtils;
-import tja.util.TJAItemUtils;
+import tja.util.TJAGTUtils;
 
 public interface IMachineHandler {
 
     default IItemHandlerModifiable getImportItemInventory() {
-        return TJAItemUtils.DUMMY_ITEM_HANDLER;
+        return TJAGTUtils.DUMMY_ITEM_HANDLER;
     }
 
     default IItemHandlerModifiable getExportItemInventory() {
-        return TJAItemUtils.DUMMY_ITEM_HANDLER;
+        return TJAGTUtils.DUMMY_ITEM_HANDLER;
     }
 
     default IItemHandlerModifiable getInputBus(int index) {
-        return TJAItemUtils.DUMMY_ITEM_HANDLER;
+        return TJAGTUtils.DUMMY_ITEM_HANDLER;
     }
 
     default IMultipleTankHandler getImportFluidTank() {

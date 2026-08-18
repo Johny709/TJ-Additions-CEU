@@ -119,6 +119,7 @@ public class BlockSuperInterface extends BlockInterface {
 
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
         return ModularPanel.defaultPanel("me.super_interface.gui", 176, 292)
+                .childIf(TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID), () -> MUIUtils.createPatternMultiToolWidget(data, syncManager, settings))
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)

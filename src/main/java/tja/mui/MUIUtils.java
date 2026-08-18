@@ -1,15 +1,25 @@
 package tja.mui;
 
+import appeng.core.Api;
+import baubles.api.BaublesApi;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiTextures;
+import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.Operation;
@@ -17,16 +27,25 @@ import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.drawable.GTObjectDrawable;
 import gregtech.api.util.KeyUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.ISuperInterface;
+import tja.items.handlers.FilteredItemStackHandler;
+import tja.util.TJAItemUtils;
+import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class MUIUtils {
     
@@ -497,5 +516,180 @@ public final class MUIUtils {
                         .background(GuiTextures.MC_BUTTON)
                         .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_sub_1000"));
+    }
+
+    public static Widget<?> createPatternMultiToolWidget(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        final ItemStack patternMultiTool = Optional.of(data.getPlayer().inventory.mainInventory)
+                .map(inventory -> {
+                    for (ItemStack stack : inventory)
+                        if (stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                            return stack;
+                    if (TJAValues.isModLoaded(TJAValues.BAUBLES_MOD_ID)) {
+                        final IItemHandlerModifiable baubleSlots = BaublesApi.getBaublesHandler(data.getPlayer());
+                        for (int i = 0; i < baubleSlots.getSlots(); i++)
+                            if (baubleSlots.getStackInSlot(i).isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                                return baubleSlots.getStackInSlot(i);
+                    }
+                    return ItemStack.EMPTY;
+                }).get();
+        final NBTTagCompound compound = TJAItemUtils.getCompoundFromStack(patternMultiTool);
+        final NBTTagCompound invTag = compound.getCompoundTag("inv");
+        final NBTTagCompound upgradeTag = compound.getCompoundTag("upgrades");
+        final FilteredItemStackHandler multiPatternSlots = new FilteredItemStackHandler(36, 64)
+                .setItemStackPredicate((slot, itemStack) -> itemStack.isItemEqual(Api.INSTANCE.definitions().materials().blankPattern().maybeStack(1).orElse(ItemStack.EMPTY)) ||
+                        itemStack.isItemEqual(Api.INSTANCE.definitions().items().encodedPattern().maybeStack(1).orElse(ItemStack.EMPTY)) || itemStack.isItemEqual(TJAItemUtils.getItemStackFromName("ae2fc:dense_encoded_pattern")));
+        multiPatternSlots.setOnContentsChangedPost((slot, itemStack) -> writePatternMultiToolToNBT(multiPatternSlots, invTag));
+        final FilteredItemStackHandler multiUpgradeSlots = new FilteredItemStackHandler(3, 1)
+                .setItemStackPredicate((slot, itemStack) -> itemStack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)));
+        multiUpgradeSlots.setOnContentsChangedPost((slot, itemStack) -> writePatternMultiToolToNBT(multiUpgradeSlots, upgradeTag));
+
+        syncManager.syncValue("pattern_multiply_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m * 2,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_multiply_3", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m * 3,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_add_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m + 1,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_divide_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m / 2,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_divide_3", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m / 3,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.changeInterfacePatternAmount(multiPatternSlots, m -> m - 1,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+        syncManager.syncValue("pattern_clear", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> TJAUtility.clearPatterns(multiPatternSlots,
+                        () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
+
+
+        syncManager.registerSlotGroup(new SlotGroup("multi_tool_inventory", 4, 0, true));
+        syncManager.registerSlotGroup(new SlotGroup("multi_tool_upgrade_inventory", 1, 1, true));
+
+        final Flow flow = Flow.col();
+        settings.getRecipeViewerSettings().addExclusionArea(flow);
+
+        syncManager.addOpenListener(player -> {
+            if (!patternMultiTool.isEmpty()) {
+                readPatternMultiToolNBT(multiPatternSlots, invTag.getTagList("Items", 10));
+                readPatternMultiToolNBT(multiUpgradeSlots, upgradeTag.getTagList("Items", 10));
+                if (patternMultiTool.getTagCompound() == null || patternMultiTool.getTagCompound().isEmpty()) {
+                    compound.setTag("inv", invTag);
+                    compound.setTag("upgrades", upgradeTag);
+                    patternMultiTool.setTagCompound(compound);
+                }
+            }
+        });
+
+        return patternMultiTool.isEmpty() ? new Widget<>() :
+                flow.rightRel(1.12f)
+                        .size(105, 218)
+                        .background(GuiTextures.MC_BACKGROUND)
+                        .child(new TextWidget<>(IKey.lang("item.nae2.pattern_multiplier.name"))
+                                .pos(7, 4))
+                        .child(new Grid()
+                                .pos(7, 14)
+                                .size(72, 162)
+                                .gridOfSizeWidth(multiPatternSlots.getSlots(), 4, (x, y, i) -> new ItemSlot()
+                                        .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
+                                        .slot(new ModularSlot(multiPatternSlots, i)
+                                                .slotGroup("multi_tool_inventory"))))
+                        .child(Flow.col()
+                                .pos(79, 14)
+                                .size(18, 54)
+                                .children(multiUpgradeSlots.getSlots(), i -> new ItemSlot()
+                                        .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
+                                        .slot(new ModularSlot(multiUpgradeSlots, i)
+                                                .slotGroup("multi_tool_upgrade_inventory"))))
+                        .child(new ButtonWidget<>()
+                                .pos(7, 176)
+                                .size(18)
+                                .overlay(IKey.str("*2"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.action.MULTIPLY_2.name"))
+                                .addTooltipLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_multiply_2"))
+                        .child(new ButtonWidget<>()
+                                .pos(25, 176)
+                                .size(18)
+                                .overlay(IKey.str("*3"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.action.MULTIPLY_3.name"))
+                                .addTooltipLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_multiply_3"))
+                        .child(new ButtonWidget<>()
+                                .pos(43, 176)
+                                .size(18)
+                                .overlay(IKey.str("+1"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.tooltips.appliedenergistics2.IncreaseByOne"))
+                                .addTooltipLine(IKey.lang("gui.tooltips.appliedenergistics2.IncreaseByOneDesc")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_add_1"))
+                        .child(new ButtonWidget<>()
+                                .pos(7, 194)
+                                .size(18)
+                                .overlay(IKey.str("/2"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.action.DIVIDE_2.name"))
+                                .addTooltipLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_2.text")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_divide_2"))
+                        .child(new ButtonWidget<>()
+                                .pos(25, 194)
+                                .size(18)
+                                .overlay(IKey.str("/3"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.action.DIVIDE_3.name"))
+                                .addTooltipLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_3.text")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_divide_3"))
+                        .child(new ButtonWidget<>()
+                                .pos(43, 194)
+                                .size(18)
+                                .overlay(IKey.str("-1"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("gui.tooltips.appliedenergistics2.DecreaseByOne"))
+                                .addTooltipLine(IKey.lang("gui.tooltips.appliedenergistics2.DecreaseByOneDesc")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_sub_1"))
+                        .child(new ButtonWidget<>()
+                                .pos(61, 176)
+                                .size(36)
+                                .overlay(IKey.str("X"))
+                                .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
+                                .addTooltipLine(IKey.lang("nae2.pattern_multiplier.unencode"))
+                                .addTooltipLine(IKey.lang("nae2.pattern_multiplier.unencode.desc")
+                                        .style(TextFormatting.GRAY))
+                                .syncHandler("pattern_clear"));
+    }
+
+    private static void writePatternMultiToolToNBT(IItemHandler itemHandler, NBTTagCompound compound) {
+        final NBTTagList tagList = new NBTTagList();
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            final ItemStack stack = itemHandler.getStackInSlot(i);
+            if (!stack.isEmpty()) {
+                final NBTTagCompound tagCompound = stack.serializeNBT();
+                tagCompound.setInteger("Slot", i);
+                tagList.appendTag(tagCompound);
+            }
+        }
+        compound.setTag("Items", tagList);
+    }
+
+    private static void readPatternMultiToolNBT(IItemHandlerModifiable itemHandler, NBTTagList tagList) {
+        for (int i = 0; i < tagList.tagCount(); i++) {
+            final NBTTagCompound compound = tagList.getCompoundTagAt(i);
+            if (compound.hasKey("Slot")) {
+                final ItemStack patternStack = TJAItemUtils.getItemStackFromName(compound.getString("id"), compound.getInteger("Count"), compound.getShort("Damage"));
+                patternStack.setTagCompound(compound.getCompoundTag("tag"));
+                itemHandler.setStackInSlot(compound.getInteger("Slot"), patternStack);
+            }
+        }
     }
 }

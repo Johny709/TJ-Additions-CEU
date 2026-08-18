@@ -1,5 +1,6 @@
 package tja.util;
 
+import appeng.core.Api;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -122,5 +123,14 @@ public final class TJAUtility {
             itemStacks.add(patternSlots.extractItem(i, Integer.MAX_VALUE, false));
         for (int i = 0; i < patternSlots.getSlots(); i++)
             patternSlots.insertItem(i, itemStacks.get(i), false);
+    }
+
+    public static void clearPatterns(IItemHandler patternSlots, Runnable callback) {
+        for (int i = 0; i < patternSlots.getSlots(); i++) {
+            ItemStack pattern = patternSlots.extractItem(i, Integer.MAX_VALUE, false);
+            pattern = Api.INSTANCE.definitions().materials().blankPattern().maybeStack(pattern.getCount()).orElse(ItemStack.EMPTY);
+            patternSlots.insertItem(i, pattern, false);
+        }
+        callback.run();
     }
 }

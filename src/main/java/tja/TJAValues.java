@@ -18,7 +18,9 @@ public class TJAValues {
     public static final String THEONEPROBE_MOD_ID = "theoneprobe";
     public static final String SUPERCRITICAL_MOD_ID = "supercritical";
     public static final String AE2FC_MOD_ID = "ae2fc";
+    public static final String NAE2_MOD_ID = "nae2";
     public static final String RANDOM_COMPLEMENT_MOD_ID = "random_complement";
+    public static final String BAUBLES_MOD_ID = "baubles";
     public static final BlockPos DUMMY_POS = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final IFluidTank DUMMY_TANK = new FluidTank(0);
     public static final DecimalFormat thousandFormat = new DecimalFormat(",###");
