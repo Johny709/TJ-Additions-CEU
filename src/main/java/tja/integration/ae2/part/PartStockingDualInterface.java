@@ -70,10 +70,6 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_dual_interface_has_channel"));
 
-    public static final IDrawable INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
-    public static final IDrawable FLUID_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 36);
     private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
@@ -357,11 +353,11 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
 
     @Override
     public IDrawable getItemTabTexture() {
-        return INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return FLUID_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

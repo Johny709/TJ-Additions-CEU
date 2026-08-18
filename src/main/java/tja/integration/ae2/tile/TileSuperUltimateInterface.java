@@ -54,8 +54,6 @@ import java.util.List;
 
 public class TileSuperUltimateInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperDualInterface {
 
-    public static final IDrawable EXTRA_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 72);
     private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
@@ -333,16 +331,16 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
 
     @Override
     public IDrawable getItemTabTexture() {
-        return TileStockingDualInterface.INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return TileStockingDualInterface.FLUID_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getExtraTabTexture() {
-        return EXTRA_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

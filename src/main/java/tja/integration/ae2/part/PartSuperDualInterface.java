@@ -57,10 +57,6 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.super_dual_interface_has_channel"));
 
-    public static final IDrawable INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
-    public static final IDrawable FLUID_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 18);
 
     public PartSuperDualInterface(ItemStack is) {
@@ -228,11 +224,11 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
 
     @Override
     public IDrawable getItemTabTexture() {
-        return INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return FLUID_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

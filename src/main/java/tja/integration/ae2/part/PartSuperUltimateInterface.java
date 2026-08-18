@@ -74,8 +74,6 @@ public class PartSuperUltimateInterface extends PartInterface implements IGuiHol
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.super_ultimate_interface_has_channel"));
 
-    public static final IDrawable EXTRA_INTERFACE_TAB_TEXTURE = new ItemDrawable(TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
-
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 72);
     private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
@@ -373,16 +371,16 @@ public class PartSuperUltimateInterface extends PartInterface implements IGuiHol
 
     @Override
     public IDrawable getItemTabTexture() {
-        return PartStockingDualInterface.INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return PartStockingDualInterface.FLUID_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getExtraTabTexture() {
-        return EXTRA_INTERFACE_TAB_TEXTURE;
+        return new ItemDrawable(TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }
