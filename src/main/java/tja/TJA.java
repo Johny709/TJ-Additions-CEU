@@ -1,13 +1,11 @@
 package tja;
 
 import codechicken.lib.texture.TextureUtils;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJAAE2Blocks;
 import tja.blocks.TJAMetaBlocks;
 import tja.capability.TJASimpleCapabilityManager;
-import tja.events.GTEventHandler;
 import tja.integration.theoneprobe.TheOneProbeModule;
 import tja.items.TJACoverBehaviors;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +34,6 @@ public class TJA {
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("Hello From {}!", MOD_NAME);
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
-            MinecraftForge.EVENT_BUS.register(new GTEventHandler());
             TJAMetaTileEntities.init();
             TJAMetaBlocks.init();
             TJAMetaItems.init();
