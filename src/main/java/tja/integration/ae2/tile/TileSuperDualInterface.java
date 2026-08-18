@@ -27,7 +27,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tja.blocks.TJABlocks;
+import net.minecraftforge.fml.common.Optional;
+import tja.TJAValues;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockSuperDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -104,7 +106,7 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -157,6 +159,7 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     }
 
     @Override
+    @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
         ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.markDirty();
@@ -187,11 +190,11 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
 
     @Override
     public IDrawable getItemTabTexture() {
-        return new ItemDrawable(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return new ItemDrawable(TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

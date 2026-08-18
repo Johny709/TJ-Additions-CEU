@@ -23,8 +23,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.integration.ae2.tile.TileTJCraftingStorageTile;
 import tja.rendering.IBlockModel;
 
@@ -39,6 +41,7 @@ public class BlockTJCraftingUnit extends BlockCraftingUnit implements IBlockMode
         super(CraftingUnitType.UNIT);
         this.type = type;
         this.setTileEntity(TileTJCraftingStorageTile.class);
+        GameRegistry.registerTileEntity(TileTJCraftingStorageTile.class, new ResourceLocation(TJA.MOD_ID, "me.crafting_storage"));
     }
 
     @Override

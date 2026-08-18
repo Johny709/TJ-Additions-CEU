@@ -50,7 +50,7 @@ import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockStockingDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
@@ -239,7 +239,7 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -353,11 +353,11 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
 
     @Override
     public IDrawable getItemTabTexture() {
-        return new ItemDrawable(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Items.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return new ItemDrawable(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Items.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

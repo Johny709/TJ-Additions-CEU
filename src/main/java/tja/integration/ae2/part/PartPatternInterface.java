@@ -22,11 +22,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.Optional;
 import tja.TJA;
+import tja.TJAValues;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockPatternInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 
 import javax.annotation.Nonnull;
 
@@ -65,7 +67,7 @@ public class PartPatternInterface extends PartInterface implements IGuiHolder<Si
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull
@@ -120,6 +122,7 @@ public class PartPatternInterface extends PartInterface implements IGuiHolder<Si
     }
 
     @Override
+    @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
         ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.getTile().markDirty();

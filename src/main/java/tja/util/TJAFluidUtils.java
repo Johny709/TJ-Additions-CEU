@@ -10,6 +10,8 @@ import java.util.function.BiConsumer;
 
 public final class TJAFluidUtils {
 
+    public static final IMultipleTankHandler DUMMY_FLUID_HANDLER = new FluidTankList(true);
+
     private TJAFluidUtils() {}
 
     public static final IMultipleTankHandler VOID_TANK = new FluidTankList(true,  new FluidTank(Integer.MAX_VALUE) {

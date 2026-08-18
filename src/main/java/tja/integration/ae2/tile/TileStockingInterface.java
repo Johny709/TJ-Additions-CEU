@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import tja.blocks.TJABlocks;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockStockingInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
@@ -123,7 +123,7 @@ public class TileStockingInterface extends TileInterface implements IGuiHolder<P
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

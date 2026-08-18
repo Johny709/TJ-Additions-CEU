@@ -1,5 +1,6 @@
 package tja.util;
 
+import gregtech.api.capability.impl.ItemHandlerList;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -8,14 +9,18 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
 
 public final class TJAItemUtils {
+
+    public static final IItemHandlerModifiable DUMMY_ITEM_HANDLER = new ItemHandlerList(Collections.emptyList());
 
     private TJAItemUtils() {}
 

@@ -4,11 +4,13 @@ import appeng.core.Api;
 import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.UITexture;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import tja.TJA;
 import tja.TJAValues;
-import tja.util.TJAItemUtils;
+
+import java.util.Objects;
 
 public final class TJAGuiTextures {
 
@@ -32,7 +34,7 @@ public final class TJAGuiTextures {
     public static final UITexture PATTERN_OVERLAY = UITexture.fullImage(resource("textures/gui/overlay/me.pattern_overlay"));
 
     public static final IDrawable CERTUS_QUARTZ_WRENCH = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID) ? new ItemDrawable(Api.INSTANCE.definitions().items().certusQuartzWrench().maybeStack(1).orElse(ItemStack.EMPTY)) : UITexture.EMPTY;
-    public static final IDrawable CLOCK = new ItemDrawable(TJAItemUtils.getItemStackFromName("minecraft:clock"));
+    public static final IDrawable CLOCK = new ItemDrawable(new ItemStack(Objects.requireNonNull(Item.getByNameOrId("minecraft:clock"))));
 
     private static ResourceLocation resource(String path) {
         return new ResourceLocation(TJA.MOD_ID, path);

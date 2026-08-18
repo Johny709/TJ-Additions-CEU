@@ -39,9 +39,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import tja.blocks.TJABlocks;
+import tja.TJAValues;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockSuperUltimateInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -213,7 +215,7 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -266,6 +268,7 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
     }
 
     @Override
+    @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
         ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.markDirty();
@@ -331,16 +334,16 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
 
     @Override
     public IDrawable getItemTabTexture() {
-        return new ItemDrawable(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return new ItemDrawable(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getExtraTabTexture() {
-        return new ItemDrawable(TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

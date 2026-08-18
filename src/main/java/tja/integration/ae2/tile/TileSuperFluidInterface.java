@@ -8,7 +8,7 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tja.blocks.TJABlocks;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockSuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -27,7 +27,7 @@ public class TileSuperFluidInterface extends TileFluidInterface implements IGuiH
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override

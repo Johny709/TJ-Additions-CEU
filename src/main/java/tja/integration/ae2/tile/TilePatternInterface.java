@@ -13,7 +13,9 @@ import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tja.blocks.TJABlocks;
+import net.minecraftforge.fml.common.Optional;
+import tja.TJAValues;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockPatternInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
@@ -32,7 +34,7 @@ public class TilePatternInterface extends TileInterface implements IGuiHolder<Po
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class TilePatternInterface extends TileInterface implements IGuiHolder<Po
     }
 
     @Override
+    @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
         ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.markDirty();

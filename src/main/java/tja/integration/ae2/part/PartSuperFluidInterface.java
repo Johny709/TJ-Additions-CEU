@@ -21,7 +21,7 @@ import tja.TJA;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockSuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 
 import javax.annotation.Nonnull;
 
@@ -60,7 +60,7 @@ public class PartSuperFluidInterface extends PartFluidInterface implements IGuiH
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull

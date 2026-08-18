@@ -33,12 +33,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.Optional;
 import tja.TJA;
+import tja.TJAValues;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockSuperDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -135,7 +137,7 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -194,6 +196,7 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
     }
 
     @Override
+    @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
         ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.getTile().markDirty();
@@ -224,11 +227,11 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
 
     @Override
     public IDrawable getItemTabTexture() {
-        return new ItemDrawable(TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Items.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return new ItemDrawable(TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Items.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

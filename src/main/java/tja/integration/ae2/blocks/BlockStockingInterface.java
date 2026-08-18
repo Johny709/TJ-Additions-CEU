@@ -27,12 +27,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TileStockingInterface;
@@ -52,6 +55,7 @@ public class BlockStockingInterface extends BlockInterface {
 
     public BlockStockingInterface() {
         this.setTileEntity(TileStockingInterface.class);
+        GameRegistry.registerTileEntity(TileStockingInterface.class, new ResourceLocation(TJA.MOD_ID, "me.stocking_interface"));
     }
 
     @Override

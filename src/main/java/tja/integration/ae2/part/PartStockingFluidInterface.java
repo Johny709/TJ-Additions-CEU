@@ -42,7 +42,7 @@ import tja.TJA;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockStockingFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 
 import javax.annotation.Nonnull;
 
@@ -152,7 +152,7 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull

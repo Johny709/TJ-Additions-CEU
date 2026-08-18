@@ -14,7 +14,6 @@ import com.cleanroommc.modularui.value.sync.*;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.*;
-import gregtech.api.mui.sync.PagedWidgetSyncHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,18 +22,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TileStockingDualInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
+import tja.mui.sync.PagedWidgetSyncHandler;
 import tja.util.Color;
 import tja.util.TooltipHelper;
 
@@ -56,6 +59,7 @@ public class BlockStockingDualInterface extends BlockInterface {
 
     public BlockStockingDualInterface() {
         this.setTileEntity(TileStockingDualInterface.class);
+        GameRegistry.registerTileEntity(TileStockingDualInterface.class, new ResourceLocation(TJA.MOD_ID, "me.stocking_dual_interface"));
     }
 
     @Override

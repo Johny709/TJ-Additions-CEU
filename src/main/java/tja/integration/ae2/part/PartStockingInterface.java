@@ -39,7 +39,7 @@ import tja.TJA;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.blocks.BlockStockingInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
-import tja.items.TJAItems;
+import tja.items.TJAAE2Items;
 import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
@@ -152,7 +152,7 @@ public class PartStockingInterface extends PartInterface implements IGuiHolder<S
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Items.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Nonnull

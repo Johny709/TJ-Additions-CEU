@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import tja.TJA;
+import tja.TJAValues;
 import tja.integration.ae2.blocks.TJCraftingUnitType;
 import tja.integration.ae2.render.TJCraftingCubeModel;
 
@@ -16,18 +17,34 @@ import javax.annotation.Nonnull;
 
 public class BakedModelLoader implements ICustomModelLoader {
 
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_65536k_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_65M);
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_262144K_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_262M);
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_1048M_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_1048M);
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_SINGULARITY_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_SINGULARITY);
+    private static final TJCraftingCubeModel CRAFTING_STORAGE_65536k_MODEL;
+    private static final TJCraftingCubeModel CRAFTING_STORAGE_262144K_MODEL;
+    private static final TJCraftingCubeModel CRAFTING_STORAGE_1048M_MODEL;
+    private static final TJCraftingCubeModel CRAFTING_STORAGE_SINGULARITY_MODEL;
+
+    static {
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
+            CRAFTING_STORAGE_65536k_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_65M);
+            CRAFTING_STORAGE_262144K_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_262M);
+            CRAFTING_STORAGE_1048M_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_1048M);
+            CRAFTING_STORAGE_SINGULARITY_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_SINGULARITY);
+        } else {
+            CRAFTING_STORAGE_65536k_MODEL = null;
+            CRAFTING_STORAGE_262144K_MODEL = null;
+            CRAFTING_STORAGE_1048M_MODEL = null;
+            CRAFTING_STORAGE_SINGULARITY_MODEL = null;
+        }
+    }
 
     private final Object2ObjectMap<ResourceLocation, IModel> models = new Object2ObjectOpenHashMap<>();
 
     public BakedModelLoader() {
-        this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.65536k"), "normal"), CRAFTING_STORAGE_65536k_MODEL);
-        this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.262144k"), "normal"), CRAFTING_STORAGE_262144K_MODEL);
-        this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.1048m"), "normal"), CRAFTING_STORAGE_1048M_MODEL);
-        this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.singularity"), "normal"), CRAFTING_STORAGE_SINGULARITY_MODEL);
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
+            this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.65536k"), "normal"), CRAFTING_STORAGE_65536k_MODEL);
+            this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.262144k"), "normal"), CRAFTING_STORAGE_262144K_MODEL);
+            this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.1048m"), "normal"), CRAFTING_STORAGE_1048M_MODEL);
+            this.models.put(new ModelResourceLocation(new ResourceLocation(TJA.MOD_ID, "me.crafting_storage.singularity"), "normal"), CRAFTING_STORAGE_SINGULARITY_MODEL);
+        }
     }
 
     @Override

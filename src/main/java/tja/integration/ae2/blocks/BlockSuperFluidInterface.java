@@ -29,11 +29,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.tile.TileSuperFluidInterface;
@@ -54,6 +57,7 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
 
     public BlockSuperFluidInterface() {
         this.setTileEntity(TileSuperFluidInterface.class);
+        GameRegistry.registerTileEntity(TileSuperFluidInterface.class, new ResourceLocation(TJA.MOD_ID, "me.super_fluid_interface"));
     }
 
     @Override

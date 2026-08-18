@@ -37,7 +37,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import tja.blocks.TJABlocks;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.blocks.BlockStockingDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -206,7 +206,7 @@ public class TileStockingDualInterface extends TileInterface implements IGuiHold
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -314,11 +314,11 @@ public class TileStockingDualInterface extends TileInterface implements IGuiHold
 
     @Override
     public IDrawable getItemTabTexture() {
-        return new ItemDrawable(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public IDrawable getFluidTabTexture() {
-        return new ItemDrawable(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
+        return new ItemDrawable(TJAAE2Blocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY));
     }
 }

@@ -10,7 +10,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.core.Api;
 import appeng.fluids.helper.DualityFluidInterface;
 import appeng.fluids.helper.IFluidInterfaceHost;
-import appeng.fluids.util.AEFluidInventory;
 import appeng.fluids.util.IAEFluidTank;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;

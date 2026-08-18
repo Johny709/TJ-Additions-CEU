@@ -20,7 +20,6 @@ import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.*;
-import gregtech.api.mui.sync.PagedWidgetSyncHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -29,12 +28,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.TJAValues;
 import tja.integration.ae2.ISuperDualInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -42,6 +44,7 @@ import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TileSuperDualInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
+import tja.mui.sync.PagedWidgetSyncHandler;
 import tja.util.Color;
 import tja.util.TJAUtility;
 import tja.util.TooltipHelper;
@@ -65,6 +68,7 @@ public class BlockSuperDualInterface extends BlockInterface {
 
     public BlockSuperDualInterface() {
         this.setTileEntity(TileSuperDualInterface.class);
+        GameRegistry.registerTileEntity(TileSuperDualInterface.class, new ResourceLocation(TJA.MOD_ID, "me.super_dual_interface"));
     }
 
     @Override
@@ -109,8 +113,13 @@ public class BlockSuperDualInterface extends BlockInterface {
         syncManager.syncValue("splitting_items_fluids", splittingItemsFluids);
         final IntSyncValue blockingModeEx = new IntSyncValue(() -> superDualInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.CONDENSER_OUTPUT).ordinal(), i -> superDualInterface.setBlockModeEx(CondenserOutput.values()[i]));
         syncManager.syncValue("blocking_mode_ex", blockingModeEx);
-        final BooleanSyncValue intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superDualInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superDualInterface::setIntelligentBlocking);
-        syncManager.syncValue("intelligent_blocking", intelligentBlocking);
+
+        final BooleanSyncValue intelligentBlocking;
+        if (TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID)) {
+            intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superDualInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superDualInterface::setIntelligentBlocking);
+            syncManager.syncValue("intelligent_blocking", intelligentBlocking);
+        } else intelligentBlocking = null;
+
         final PagedWidget.Controller controller = new PagedWidget.Controller();
         syncManager.syncValue("controller", new PagedWidgetSyncHandler(controller));
 
@@ -216,7 +225,7 @@ public class BlockSuperDualInterface extends BlockInterface {
                                             richTooltip.addLine(IKey.lang("gui.appliedenergistics2.InterfaceTerminalHint")
                                                     .style(TextFormatting.GRAY));
                                         }))
-                                .child(new ToggleButton()
+                                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
                                         .pos(-18, 114)
                                         .size(16)
                                         .syncHandler("fluid_packet")
@@ -226,7 +235,7 @@ public class BlockSuperDualInterface extends BlockInterface {
                                             richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet.hint" : "ae2fc.tooltip.real_fluid.hint")
                                                     .style(TextFormatting.GRAY));
                                         }))
-                                .child(new ToggleButton()
+                                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
                                         .pos(-18, 132)
                                         .size(16)
                                         .syncHandler("splitting_items_fluids")
@@ -236,7 +245,7 @@ public class BlockSuperDualInterface extends BlockInterface {
                                             richTooltip.addLine(IKey.lang(splittingItemsFluids.getBoolValue() ? "ae2fc.tooltip.prevent_splitting.hint" : "ae2fc.tooltip.allow_splitting.hint")
                                                     .style(TextFormatting.GRAY));
                                         }))
-                                .child(new CycleButtonWidget()
+                                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new CycleButtonWidget()
                                         .pos(-18, 150)
                                         .size(16)
                                         .length(3)

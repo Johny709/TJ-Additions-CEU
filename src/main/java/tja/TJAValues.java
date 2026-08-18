@@ -1,20 +1,12 @@
 package tja;
 
-import gregtech.api.capability.IMultipleTankHandler;
-import gregtech.api.capability.impl.FluidTankList;
-import gregtech.api.capability.impl.ItemHandlerList;
-import gregtech.api.unification.material.MarkerMaterials;
-import gregtech.api.unification.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import tja.capability.workables.BasicEnergyHandler;
 
 import java.text.DecimalFormat;
-import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -25,12 +17,10 @@ public class TJAValues {
     public static final String GCYL_MOD_ID = "gcyl";
     public static final String THEONEPROBE_MOD_ID = "theoneprobe";
     public static final String SUPERCRITICAL_MOD_ID = "supercritical";
+    public static final String AE2FC_MOD_ID = "ae2fc";
     public static final String RANDOM_COMPLEMENT_MOD_ID = "random_complement";
     public static final BlockPos DUMMY_POS = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final IFluidTank DUMMY_TANK = new FluidTank(0);
-    public static final BasicEnergyHandler DUMMY_ENERGY = new BasicEnergyHandler(0);
-    public static final IMultipleTankHandler DUMMY_FLUID_HANDLER = new FluidTankList(true);
-    public static final IItemHandlerModifiable DUMMY_ITEM_HANDLER = new ItemHandlerList(Collections.emptyList());
     public static final DecimalFormat thousandFormat = new DecimalFormat(",###");
     public static final DecimalFormat thousandTwoPlaceFormat = new DecimalFormat(",##0.00");
     public static final String[] LOCKING_MODE_TOOLTIP_TITLE = new String[]{"gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode", "gui.tooltips.appliedenergistics2.LockCraftingMode"};

@@ -29,7 +29,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tja.blocks.TJABlocks;
+import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockStockingFluidInterface;
 import tja.integration.ae2.helpers.DualitySuperFluidInterface;
@@ -123,7 +123,7 @@ public class TileStockingFluidInterface extends TileFluidInterface implements IG
 
     @Override
     public ItemStack getItemStackRepresentation() {
-        return TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
+        return TJAAE2Blocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY);
     }
 
     @Override
