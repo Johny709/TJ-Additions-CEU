@@ -1,5 +1,6 @@
 package tja.recipes;
 
+import appeng.core.Api;
 import com.fulltrix.gcyl.item.GCYLCoreItems;
 import com.fulltrix.gcyl.materials.GCYLMaterials;
 import gregtech.api.GTValues;
@@ -15,10 +16,20 @@ import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistry;
 import supercritical.api.unification.material.SCMaterials;
+import tja.TJA;
 import tja.TJAValues;
 import tja.blocks.BlockBatteryCell;
+import tja.blocks.TJABlocks;
 import tja.blocks.TJAMetaBlocks;
+import tja.items.TJAItems;
 import tja.items.TJAMetaItems;
 import tja.machines.TJAMetaTileEntities;
 import tja.util.TJAItemUtils;
@@ -29,17 +40,109 @@ import java.util.List;
 
 public class TJARecipes {
 
-    public static void init() {
+    public static void init(IForgeRegistry<IRecipe> recipes) {
+        final boolean isAE2Loaded = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID);
         final boolean isGregicalityLoaded = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID);
         final boolean isSuperCriticalLoaded = TJAValues.isModLoaded(TJAValues.SUPERCRITICAL_MOD_ID);
+
+        if (isAE2Loaded) {
+            // ME super interface
+            recipes.register(new ShapelessRecipes(resource("me.super_interface.block").toString(),
+                    TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.super_interface.part").toString(),
+                    TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_interface.part")));
+            // ME super fluid interface
+            recipes.register(new ShapelessRecipes(resource("me.super_fluid_interface.block").toString(),
+                    TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_fluid_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.super_fluid_interface.part").toString(),
+                    TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_fluid_interface.part")));
+            // ME super dual interface
+            recipes.register(new ShapelessRecipes(resource("me.super_dual_interface.block").toString(),
+                    TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_dual_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.super_dual_interface.part").toString(),
+                    TJAItems.PART_SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_dual_interface.part")));
+            recipes.register(new ShapelessRecipes(resource("me.super_dual_interface").toString(),
+                    TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                                    TJAItems.PART_SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY)),
+                            Ingredient.fromStacks(TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                                    TJAItems.PART_SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_dual_interface")));
+            // ME stocking interface
+            recipes.register(new ShapelessRecipes(resource("me.stocking_inteface.block").toString(),
+                    TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.stocking_interface.part").toString(),
+                    TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_interface.part")));
+            // ME stocking fluid interface
+            recipes.register(new ShapelessRecipes(resource("me.stocking_fluid_interface.block").toString(),
+                    TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_fluid_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.stocking_fluid_interface.part").toString(),
+                    TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_fluid_interface.part")));
+            // ME stocking dual interface
+            recipes.register(new ShapelessRecipes(resource("me.stocking_dual_interface.block").toString(),
+                    TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_dual_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.stocking_dual_interface.part").toString(),
+                    TJAItems.PART_STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_dual_interface.part")));
+            recipes.register(new ShapelessRecipes(resource("me.stocking_dual_inteface").toString(),
+                    TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                                    TJAItems.PART_STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY)),
+                            Ingredient.fromStacks(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                                    TJAItems.PART_STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.stocking_dual_interface")));
+            // ME pattern interface
+            recipes.register(new ShapelessRecipes(resource("me.pattern_interface.block").toString(),
+                    TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.pattern_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.pattern_interface.part").toString(),
+                    TJAItems.PART_PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.pattern_interface.part")));
+            // ME super ultimate interface
+            recipes.register(new ShapelessRecipes(resource("me.super_ultimate_interface.block").toString(),
+                    TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItems.PART_SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName(resource("me.super_ultimate_interface.block")));
+            recipes.register(new ShapelessRecipes(resource("me.super_ultimate_interface.part").toString(),
+                    TJAItems.PART_SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
+                    .setRegistryName("me.super_ultimate_interface.part"));
+        }
+
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             final List<Material> materials = new ArrayList<>(Arrays.asList(Materials.WroughtIron, Materials.Steel, Materials.Aluminium, Materials.StainlessSteel,
                     Materials.Titanium, Materials.TungstenSteel, Materials.RhodiumPlatedPalladium, Materials.Duranium, Materials.Tritanium));
             final List<Material> cableMaterials = new ArrayList<>(Arrays.asList(Materials.RedAlloy, Materials.Tin, Materials.Copper, Materials.Gold,
                     Materials.Aluminium, Materials.Platinum, Materials.Niobium, Materials.Naquadah, Materials.NaquadahAlloy));
             final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
-                    MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV, MarkerMaterials.Tier.UHV,
-                    MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV, MarkerMaterials.Tier.MAX};
+                    MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV,
+                    MarkerMaterials.Tier.UHV, MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV,
+                    MarkerMaterials.Tier.MAX};
             if (isGregicalityLoaded) {
                 materials.addAll(Arrays.asList(Materials.Seaborgium, Materials.Bohrium, GCYLMaterials.Quantum, GCYLMaterials.BlackTitanium,
                         GCYLMaterials.HeavyQuarkDegenerateMatter, Materials.Neutronium));
@@ -116,6 +219,121 @@ public class TJARecipes {
                         .EUt(983040000).duration(100)
                         .buildAndRegister();
             }
+            if (isAE2Loaded) {
+                // ME super interface
+                RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                        .input(OrePrefix.screw, Materials.TungstenSteel, 16)
+                        .inputs(Api.INSTANCE.definitions().materials().annihilationCore().maybeStack(10).orElse(ItemStack.EMPTY),
+                                Api.INSTANCE.definitions().materials().formationCore().maybeStack(10).orElse(ItemStack.EMPTY),
+                                Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(8).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.plate, Materials.RedSteel, 16)
+                        .input(MetaItems.ELECTRIC_PISTON_EV, 4)
+                        .inputs(Api.INSTANCE.definitions().blocks().iface().maybeStack(2).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.circuit, MarkerMaterials.Tier.IV, 2)
+                        .fluidInputs(Materials.SolderingAlloy.getFluid(1440))
+                        .outputs(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                        .EUt(1920).duration(1000)
+                        .buildAndRegister();
+                // ME super fluid interface
+                RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                        .circuitMeta(3)
+                        .input(OrePrefix.screw, Materials.TungstenCarbide, 16)
+                        .inputs(Api.INSTANCE.definitions().materials().annihilationCore().maybeStack(10).orElse(ItemStack.EMPTY),
+                                Api.INSTANCE.definitions().materials().formationCore().maybeStack(10).orElse(ItemStack.EMPTY),
+                                Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(8).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.plate, Materials.RedSteel, 16)
+                        .input(MetaItems.ELECTRIC_PUMP_EV, 4)
+                        .inputs(Api.INSTANCE.definitions().blocks().fluidIface().maybeStack(2).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.circuit, MarkerMaterials.Tier.IV, 2)
+                        .fluidInputs(Materials.SolderingAlloy.getFluid(1440))
+                        .outputs(TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                        .EUt(1920).duration(1000)
+                        .buildAndRegister();
+                // ME stocking interface
+                RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                        .inputs(Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(16).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.screw, Materials.NaquadahEnriched, 16)
+                        .input(OrePrefix.plateDouble, Materials.RhodiumPlatedPalladium, 8)
+                        .inputs(Api.INSTANCE.definitions().blocks().iface().maybeStack(4).orElse(ItemStack.EMPTY))
+                        .input(MetaItems.ELECTRIC_PISTON_LUV, 4)
+                        .input(OrePrefix.circuit, MarkerMaterials.Tier.ZPM, 2)
+                        .input(MetaItems.SENSOR_LuV)
+                        .input(MetaItems.EMITTER_LuV)
+                        .fluidInputs(Materials.SolderingAlloy.getFluid(1440))
+                        .outputs(TJABlocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                        .EUt(GTValues.VAOC[GTValues.LuV]).duration(1000)
+                        .buildAndRegister();
+                // ME stocking fluid inteface
+                RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                        .circuitMeta(3)
+                        .inputs(Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(16).orElse(ItemStack.EMPTY))
+                        .input(OrePrefix.screw, Materials.NaquadahAlloy, 16)
+                        .input(OrePrefix.plateDouble, Materials.RhodiumPlatedPalladium, 8)
+                        .inputs(Api.INSTANCE.definitions().blocks().fluidIface().maybeStack(4).orElse(ItemStack.EMPTY))
+                        .input(MetaItems.ELECTRIC_PUMP_LuV, 4)
+                        .input(OrePrefix.circuit, MarkerMaterials.Tier.ZPM, 2)
+                        .input(MetaItems.SENSOR_LuV)
+                        .input(MetaItems.EMITTER_LuV)
+                        .fluidInputs(Materials.SolderingAlloy.getFluid(1440))
+                        .outputs(TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                        .EUt(GTValues.VAOC[GTValues.LuV]).duration(1000)
+                        .buildAndRegister();
+                if (isGregicalityLoaded) {
+                    // ME pattern interface
+                    RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                            .inputs(Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().blankPattern().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(64).orElse(ItemStack.EMPTY))
+                            .input(OrePrefix.screw, Materials.Seaborgium, 64)
+                            .inputs(Api.INSTANCE.definitions().materials().annihilationCore().maybeStack(50).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().formationCore().maybeStack(50).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().blocks().iface().maybeStack(16).orElse(ItemStack.EMPTY))
+                            .input(OrePrefix.plate, GCYLMaterials.HastelloyX78, 16)
+                            .input(MetaItems.ELECTRIC_PISTON_UHV, 4)
+                            .input(OrePrefix.circuit, MarkerMaterials.Tier.UEV, 2)
+                            .fluidInputs(Materials.SolderingAlloy.getFluid(18432), Materials.Lubricant.getFluid(64000))
+                            .outputs(TJABlocks.PATTERN_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                            .stationResearch(stationRecipeBuilder -> stationRecipeBuilder
+                                    .researchStack(TJABlocks.SUPER_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                                    .EUt(GTValues.VAOC[GTValues.UHV])
+                                    .CWUt(128))
+                            .EUt(GTValues.VAOC[GTValues.UEV]).duration(1000)
+                            .buildAndRegister();
+                    // ME super ultimate interface
+                    RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                            .inputs(Api.INSTANCE.definitions().materials().annihilationCore().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().materials().formationCore().maybeStack(64).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(64).orElse(ItemStack.EMPTY))
+                            .input(OrePrefix.circuit, MarkerMaterials.Tier.UXV, 8)
+                            .inputs(TJABlocks.PATTERN_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.STOCKING_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.STOCKING_FLUID_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.STOCKING_DUAL_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.SUPER_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.SUPER_FLUID_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(4).orElse(ItemStack.EMPTY),
+                                    TJAItemUtils.getItemStackFromName("ae2fc:dual_interface", 4)) // TODO add replacement dual interface
+                            .input(MetaItems.ELECTRIC_PISTON_UXV, 4)
+                            .input(MetaItems.EMITTER_UXV, 4)
+                            .input(MetaItems.SENSOR_UXV, 4)
+                            .input(MetaItems.FIELD_GENERATOR_UXV, 4)
+                            .fluidInputs(Materials.SolderingAlloy.getFluid(55296), Materials.Lubricant.getFluid(64000),
+                                    GCYLMaterials.FullerenePolymerMatrix.getFluid(9216), GCYLMaterials.Periodicium.getFluid(18432))
+                            .outputs(TJABlocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                            .stationResearch(stationRecipeBuilder -> stationRecipeBuilder
+                                    .researchStack(TJABlocks.SUPER_DUAL_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
+                                    .EUt(GTValues.VAOC[GTValues.OpV])
+                                    .CWUt(1024))
+                            .EUt(GTValues.VAOC[GTValues.OpV]).duration(1000)
+                            .buildAndRegister();
+                }
+            }
             if (isGregicalityLoaded && isSuperCriticalLoaded) {
                 // industrial fusion reactor mk1
                 RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
@@ -166,5 +384,9 @@ public class TJARecipes {
                         .buildAndRegister();
             }
         }
+    }
+
+    private static ResourceLocation resource(String path) {
+        return new ResourceLocation(TJA.MOD_ID, path);
     }
 }

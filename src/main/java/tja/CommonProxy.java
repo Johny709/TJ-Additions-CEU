@@ -36,14 +36,15 @@ public class CommonProxy {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         final IForgeRegistry<Item> registry = event.getRegistry();
         TJAItems.init(registry);
-        TJABlocks.TJ_BLOCK_DEFINITION_REGISTRY.forEach(((location, blockDefinition) -> registry.register(blockDefinition.maybeItem().orElseThrow(() -> new NullPointerException("Item not found")))));
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID))
+            TJABlocks.TJ_BLOCK_DEFINITION_REGISTRY.forEach(((location, blockDefinition) -> registry.register(blockDefinition.maybeItem().orElseThrow(() -> new NullPointerException("Item not found")))));
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
             registry.register(createItemBlock(TJAMetaBlocks.BATTERY_CELL, VariantItemBlock::new));
     }
 
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-        TJARecipes.init();
+        TJARecipes.init(event.getRegistry());
     }
 
     @SubscribeEvent
