@@ -70,7 +70,7 @@ public class BlockSuperDualInterface extends BlockInterface {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, World world, List<String> lines, ITooltipFlag advancedItemTooltips) {
-        TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description");
+        lines.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (DUALITY_INSTANCE != null && FLUID_DUALITY_INSTANCE != null) {
             lines.add(I18n.format("tile.me.super_interface.pattern_slots", DUALITY_INSTANCE.getPatterns().getSlots()));
             lines.add(I18n.format("tile.me.super_interface.storage_slots", DUALITY_INSTANCE.getStorage().getSlots()));

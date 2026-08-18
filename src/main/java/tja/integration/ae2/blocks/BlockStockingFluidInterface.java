@@ -55,7 +55,7 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, World world, List<String> lines, ITooltipFlag advancedItemTooltips) {
-        TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description");
+        lines.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (FLUID_DUALITY_INSTANCE != null) {
             lines.add(I18n.format("tile.me.super_fluid_interface.fluid_tanks", FLUID_DUALITY_INSTANCE.getTanks().getSlots()));
             lines.add(I18n.format("tile.me.super_fluid_interface.upgrade_slots", FLUID_DUALITY_INSTANCE.getInventoryByName("upgrades").getSlots()));
