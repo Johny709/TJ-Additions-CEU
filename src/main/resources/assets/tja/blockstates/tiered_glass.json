@@ -1,0 +1,88 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all",
+    "textures": {
+      "all": "gregtech:blocks/rendering_error"
+    }
+  },
+  "variants": {
+    "variant": {
+      "ulv": {
+        "textures": {
+          "all": "tja:blocks/glass/reinforced_glass"
+        }
+      },
+      "lv": {
+        "textures": {
+          "all": "tja:blocks/glass/borosilicate_reinforced_glass"
+        }
+      },
+      "mv": {
+        "textures": {
+          "all": "tja:blocks/glass/nickel_reinforced_glass"
+        }
+      },
+      "hv": {
+        "textures": {
+          "all": "tja:blocks/glass/chrome_reinforced_glass"
+        }
+      },
+      "ev": {
+        "textures": {
+          "all": "tja:blocks/glass/tungsten_reinforced_glass"
+        }
+      },
+      "iv": {
+        "textures": {
+          "all": "tja:blocks/glass/iridium_reinforced_glass"
+        }
+      },
+      "luv": {
+        "textures": {
+          "all": "tja:blocks/glass/osmium_reinforced_glass"
+        }
+      },
+      "zpm": {
+        "textures": {
+          "all": "tja:blocks/glass/duranium_reinforced_glass"
+        }
+      },
+      "uv": {
+        "textures": {
+          "all": "tja:blocks/glass/tritanium_reinforced_glass"
+        }
+      },
+      "uhv": {
+        "textures": {
+          "all": "tja:blocks/glass/seaborgium_reinforced_glass"
+        }
+      },
+      "uev": {
+        "textures": {
+          "all": "tja:blocks/glass/bohrium_reinforced_glass"
+        }
+      },
+      "uiv": {
+        "textures": {
+          "all": "tja:blocks/glass/heavy_quark_degenerate_matter_reinforced_glass"
+        }
+      },
+      "uxv": {
+        "textures": {
+          "all": "tja:blocks/glass/qcd_matter_reinforced_glass"
+        }
+      },
+      "opv": {
+        "textures": {
+          "all": "tja:blocks/glass/neutronium_reinforced_glass"
+        }
+      },
+      "max": {
+        "textures": {
+          "all": "tja:blocks/glass/cosmic_neutronium_reinforced_glass"
+        }
+      }
+    }
+  }
+}

@@ -137,6 +137,21 @@ tile.cell_battery.uiv.name=UIV Power Cell
 tile.cell_battery.uxv.name=UXV Power Cell
 tile.cell_battery.opv.name=OPV Power Cell
 tile.cell_battery.max.name=MAX Power Cell
+tile.tiered_glass.ulv.name=Reinforced Glass
+tile.tiered_glass.lv.name=Borosilicate Reinforced Glass
+tile.tiered_glass.mv.name=Nickel Reinforced Glass
+tile.tiered_glass.hv.name=Chrome Reinforced Glass
+tile.tiered_glass.ev.name=Tungsten Reinforced Glass
+tile.tiered_glass.iv.name=Iridium Reinforced Glass
+tile.tiered_glass.luv.name=Osmium Reinforced Glass
+tile.tiered_glass.zpm.name=Duranium Reinforced Glass
+tile.tiered_glass.uv.name=Tritanium Reinforced Glass
+tile.tiered_glass.uhv.name=Seaborgium Reinforced Glass
+tile.tiered_glass.uev.name=Bohrium Reinforced Glass
+tile.tiered_glass.uiv.name=Heavy Quark Degenerate Matter Reinforced Glass
+tile.tiered_glass.uxv.name=QCD Matter Reinforced Glass
+tile.tiered_glass.opv.name=Neutronium Reinforced Glass
+tile.tiered_glass.max.name=Cosmic Neutronium Reinforced Glass
 
 metaitem.creative_cover.tooltip.1=§dCreative Only
 

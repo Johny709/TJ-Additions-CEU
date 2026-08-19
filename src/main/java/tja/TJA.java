@@ -35,7 +35,6 @@ public class TJA {
         LOGGER.info("Hello From {}!", MOD_NAME);
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             TJAMetaTileEntities.init();
-            TJAMetaBlocks.init();
             TJAMetaItems.init();
             TJASimpleCapabilityManager.init();
             if (event.getSide() == Side.CLIENT)

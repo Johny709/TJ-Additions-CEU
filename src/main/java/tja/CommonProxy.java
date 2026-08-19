@@ -28,7 +28,7 @@ public class CommonProxy {
         if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID))
             TJAAE2Blocks.init(registry);
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
-            registry.register(TJAMetaBlocks.BATTERY_CELL);
+            TJAMetaBlocks.init(registry);
     }
 
     @SubscribeEvent

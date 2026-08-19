@@ -19,17 +19,22 @@ import static gregtech.common.blocks.MetaBlocks.statePropertiesToString;
 public final class TJAMetaBlocks {
 
     public static final BlockBatteryCell BATTERY_CELL = new BlockBatteryCell();
+    public static final BlockTieredGlass TIERED_GLASS = new BlockTieredGlass();
 
-    public static void init() {
-        // call on initialization
+    public static void init(IForgeRegistry<Block> blocks) {
+        blocks.register(BATTERY_CELL);
+        blocks.register(TIERED_GLASS);
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> items) {
         items.register(createItemBlock(BATTERY_CELL, VariantItemBlock::new));
+        items.register(createItemBlock(TIERED_GLASS, VariantItemBlock::new));
     }
 
+    @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
         registerItemModel(BATTERY_CELL);
+        registerItemModel(TIERED_GLASS);
     }
 
     @SideOnly(Side.CLIENT)
