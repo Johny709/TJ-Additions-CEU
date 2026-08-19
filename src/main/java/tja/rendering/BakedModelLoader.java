@@ -9,25 +9,25 @@ import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import tja.TJA;
 import tja.TJAValues;
-import tja.integration.ae2.blocks.TJCraftingUnitType;
-import tja.integration.ae2.render.TJCraftingCubeModel;
+import tja.integration.ae2.blocks.TJACraftingUnitType;
+import tja.integration.ae2.render.TJACraftingCubeModel;
 
 
 import javax.annotation.Nonnull;
 
 public class BakedModelLoader implements ICustomModelLoader {
 
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_65536k_MODEL;
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_262144K_MODEL;
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_1048M_MODEL;
-    private static final TJCraftingCubeModel CRAFTING_STORAGE_SINGULARITY_MODEL;
+    private static final TJACraftingCubeModel CRAFTING_STORAGE_65536k_MODEL;
+    private static final TJACraftingCubeModel CRAFTING_STORAGE_262144K_MODEL;
+    private static final TJACraftingCubeModel CRAFTING_STORAGE_1048M_MODEL;
+    private static final TJACraftingCubeModel CRAFTING_STORAGE_SINGULARITY_MODEL;
 
     static {
         if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
-            CRAFTING_STORAGE_65536k_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_65M);
-            CRAFTING_STORAGE_262144K_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_262M);
-            CRAFTING_STORAGE_1048M_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_1048M);
-            CRAFTING_STORAGE_SINGULARITY_MODEL = new TJCraftingCubeModel(TJCraftingUnitType.STORAGE_SINGULARITY);
+            CRAFTING_STORAGE_65536k_MODEL = new TJACraftingCubeModel(TJACraftingUnitType.STORAGE_65M);
+            CRAFTING_STORAGE_262144K_MODEL = new TJACraftingCubeModel(TJACraftingUnitType.STORAGE_262M);
+            CRAFTING_STORAGE_1048M_MODEL = new TJACraftingCubeModel(TJACraftingUnitType.STORAGE_1048M);
+            CRAFTING_STORAGE_SINGULARITY_MODEL = new TJACraftingCubeModel(TJACraftingUnitType.STORAGE_SINGULARITY);
         } else {
             CRAFTING_STORAGE_65536k_MODEL = null;
             CRAFTING_STORAGE_262144K_MODEL = null;

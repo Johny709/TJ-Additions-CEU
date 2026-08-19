@@ -1,6 +1,6 @@
 package tja.integration.ae2.blocks;
 
-public enum TJCraftingUnitType {
+public enum TJACraftingUnitType {
     UNIT(0),
     STORAGE_65M(65536),
     STORAGE_262M(262144),
@@ -9,7 +9,7 @@ public enum TJCraftingUnitType {
 
     private final int bytes;
 
-    TJCraftingUnitType(int bytes) {
+    TJACraftingUnitType(int bytes) {
         this.bytes = bytes;
     }
 

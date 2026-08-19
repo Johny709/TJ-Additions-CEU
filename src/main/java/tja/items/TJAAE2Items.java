@@ -82,18 +82,18 @@ public final class TJAAE2Items {
         MATERIAL_FLUID_CELL_1048M = registerItem(registry, item -> new ItemDefinition("me.material.fluid_cell.1048m", item));
         MATERIAL_FLUID_CELL_DIGITAL_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.material.fluid_cell.digital_singularity", item));
 
-        ITEM_CELL_65536K = registerItem(registry, item -> new ItemDefinition("me.item_cell.65536k", new TJItemStorageCell(MATERIAL_ITEM_CELL_65536K, 65536)));
-        ITEM_CELL_262144K = registerItem(registry, item -> new ItemDefinition("me.item_cell.262144k", new TJItemStorageCell(MATERIAL_ITEM_CELL_262144K, 262144)));
-        ITEM_CELL_1048M = registerItem(registry, item -> new ItemDefinition("me.item_cell.1048m", new TJItemStorageCell(MATERIAL_ITEM_CELL_1048M, 1048576)));
-        ITEM_CELL_DIGITAL_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.item_cell.digital_singularity", new TJItemStorageCell(MATERIAL_ITEM_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
-        FLUID_CELL_65536K = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.65536k", new TJFluidStorageCell(MATERIAL_FLUID_CELL_65536K, 65536)));
-        FLUID_CELL_262144K = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.262144k", new TJFluidStorageCell(MATERIAL_FLUID_CELL_262144K, 262144)));
-        FLUID_CELL_1048M = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.1048m", new TJFluidStorageCell(MATERIAL_FLUID_CELL_1048M, 1048576)));
-        FLUID_CELL_DIGITAL_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.digital_singularity", new TJFluidStorageCell(MATERIAL_FLUID_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
+        ITEM_CELL_65536K = registerItem(registry, item -> new ItemDefinition("me.item_cell.65536k", new TJAItemStorageCell(MATERIAL_ITEM_CELL_65536K, 65536)));
+        ITEM_CELL_262144K = registerItem(registry, item -> new ItemDefinition("me.item_cell.262144k", new TJAItemStorageCell(MATERIAL_ITEM_CELL_262144K, 262144)));
+        ITEM_CELL_1048M = registerItem(registry, item -> new ItemDefinition("me.item_cell.1048m", new TJAItemStorageCell(MATERIAL_ITEM_CELL_1048M, 1048576)));
+        ITEM_CELL_DIGITAL_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.item_cell.digital_singularity", new TJAItemStorageCell(MATERIAL_ITEM_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
+        FLUID_CELL_65536K = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.65536k", new TJAFluidStorageCell(MATERIAL_FLUID_CELL_65536K, 65536)));
+        FLUID_CELL_262144K = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.262144k", new TJAFluidStorageCell(MATERIAL_FLUID_CELL_262144K, 262144)));
+        FLUID_CELL_1048M = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.1048m", new TJAFluidStorageCell(MATERIAL_FLUID_CELL_1048M, 1048576)));
+        FLUID_CELL_DIGITAL_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.fluid_cell.digital_singularity", new TJAFluidStorageCell(MATERIAL_FLUID_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
 
-        ITEM_BLOCK_CONTAINER_64K = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.64k", new TJBlockContainerItemStorageCell(Api.INSTANCE.definitions().materials().cell1kPart(), 64)));
-        ITEM_BLOCK_CONTAINER_65536K = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.65536k", new TJBlockContainerItemStorageCell(MATERIAL_ITEM_CELL_65536K, 65536)));
-        ITEM_BLOCK_CONTAINER_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.singularity", new TJBlockContainerItemStorageCell(MATERIAL_ITEM_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
+        ITEM_BLOCK_CONTAINER_64K = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.64k", new TJABlockContainerItemStorageCell(Api.INSTANCE.definitions().materials().cell1kPart(), 64)));
+        ITEM_BLOCK_CONTAINER_65536K = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.65536k", new TJABlockContainerItemStorageCell(MATERIAL_ITEM_CELL_65536K, 65536)));
+        ITEM_BLOCK_CONTAINER_SINGULARITY = registerItem(registry, item -> new ItemDefinition("me.block_container.item_cell.singularity", new TJABlockContainerItemStorageCell(MATERIAL_ITEM_CELL_DIGITAL_SINGULARITY, Integer.MAX_VALUE)));
 
         Api.INSTANCE.getPartModels().registerModels(TJ_ITEM_DEFINITION_REGISTRY.values().stream()
                 .map(definition -> definition.maybeItem().orElse(null))

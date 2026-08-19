@@ -3,29 +3,27 @@ package tja.integration.ae2.items;
 import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
 import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.channels.IFluidStorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.fluids.helper.FluidCellConfig;
+import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.util.InventoryAdaptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class TJFluidStorageCell extends TJAbstractStorageCell<IAEFluidStack> {
+public class TJAItemStorageCell extends TJAAbstractStorageCell<IAEItemStack> {
 
-    private final int perType;
-    private final double idleDrain;
+    protected final int perType;
+    protected final double idleDrain;
 
-    public TJFluidStorageCell(IItemDefinition material, int kiloBytes) {
+    public TJAItemStorageCell(IItemDefinition material, int kiloBytes) {
         super(material, kiloBytes);
         this.idleDrain = 2.0;
         this.perType = Math.min(16_777_215, kiloBytes / 128);
     }
 
     @Override
-    public int getBytesPerType(ItemStack cellItem) {
+    public int getBytesPerType(@Nonnull ItemStack cellItem) {
         return this.perType;
     }
 
@@ -34,19 +32,10 @@ public class TJFluidStorageCell extends TJAbstractStorageCell<IAEFluidStack> {
         return this.idleDrain;
     }
 
+    @Nonnull
     @Override
-    public IStorageChannel<IAEFluidStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
-    }
-
-    @Override
-    public int getTotalTypes(@Nonnull final ItemStack cellItem) {
-        return 5;
-    }
-
-    @Override
-    public IItemHandler getConfigInventory(final ItemStack is) {
-        return new FluidCellConfig(is);
+    public IStorageChannel<IAEItemStack> getChannel() {
+        return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
     }
 
     @Override

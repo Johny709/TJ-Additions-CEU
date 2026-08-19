@@ -3,27 +3,29 @@ package tja.integration.ae2.items;
 import appeng.api.AEApi;
 import appeng.api.definitions.IItemDefinition;
 import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.channels.IFluidStorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.fluids.helper.FluidCellConfig;
 import appeng.util.InventoryAdaptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class TJItemStorageCell extends TJAbstractStorageCell<IAEItemStack> {
+public class TJAFluidStorageCell extends TJAAbstractStorageCell<IAEFluidStack> {
 
-    protected final int perType;
-    protected final double idleDrain;
+    private final int perType;
+    private final double idleDrain;
 
-    public TJItemStorageCell(IItemDefinition material, int kiloBytes) {
+    public TJAFluidStorageCell(IItemDefinition material, int kiloBytes) {
         super(material, kiloBytes);
         this.idleDrain = 2.0;
         this.perType = Math.min(16_777_215, kiloBytes / 128);
     }
 
     @Override
-    public int getBytesPerType(@Nonnull ItemStack cellItem) {
+    public int getBytesPerType(ItemStack cellItem) {
         return this.perType;
     }
 
@@ -32,10 +34,19 @@ public class TJItemStorageCell extends TJAbstractStorageCell<IAEItemStack> {
         return this.idleDrain;
     }
 
-    @Nonnull
     @Override
-    public IStorageChannel<IAEItemStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
+    public IStorageChannel<IAEFluidStack> getChannel() {
+        return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
+    }
+
+    @Override
+    public int getTotalTypes(@Nonnull final ItemStack cellItem) {
+        return 5;
+    }
+
+    @Override
+    public IItemHandler getConfigInventory(final ItemStack is) {
+        return new FluidCellConfig(is);
     }
 
     @Override

@@ -39,12 +39,12 @@ import java.util.Set;
 /**
  * More advanced form of {@link appeng.items.storage.AbstractStorageCell}
  */
-public abstract class TJAbstractStorageCell<T extends IAEStack<T>> extends AEBaseItem implements IStorageCell<T>, IItemGroup {
+public abstract class TJAAbstractStorageCell<T extends IAEStack<T>> extends AEBaseItem implements IStorageCell<T>, IItemGroup {
 
     protected final IItemDefinition material;
     protected final int totalBytes;
 
-    public TJAbstractStorageCell(IItemDefinition material, final int kiloBytes) {
+    public TJAAbstractStorageCell(IItemDefinition material, final int kiloBytes) {
         this.setMaxStackSize(1);
         this.totalBytes = (int) Math.min(Integer.MAX_VALUE, (long) kiloBytes * 1024);
         this.material = material;

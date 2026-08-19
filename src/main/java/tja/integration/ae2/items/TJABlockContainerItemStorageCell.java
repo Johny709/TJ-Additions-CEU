@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 
-public class TJBlockContainerItemStorageCell extends TJItemStorageCell {
+public class TJABlockContainerItemStorageCell extends TJAItemStorageCell {
 
-    public TJBlockContainerItemStorageCell(IItemDefinition material, int kiloBytes) {
+    public TJABlockContainerItemStorageCell(IItemDefinition material, int kiloBytes) {
         super(material, kiloBytes);
     }
 

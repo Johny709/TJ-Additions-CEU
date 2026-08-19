@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,25 +40,24 @@ public class ClientProxy {
     }
 
     @SubscribeEvent
+    @Optional.Method(modid = TJAValues.AE2_MOD_ID)
     public static void onModelsBake(ModelBakeEvent event) {
-        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
-            final IRegistry<ModelResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
-            final Set<ModelResourceLocation> locationSet = new HashSet<>(modelRegistry.getKeys());
-            final IModel missingModel = ModelLoaderRegistry.getMissingModel();
-            for (ModelResourceLocation modelResourceLocation : locationSet) {
-                if (!modelResourceLocation.getNamespace().equals(TJA.MOD_ID)) continue;
-                final IBakedModel model = modelRegistry.getObject(modelResourceLocation);
-                if (model == missingModel)
-                    continue; // Don't customize the missing model. This causes Forge to swallow exceptions
-                switch (modelResourceLocation.getPath()) {
-                    case "me.super_interface":
-                    case "me.super_dual_interface":
-                    case "me.pattern_interface":
-                    case "me.stocking_interface":
-                    case "me.stocking_dual_interface":
-                    case "me.super_ultimate_interface":
-                        modelRegistry.putObject(modelResourceLocation, new AutoRotatingModel(model));
-                }
+        final IRegistry<ModelResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
+        final Set<ModelResourceLocation> locationSet = new HashSet<>(modelRegistry.getKeys());
+        final IModel missingModel = ModelLoaderRegistry.getMissingModel();
+        for (ModelResourceLocation modelResourceLocation : locationSet) {
+            if (!modelResourceLocation.getNamespace().equals(TJA.MOD_ID)) continue;
+            final IBakedModel model = modelRegistry.getObject(modelResourceLocation);
+            if (model == missingModel)
+                continue; // Don't customize the missing model. This causes Forge to swallow exceptions
+            switch (modelResourceLocation.getPath()) {
+                case "me.super_interface":
+                case "me.super_dual_interface":
+                case "me.pattern_interface":
+                case "me.stocking_interface":
+                case "me.stocking_dual_interface":
+                case "me.super_ultimate_interface":
+                    modelRegistry.putObject(modelResourceLocation, new AutoRotatingModel(model));
             }
         }
     }
