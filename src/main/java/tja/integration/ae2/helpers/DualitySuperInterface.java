@@ -107,24 +107,8 @@ public class DualitySuperInterface extends DualityInterface {
             this.setFilter(new DualityFilter((DualityInterface) parent));
         }
 
-        @Override
-        public int getMaxInstalled(Upgrades upgrades) {
-            switch (upgrades) {
-                case CAPACITY: return this.installedCapacity;
-                case PATTERN_EXPANSION: return this.installedPatterns;
-                case CRAFTING: return this.installedCraftingCard;
-                default: return 0;
-            }
-        }
-
-        @Override
-        public int getInstalledUpgrades(Upgrades u) {
-            switch (u) {
-                case CAPACITY: return this.installedCapacity;
-                case PATTERN_EXPANSION: return this.installedPatterns;
-                case CRAFTING: return this.installedCraftingCard;
-                default: return 0;
-            }
+        public void updateContentsAt(int slot) {
+            this.onContentsChanged(slot);
         }
 
         @Override
@@ -166,6 +150,26 @@ public class DualitySuperInterface extends DualityInterface {
             this.installedCapacity = nbt.getInteger("installedCapacity");
             this.installedPatterns = nbt.getInteger("installedPatterns");
             this.installedCraftingCard = nbt.getInteger("installedCraftingCard");
+        }
+
+        @Override
+        public int getMaxInstalled(Upgrades upgrades) {
+            switch (upgrades) {
+                case CAPACITY: return this.installedCapacity;
+                case PATTERN_EXPANSION: return this.installedPatterns;
+                case CRAFTING: return this.installedCraftingCard;
+                default: return 0;
+            }
+        }
+
+        @Override
+        public int getInstalledUpgrades(Upgrades u) {
+            switch (u) {
+                case CAPACITY: return this.installedCapacity;
+                case PATTERN_EXPANSION: return this.installedPatterns;
+                case CRAFTING: return this.installedCraftingCard;
+                default: return 0;
+            }
         }
     }
 
@@ -228,7 +232,7 @@ public class DualitySuperInterface extends DualityInterface {
                     return false;
                 for (int i = 0; i < iItemHandler.getSlots(); i++) {
                     final ItemStack stack = iItemHandler.getStackInSlot(i);
-                    if (stack.getTagCompound() != null && stack.getTagCompound().equals(itemStack.getTagCompound()))
+                    if (stack.getTagCompound() != null && ItemStack.areItemsEqual(itemStack, stack) && ItemStack.areItemStackTagsEqual(itemStack, stack))
                         return false;
                 }
                 return true;

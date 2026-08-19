@@ -16,8 +16,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.integration.ae2.part.PartStockingInterface;
-import tja.util.Color;
-import tja.util.TooltipHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +30,6 @@ public class ItemPartStockingInterface extends Item implements IPartItem<IPart> 
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn) {
-        tooltip.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (DUALITY_INSTANCE != null) {
             tooltip.add(I18n.format("tile.me.super_interface.storage_slots", DUALITY_INSTANCE.getStorage().getSlots()));
             tooltip.add(I18n.format("tile.me.super_interface.upgrade_slots", DUALITY_INSTANCE.getInventoryByName("upgrades").getSlots()));

@@ -16,7 +16,6 @@ import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
@@ -41,8 +40,7 @@ import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TileStockingInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
-import tja.util.Color;
-import tja.util.TooltipHelper;
+import tja.mui.slot.TJAModularSlot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +64,6 @@ public class BlockStockingInterface extends BlockInterface {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, World world, List<String> lines, ITooltipFlag advancedItemTooltips) {
-        lines.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (DUALITY_INSTANCE != null) {
             lines.add(I18n.format("tile.me.super_interface.storage_slots", DUALITY_INSTANCE.getStorage().getSlots()));
             lines.add(I18n.format("tile.me.super_interface.upgrade_slots", DUALITY_INSTANCE.getInventoryByName("upgrades").getSlots()));
@@ -119,10 +116,10 @@ public class BlockStockingInterface extends BlockInterface {
                         .row("SSSSSSSSS")
                         .key('C', i -> new PhantomItemSlot()
                                 .background(TJAGuiTextures.SLOW_DOWN)
-                                .syncHandler(new PhantomItemSlotSH(new ModularSlot(superInterface.getInterfaceDuality().getConfig(), i)
+                                .syncHandler(new PhantomItemSlotSH(new TJAModularSlot(superInterface.getInterfaceDuality().getConfig(), i)
                                         .ignoreMaxStackSize(true))))
                         .key('S', i -> new ItemSlot()
-                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getStorage(), i)
+                                .slot(new TJAModularSlot(superInterface.getInterfaceDuality().getStorage(), i)
                                         .slotGroup("storage_inventory")))
                         .build().pos(7, 34))
                 .child(upgradeArea
@@ -132,7 +129,7 @@ public class BlockStockingInterface extends BlockInterface {
                         .children(10, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot(new ModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                .slot(new TJAModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
                 .child(new ToggleButton()
                         .pos(-18, 35)

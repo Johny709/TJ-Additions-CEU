@@ -16,9 +16,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.integration.ae2.part.PartStockingFluidInterface;
-import tja.util.Color;
-import tja.util.TooltipHelper;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,7 +29,6 @@ public class ItemPartStockingFluidInterface extends Item implements IPartItem<IP
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag flagIn) {
-        tooltip.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (FLUID_DUALITY_INSTANCE != null) {
             tooltip.add(I18n.format("tile.me.super_fluid_interface.fluid_tanks", FLUID_DUALITY_INSTANCE.getTanks().getSlots()));
             tooltip.add(I18n.format("tile.me.super_fluid_interface.upgrade_slots", FLUID_DUALITY_INSTANCE.getInventoryByName("upgrades").getSlots()));

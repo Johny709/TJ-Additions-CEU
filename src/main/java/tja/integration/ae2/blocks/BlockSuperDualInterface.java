@@ -3,6 +3,7 @@ package tja.integration.ae2.blocks;
 import appeng.api.config.CondenserOutput;
 import appeng.api.config.LockCraftingMode;
 import appeng.api.config.Settings;
+import appeng.api.config.Upgrades;
 import appeng.block.misc.BlockInterface;
 import com.circulation.random_complement.client.RCSettings;
 import com.circulation.random_complement.common.interfaces.RCIConfigurableObject;
@@ -36,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 import tja.TJA;
 import tja.TJAValues;
 import tja.integration.ae2.ISuperDualInterface;
@@ -44,10 +46,9 @@ import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TileSuperDualInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
+import tja.mui.slot.TJAModularSlot;
 import tja.mui.sync.PagedWidgetSyncHandler;
-import tja.util.Color;
 import tja.util.TJAUtility;
-import tja.util.TooltipHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -74,7 +75,6 @@ public class BlockSuperDualInterface extends BlockInterface {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, World world, List<String> lines, ITooltipFlag advancedItemTooltips) {
-        lines.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (DUALITY_INSTANCE != null && FLUID_DUALITY_INSTANCE != null) {
             lines.add(I18n.format("tile.me.super_interface.pattern_slots", DUALITY_INSTANCE.getPatterns().getSlots()));
             lines.add(I18n.format("tile.me.super_interface.storage_slots", DUALITY_INSTANCE.getStorage().getSlots()));
@@ -113,6 +113,8 @@ public class BlockSuperDualInterface extends BlockInterface {
         syncManager.syncValue("splitting_items_fluids", splittingItemsFluids);
         final IntSyncValue blockingModeEx = new IntSyncValue(() -> superDualInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.CONDENSER_OUTPUT).ordinal(), i -> superDualInterface.setBlockModeEx(CondenserOutput.values()[i]));
         syncManager.syncValue("blocking_mode_ex", blockingModeEx);
+        final IntSyncValue patternUpgrades = new IntSyncValue(() -> ((DualitySuperInterface.DualityUpgradeInventory) superDualInterface.getInterfaceDuality().getInventoryByName("upgrades")).getInstalledUpgrades(Upgrades.PATTERN_EXPANSION));
+        syncManager.syncValue("pattern_upgrades", patternUpgrades);
 
         final BooleanSyncValue intelligentBlocking;
         if (TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID)) {
@@ -133,9 +135,10 @@ public class BlockSuperDualInterface extends BlockInterface {
         final Flow fluidUpgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(fluidUpgradeArea);
 
+        final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superDualInterface));
         return ModularPanel.defaultPanel("me.super_dual_interface.gui", 176, 292)
-                .childIf(TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID), () -> MUIUtils.createPatternMultiToolWidget(data, syncManager, settings))
+                .childIf(TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID), () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)
@@ -170,10 +173,10 @@ public class BlockSuperDualInterface extends BlockInterface {
                                         .row("SSSSSSSSS")
                                         .key('C', i -> new PhantomItemSlot()
                                                 .background(TJAGuiTextures.SLOW_DOWN)
-                                                .syncHandler(new PhantomItemSlotSH(new ModularSlot(superDualInterface.getInterfaceDuality().getConfig(), i)
+                                                .syncHandler(new PhantomItemSlotSH(new TJAModularSlot(superDualInterface.getInterfaceDuality().getConfig(), i)
                                                         .ignoreMaxStackSize(true))))
                                         .key('S', i -> new ItemSlot()
-                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getStorage(), i)
+                                                .slot(new TJAModularSlot(superDualInterface.getInterfaceDuality().getStorage(), i)
                                                         .slotGroup("storage_inventory")))
                                         .build().pos(7, 34))
                                 .child(itemUpgradeArea
@@ -183,7 +186,7 @@ public class BlockSuperDualInterface extends BlockInterface {
                                         .children(10, i -> new ItemSlot()
                                                 .pos(7, 7 + (18 * i))
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                                .slot(new TJAModularSlot(superDualInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
                                                         .slotGroup("item_upgrade_inventory"))))
                                 .child(new Grid()
                                         .pos(7, 133)
@@ -193,7 +196,8 @@ public class BlockSuperDualInterface extends BlockInterface {
                                         }})
                                         .gridOfSizeWidth(superDualInterface.getInterfaceDuality().getPatterns().getSlots(), 9, (x, y, i) -> new ItemSlot()
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
-                                                .slot(new ModularSlot(superDualInterface.getInterfaceDuality().getPatterns(), i)
+                                                .setEnabledIf(itemSlot -> i / 9 <= patternUpgrades.getIntValue())
+                                                .slot(new TJAModularSlot(superDualInterface.getInterfaceDuality().getPatterns(), i)
                                                         .slotGroup("pattern_inventory"))))
                                 .child(new ToggleButton()
                                         .pos(-18, 60)
@@ -340,7 +344,7 @@ public class BlockSuperDualInterface extends BlockInterface {
                                         .children(4, i -> new ItemSlot()
                                                 .pos(7, 7 + (18 * i))
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                                .slot(new ModularSlot(superDualInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
+                                                .slot(new TJAModularSlot(superDualInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
                                                         .slotGroup("fluid_upgrade_inventory"))))))
                 .child(new ButtonWidget<>()
                         .left(154)
@@ -353,6 +357,10 @@ public class BlockSuperDualInterface extends BlockInterface {
                             } else prioritySettings.openPanel();
                             return true;
                         }))
-                .bindPlayerInventory();
+                .child(SlotGroupWidget.playerInventory(7, true, (i, slot) -> {
+                    if (i == patternMultiTool.getValue())
+                        slot.setEnabled(false);
+                    return slot;
+                }));
     }
 }

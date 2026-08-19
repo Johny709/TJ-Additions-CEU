@@ -18,7 +18,6 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
@@ -34,11 +33,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.commons.lang3.tuple.Pair;
 import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.ISuperInterface;
 import tja.items.handlers.FilteredItemStackHandler;
+import tja.mui.slot.TJAModularSlot;
 import tja.util.TJAItemUtils;
 import tja.util.TJAUtility;
 
@@ -518,20 +519,7 @@ public final class MUIUtils {
                         .syncHandler("tick_sub_1000"));
     }
 
-    public static Widget<?> createPatternMultiToolWidget(PosGuiData data, PanelSyncManager syncManager, UISettings settings) {
-        final ItemStack patternMultiTool = Optional.of(data.getPlayer().inventory.mainInventory)
-                .map(inventory -> {
-                    for (ItemStack stack : inventory)
-                        if (stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
-                            return stack;
-                    if (TJAValues.isModLoaded(TJAValues.BAUBLES_MOD_ID)) {
-                        final IItemHandlerModifiable baubleSlots = BaublesApi.getBaublesHandler(data.getPlayer());
-                        for (int i = 0; i < baubleSlots.getSlots(); i++)
-                            if (baubleSlots.getStackInSlot(i).isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
-                                return baubleSlots.getStackInSlot(i);
-                    }
-                    return ItemStack.EMPTY;
-                }).get();
+    public static Widget<?> createPatternMultiToolWidget(PanelSyncManager syncManager, UISettings settings, ItemStack patternMultiTool) {
         final NBTTagCompound compound = TJAItemUtils.getCompoundFromStack(patternMultiTool);
         final NBTTagCompound invTag = compound.getCompoundTag("inv");
         final NBTTagCompound upgradeTag = compound.getCompoundTag("upgrades");
@@ -595,14 +583,14 @@ public final class MUIUtils {
                                 .size(72, 162)
                                 .gridOfSizeWidth(multiPatternSlots.getSlots(), 4, (x, y, i) -> new ItemSlot()
                                         .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
-                                        .slot(new ModularSlot(multiPatternSlots, i)
+                                        .slot(new TJAModularSlot(multiPatternSlots, i)
                                                 .slotGroup("multi_tool_inventory"))))
                         .child(Flow.col()
                                 .pos(79, 14)
                                 .size(18, 54)
                                 .children(multiUpgradeSlots.getSlots(), i -> new ItemSlot()
                                         .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                        .slot(new ModularSlot(multiUpgradeSlots, i)
+                                        .slot(new TJAModularSlot(multiUpgradeSlots, i)
                                                 .slotGroup("multi_tool_upgrade_inventory"))))
                         .child(new ButtonWidget<>()
                                 .pos(7, 176)
@@ -667,6 +655,24 @@ public final class MUIUtils {
                                 .addTooltipLine(IKey.lang("nae2.pattern_multiplier.unencode.desc")
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_clear"));
+    }
+
+    public static Pair<ItemStack, Integer> getPatternMultiTool(PosGuiData data) {
+        return Optional.of(data.getPlayer().inventory.mainInventory)
+                .map(inventory -> {
+                    for (int i = 0; i < inventory.size(); i++) {
+                        final ItemStack stack = inventory.get(i);
+                        if (stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                            return Pair.of(stack, i);
+                    }
+                    if (TJAValues.isModLoaded(TJAValues.BAUBLES_MOD_ID)) {
+                        final IItemHandlerModifiable baubleSlots = BaublesApi.getBaublesHandler(data.getPlayer());
+                        for (int i = 0; i < baubleSlots.getSlots(); i++)
+                            if (baubleSlots.getStackInSlot(i).isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                                return Pair.of(baubleSlots.getStackInSlot(i), -1);
+                    }
+                    return Pair.of(ItemStack.EMPTY, -1);
+                }).get();
     }
 
     private static void writePatternMultiToolToNBT(IItemHandler itemHandler, NBTTagCompound compound) {

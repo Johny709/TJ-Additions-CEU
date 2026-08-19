@@ -15,7 +15,6 @@ import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -39,8 +38,7 @@ import tja.integration.ae2.helpers.DualitySuperFluidInterface;
 import tja.integration.ae2.tile.TileStockingFluidInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
-import tja.util.Color;
-import tja.util.TooltipHelper;
+import tja.mui.slot.TJAModularSlot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,7 +57,6 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, World world, List<String> lines, ITooltipFlag advancedItemTooltips) {
-        lines.add(TooltipHelper.blinkingText(Color.YELLOW, 20, "tile.me.super_interface.description"));
         if (FLUID_DUALITY_INSTANCE != null) {
             lines.add(I18n.format("tile.me.super_fluid_interface.fluid_tanks", FLUID_DUALITY_INSTANCE.getTanks().getSlots()));
             lines.add(I18n.format("tile.me.super_fluid_interface.upgrade_slots", FLUID_DUALITY_INSTANCE.getInventoryByName("upgrades").getSlots()));
@@ -129,7 +126,7 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
                         .children(4, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot(new ModularSlot(superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
+                                .slot(new TJAModularSlot(superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
                 .child(new ToggleButton()
                         .pos(-18, 35)
