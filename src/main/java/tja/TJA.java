@@ -4,7 +4,6 @@ import codechicken.lib.texture.TextureUtils;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJAAE2Blocks;
-import tja.blocks.TJAMetaBlocks;
 import tja.capability.TJASimpleCapabilityManager;
 import tja.integration.theoneprobe.TheOneProbeModule;
 import tja.items.TJACoverBehaviors;
