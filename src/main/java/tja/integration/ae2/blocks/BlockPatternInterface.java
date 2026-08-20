@@ -21,6 +21,7 @@ import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.*;
+import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
@@ -118,6 +119,8 @@ public class BlockPatternInterface extends BlockInterface {
 
         final Widget<?> upgradeBackground = new Widget<>();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeBackground);
+        final Flow buttonArea = Flow.col();
+        settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
@@ -163,118 +166,120 @@ public class BlockPatternInterface extends BlockInterface {
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                 .slot(new TJAModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
-                .child(new ToggleButton()
+                .child(buttonArea
                         .pos(-18, 8)
-                        .size(16)
-                        .syncHandler("blocking_mode")
-                        .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.tooltips.appliedenergistics2.InterfaceBlockingMode"));
-                            richTooltip.addLine(IKey.lang(blockingMode.getBoolValue() ? "gui.tooltips.appliedenergistics2.Blocking" : "gui.tooltips.appliedenergistics2.NonBlocking")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .child(new CycleButtonWidget()
-                        .pos(-18, 26)
-                        .size(16)
-                        .length(5)
-                        .syncHandler("lock_crafting")
-                        .stateBackground(TJAGuiTextures.CYCLE_LOCK_CRAFTING)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang(TJAValues.LOCKING_MODE_TOOLTIP_TITLE[lockCrafting.getIntValue()]));
-                            richTooltip.addLine(IKey.lang(TJAValues.LOCKING_MODE_TOOLTIP_DESCRIPTION[lockCrafting.getIntValue()])
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .child(new ToggleButton()
-                        .pos(-18, 44)
-                        .size(16)
-                        .syncHandler("interface_terminal")
-                        .stateBackground(TJAGuiTextures.TOGGLE_INTERFACE_TERMINAL)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("item.appliedenergistics2.multi_part.interface_terminal.name"));
-                            richTooltip.addLine(IKey.lang("gui.appliedenergistics2.InterfaceTerminalHint")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
-                        .pos(-18, 62)
-                        .size(16)
-                        .syncHandler("fluid_packet")
-                        .stateBackground(TJAGuiTextures.TOGGLE_SEND_FLUID)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet" : "ae2fc.tooltip.real_fluid"));
-                            richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet.hint" : "ae2fc.tooltip.real_fluid.hint")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
-                        .pos(-18, 80)
-                        .size(16)
-                        .syncHandler("splitting_items_fluids")
-                        .stateBackground(TJAGuiTextures.TOGGLE_SPLITTING_ITEMS_FLUIDS)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("ae2fc.tooltip.allow_splitting"));
-                            richTooltip.addLine(IKey.lang(splittingItemsFluids.getBoolValue() ? "ae2fc.tooltip.prevent_splitting.hint" : "ae2fc.tooltip.allow_splitting.hint")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new CycleButtonWidget()
-                        .pos(-18, 98)
-                        .size(16)
-                        .length(3)
-                        .syncHandler("blocking_mode_ex")
-                        .stateBackground(TJAGuiTextures.CYCLE_BLOCKING_MODE_EX)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item" : "ae2fc.tooltip.block_fluid"));
-                            richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all.hint" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item.hint" : "ae2fc.tooltip.block_fluid.hint")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ToggleButton()
-                        .pos(-18, 116)
-                        .size(16)
-                        .syncHandler("intelligent_blocking")
-                        .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.intelligent_blocking.name"));
-                            richTooltip.addLine(IKey.lang(intelligentBlocking.getBoolValue() ? "gui.intelligent_blocking.OPEN.text" : "gui.intelligent_blocking.CLOSE.text")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
-                        .pos(-18, 134)
-                        .size(16)
-                        .background(TJAGuiTextures.AE2_MULTIPLY2_BUTTON)
-                        .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
-                        .tooltip(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_2.name"));
-                            richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
-                        .pos(-18, 152)
-                        .size(16)
-                        .background(TJAGuiTextures.AE2_DIVIDE2_BUTTON)
-                        .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
-                        .tooltip(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.action.DIVIDE_2.name"));
-                            richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_2.text")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
-                        .pos(-18, 170)
-                        .size(16)
-                        .background(TJAGuiTextures.AE2_MULTIPLY3_BUTTON)
-                        .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
-                        .tooltip(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_3.name"));
-                            richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
-                        .pos(-18, 188)
-                        .size(16)
-                        .background(TJAGuiTextures.AE2_DIVIDE3_BUTTON)
-                        .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
-                        .tooltip(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("gui.action.DIVIDE_3.name"));
-                            richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_3.text")
-                                    .style(TextFormatting.GRAY));
-                        }))
+                        .size(18, 198)
+                        .child(new ToggleButton()
+                                .size(16)
+                                .syncHandler("blocking_mode")
+                                .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.tooltips.appliedenergistics2.InterfaceBlockingMode"));
+                                    richTooltip.addLine(IKey.lang(blockingMode.getBoolValue() ? "gui.tooltips.appliedenergistics2.Blocking" : "gui.tooltips.appliedenergistics2.NonBlocking")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .child(new CycleButtonWidget()
+                                .top(18)
+                                .size(16)
+                                .length(5)
+                                .syncHandler("lock_crafting")
+                                .stateBackground(TJAGuiTextures.CYCLE_LOCK_CRAFTING)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang(TJAValues.LOCKING_MODE_TOOLTIP_TITLE[lockCrafting.getIntValue()]));
+                                    richTooltip.addLine(IKey.lang(TJAValues.LOCKING_MODE_TOOLTIP_DESCRIPTION[lockCrafting.getIntValue()])
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .child(new ToggleButton()
+                                .top(36)
+                                .size(16)
+                                .syncHandler("interface_terminal")
+                                .stateBackground(TJAGuiTextures.TOGGLE_INTERFACE_TERMINAL)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("item.appliedenergistics2.multi_part.interface_terminal.name"));
+                                    richTooltip.addLine(IKey.lang("gui.appliedenergistics2.InterfaceTerminalHint")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
+                                .top(54)
+                                .size(16)
+                                .syncHandler("fluid_packet")
+                                .stateBackground(TJAGuiTextures.TOGGLE_SEND_FLUID)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet" : "ae2fc.tooltip.real_fluid"));
+                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet.hint" : "ae2fc.tooltip.real_fluid.hint")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
+                                .top(72)
+                                .size(16)
+                                .syncHandler("splitting_items_fluids")
+                                .stateBackground(TJAGuiTextures.TOGGLE_SPLITTING_ITEMS_FLUIDS)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("ae2fc.tooltip.allow_splitting"));
+                                    richTooltip.addLine(IKey.lang(splittingItemsFluids.getBoolValue() ? "ae2fc.tooltip.prevent_splitting.hint" : "ae2fc.tooltip.allow_splitting.hint")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new CycleButtonWidget()
+                                .top(90)
+                                .size(16)
+                                .length(3)
+                                .syncHandler("blocking_mode_ex")
+                                .stateBackground(TJAGuiTextures.CYCLE_BLOCKING_MODE_EX)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item" : "ae2fc.tooltip.block_fluid"));
+                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all.hint" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item.hint" : "ae2fc.tooltip.block_fluid.hint")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ToggleButton()
+                                .top(108)
+                                .size(16)
+                                .syncHandler("intelligent_blocking")
+                                .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.intelligent_blocking.name"));
+                                    richTooltip.addLine(IKey.lang(intelligentBlocking.getBoolValue() ? "gui.intelligent_blocking.OPEN.text" : "gui.intelligent_blocking.CLOSE.text")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
+                                .top(126)
+                                .size(16)
+                                .background(TJAGuiTextures.AE2_MULTIPLY2_BUTTON)
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .tooltip(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_2.name"));
+                                    richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
+                                .top(144)
+                                .size(16)
+                                .background(TJAGuiTextures.AE2_DIVIDE2_BUTTON)
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .tooltip(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.action.DIVIDE_2.name"));
+                                    richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_2.text")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
+                                .top(162)
+                                .size(16)
+                                .background(TJAGuiTextures.AE2_MULTIPLY3_BUTTON)
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .tooltip(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_3.name"));
+                                    richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
+                                .top(180)
+                                .size(16)
+                                .background(TJAGuiTextures.AE2_DIVIDE3_BUTTON)
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .tooltip(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("gui.action.DIVIDE_3.name"));
+                                    richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_3.text")
+                                            .style(TextFormatting.GRAY));
+                                })))
                 .child(new ButtonWidget<>()
                         .left(154)
                         .size(22)

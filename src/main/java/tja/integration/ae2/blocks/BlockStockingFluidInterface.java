@@ -89,6 +89,8 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
 
         final Flow upgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
+        final Flow buttonArea = Flow.col();
+        settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createFluidPriorityPanel(panelBuilder, subPanel, superFluidInterface));
         final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createFluidTicksPanel(panelBuilder, subPanel, superFluidInterface));
@@ -128,26 +130,28 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                 .slot(new TJAModularSlot(superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
-                .child(new ToggleButton()
-                        .pos(-18, 35)
-                        .size(16)
-                        .stateBackground(TJAGuiTextures.TOGGLE_AUTO_PULL)
-                        .syncHandler("auto_pull")
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull"));
-                            richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull.description")
-                                    .style(TextFormatting.GRAY));
-                        }))
-                .child(new ToggleButton()
-                        .pos(-18, 53)
-                        .size(16)
-                        .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
-                        .syncHandler("auto_push")
-                        .tooltipDynamic(richTooltip -> {
-                            richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push"));
-                            richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push.description")
-                                    .style(TextFormatting.GRAY));
-                        }))
+                .child(buttonArea
+                        .pos(-18, 8)
+                        .size(18, 36)
+                        .child(new ToggleButton()
+                                .size(16)
+                                .stateBackground(TJAGuiTextures.TOGGLE_AUTO_PULL)
+                                .syncHandler("auto_pull")
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull"));
+                                    richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_pull.description")
+                                            .style(TextFormatting.GRAY));
+                                }))
+                        .child(new ToggleButton()
+                                .top(18)
+                                .size(16)
+                                .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
+                                .syncHandler("auto_push")
+                                .tooltipDynamic(richTooltip -> {
+                                    richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push"));
+                                    richTooltip.addLine(IKey.lang("tile.me.stocking_fluid_interface.auto_push.description")
+                                            .style(TextFormatting.GRAY));
+                                })))
                 .child(new ButtonWidget<>()
                         .left(154)
                         .size(22)

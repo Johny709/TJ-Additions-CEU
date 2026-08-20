@@ -108,6 +108,8 @@ public class BlockStockingDualInterface extends BlockInterface {
         settings.getRecipeViewerSettings().addExclusionArea(itemUpgradeArea);
         final Flow fluidUpgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(fluidUpgradeArea);
+        final Flow tabArea = Flow.col();
+        settings.getRecipeViewerSettings().addExclusionArea(tabArea);
 
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superDualInterface));
         final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, superDualInterface));
@@ -139,7 +141,7 @@ public class BlockStockingDualInterface extends BlockInterface {
                             } else ticksSettings.openPanel();
                             return true;
                         }))
-                .child(Flow.col()
+                .child(tabArea
                         .right(100).top(3)
                         .child(new PageButton(0, controller)
                                 .tab(GuiTextures.TAB_LEFT, 0)
