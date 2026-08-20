@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "tja:items/supra_solar_panel"
+    "layer0": "tja:items/metaitems/supra_solar_panel"
   }
 }

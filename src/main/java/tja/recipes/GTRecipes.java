@@ -7,6 +7,7 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
@@ -18,6 +19,7 @@ import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.registries.IForgeRegistry;
 import supercritical.api.unification.material.SCMaterials;
 import tja.TJAValues;
@@ -108,15 +110,84 @@ public class GTRecipes {
                     'C', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials.get(i)),
                     'D', new UnificationEntry(OrePrefix.toolHeadDrill, materials.get(i)));
         }
+        // mixed metal ingot
+        ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
+                'A', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Iron), OreDictUnifier.get(OrePrefix.plate, Materials.Nickel)),
+                'B', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Bronze), OreDictUnifier.get(OrePrefix.plate, Materials.Brass)),
+                'C', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Tin), OreDictUnifier.get(OrePrefix.plate, Materials.Zinc),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Aluminium)));
+        ModHandler.addShapedRecipe("mixed_metal_ingot.2", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(2), "A", "B", "C",
+                'A', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Invar), OreDictUnifier.get(OrePrefix.plate, Materials.Steel)),
+                'B', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Bronze), OreDictUnifier.get(OrePrefix.plate, Materials.Brass)),
+                'C', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Tin), OreDictUnifier.get(OrePrefix.plate, Materials.Zinc),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Aluminium)));
+        ModHandler.addShapedRecipe("mixed_metal_ingot.3", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(3), "A", "B", "C",
+                'A', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.StainlessSteel),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Titanium)),
+                'B', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Bronze), OreDictUnifier.get(OrePrefix.plate, Materials.Brass)),
+                'C', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Tin), OreDictUnifier.get(OrePrefix.plate, Materials.Zinc),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Aluminium)));
+        ModHandler.addShapedRecipe("mixed_metal_ingot.4", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(4), "A", "B", "C",
+                'A', new UnificationEntry(OrePrefix.plate, Materials.Tungsten),
+                'B', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Bronze), OreDictUnifier.get(OrePrefix.plate, Materials.Brass)),
+                'C', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Tin), OreDictUnifier.get(OrePrefix.plate, Materials.Zinc),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Aluminium)));
+        ModHandler.addShapedRecipe("mixed_metal_ingot.5", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(5), "A", "B", "C",
+                'A', new UnificationEntry(OrePrefix.plate, Materials.TungstenSteel),
+                'B', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Bronze), OreDictUnifier.get(OrePrefix.plate, Materials.Brass)),
+                'C', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Tin), OreDictUnifier.get(OrePrefix.plate, Materials.Zinc),
+                        OreDictUnifier.get(OrePrefix.plate, Materials.Aluminium)));
+        RecipeMaps.FORMING_PRESS_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Nickel)
+                .input(OrePrefix.plate, Materials.Brass)
+                .input(OrePrefix.plate, Materials.Aluminium)
+                .output(TJAMetaItems.MIXED_METAL_INGOT, 2)
+                .EUt(8).duration(40)
+                .buildAndRegister();
+        RecipeMaps.FORMING_PRESS_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Steel)
+                .input(OrePrefix.plate, Materials.Brass)
+                .input(OrePrefix.plate, Materials.Aluminium)
+                .output(TJAMetaItems.MIXED_METAL_INGOT, 4)
+                .EUt(8).duration(80)
+                .buildAndRegister();
+        RecipeMaps.FORMING_PRESS_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Titanium)
+                .input(OrePrefix.plate, Materials.Brass)
+                .input(OrePrefix.plate, Materials.Aluminium)
+                .output(TJAMetaItems.MIXED_METAL_INGOT, 6)
+                .EUt(8).duration(120)
+                .buildAndRegister();
+        RecipeMaps.FORMING_PRESS_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Tungsten)
+                .input(OrePrefix.plate, Materials.Brass)
+                .input(OrePrefix.plate, Materials.Aluminium)
+                .output(TJAMetaItems.MIXED_METAL_INGOT, 8)
+                .EUt(8).duration(160)
+                .buildAndRegister();
+        RecipeMaps.FORMING_PRESS_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.TungstenSteel)
+                .input(OrePrefix.plate, Materials.Brass)
+                .input(OrePrefix.plate, Materials.Aluminium)
+                .output(TJAMetaItems.MIXED_METAL_INGOT, 10)
+                .EUt(8).duration(200)
+                .buildAndRegister();
+        // advanced alloy plate
+        RecipeMaps.COMPRESSOR_RECIPES.recipeBuilder()
+                .input(TJAMetaItems.MIXED_METAL_INGOT)
+                .output(TJAMetaItems.ADVANCED_ALLOY_PLATE)
+                .EUt(2).duration(400)
+                .buildAndRegister();
         // tiered reinforced glass
-        // TODO add advanced alloy plate
         RecipeMaps.ALLOY_SMELTER_RECIPES.recipeBuilder()
                 .input(OrePrefix.dust, Materials.Glass, 3)
+                .input(TJAMetaItems.ADVANCED_ALLOY_PLATE)
                 .outputs(TJAMetaBlocks.TIERED_GLASS.getItemVariant(BlockTieredGlass.CasingType.ULV, 4))
                 .EUt(4).duration(400)
                 .buildAndRegister();
         RecipeMaps.ALLOY_SMELTER_RECIPES.recipeBuilder()
-                .input("blockGlass")
+                .input("blockGlass", 3)
+                .input(TJAMetaItems.ADVANCED_ALLOY_PLATE)
                 .outputs(TJAMetaBlocks.TIERED_GLASS.getItemVariant(BlockTieredGlass.CasingType.ULV, 4))
                 .EUt(4).duration(400)
                 .buildAndRegister();

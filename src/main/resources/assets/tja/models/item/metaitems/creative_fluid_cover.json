@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "tja:items/creative_fluid_cover"
+    "layer0": "tja:items/metaitems/creative_fluid_cover"
   }
 }

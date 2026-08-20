@@ -347,7 +347,7 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                 .child(new ScrollWidget<>(new VerticalScrollData() {{
                                     this.setScrollSize(superDualInterface.getInterfaceDuality().getConfig().getSlots() * 36 / 9);
                                 }}).pos(7, 34)
-                                        .size(166, 288)
+                                        .size(166, 144)
                                         .child(SlotGroupWidget.builder()
                                                 .row("CCCCCCCCC")
                                                 .row("SSSSSSSSS")
@@ -432,7 +432,7 @@ public class BlockSuperUltimateInterface extends BlockInterface {
                                 .child(new ScrollWidget<>(new VerticalScrollData() {{
                                     this.setScrollSize(superDualInterface.getDualityFluidInterface().getConfig().getSlots() * 36 / 9);
                                 }}).pos(7, 34)
-                                        .size(166, 288)
+                                        .size(166, 144)
                                         .child(SlotGroupWidget.builder()
                                                 .row("CCCCCCCCC")
                                                 .row("TTTTTTTTT")
