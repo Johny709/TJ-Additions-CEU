@@ -14,6 +14,9 @@ tja.machine.fluid_sampler.uxv.name=Epic Fluid Sampler IV
 tja.machine.fluid_sampler.opv.name=Legendary Fluid Sampler
 tja.machine.fluid_sampler.max.name=Max Fluid Sampler
 
+tja.machine.compressed_chest.name=Compressed Chest
+tja.machine.infinity_chest.name=Infinity Chest
+
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)
 tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
 tja.machine.mega_steel_boiler.name=Mega Steel Boiler (MSB)
@@ -24,6 +27,10 @@ tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Control
 tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
+
+tja.machine.compressed_chest.description=Keeps the items stored inside when broken.
+tja.machine.compressed_chest.slot=Slot: §6%s,§7 Item: §5%s,§7 Count: §6%s
+tja.machine.compressed_chest.slot_filled=Slots Filled: §9%s / %s
 
 tja.multiblock.mega_bronze_boiler.description=Mega version of §5Large Bronze Boiler.
 tja.multiblock.mega_steel_boiler.description=Mega version of §5Large Steel Boiler.
@@ -52,6 +59,8 @@ tja.machine.universal.ticks=Ticks: §b%s
 tja.machine.universal.eut=Using §c%s §fEU/t §a(%s§a)
 tja.machine.universal.ticks.operation=Ticks Per Operation
 tja.machine.universal.consuming=Consuming:
+tja.machine.universal.slots=Slots: §6%s§r
+tja.machine.universal.stack=Stack Size: §6%s§7 per slot
 tja.machine.universal.tooltip.shift=[Press shift for more info]
 tja.machine.universal.tooltip.shifted=[Showing more tooltips]
 tja.machine.universal.tooltip.page=[Page: %s / %s]

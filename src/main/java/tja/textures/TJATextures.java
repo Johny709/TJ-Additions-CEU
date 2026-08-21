@@ -21,10 +21,13 @@ import tja.TJA;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TJATextures {
+public final class TJATextures {
 
     private static final ThreadLocal<BlockRenderer.BlockFace> BLOCK_FACES = ThreadLocal.withInitial(BlockRenderer.BlockFace::new);
     public static final List<TextureUtils.IIconRegister> ICON_REGISTERS = new ArrayList<>();
+
+    public static final TJAChestRenderer WOODEN_CHEST = new TJAChestRenderer(TJA.MOD_ID, "blocks/storage/wooden_chest");
+    public static final TJAChestRenderer METAL_CHEST = new TJAChestRenderer(TJA.MOD_ID, "blocks/storage/metal_chest");
 
     public static final TJASimpleOverlayRenderer SUPRA_SOLAR_PANEL_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/cover/overlay_solar_panel_supra");
     public static final TJASimpleOverlayRenderer CREATIVE_ENERGY_COVER_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/cover/creative_energy_cover_overlay");
