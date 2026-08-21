@@ -21,6 +21,7 @@ public class TJAValues {
     public static final String NAE2_MOD_ID = "nae2";
     public static final String RANDOM_COMPLEMENT_MOD_ID = "random_complement";
     public static final String BAUBLES_MOD_ID = "baubles";
+    public static final String ACTUALLY_ADDITIONS_MOD_ID = "actuallyadditions";
     public static final BlockPos DUMMY_POS = new BlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final IFluidTank DUMMY_TANK = new FluidTank(0);
     public static final DecimalFormat thousandFormat = new DecimalFormat(",###");

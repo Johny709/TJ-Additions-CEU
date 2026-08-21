@@ -41,6 +41,7 @@ public class GTRecipes {
         final boolean isAE2Loaded = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID);
         final boolean isGregicalityLoaded = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID);
         final boolean isSuperCriticalLoaded = TJAValues.isModLoaded(TJAValues.SUPERCRITICAL_MOD_ID);
+        final boolean isActuallyAdditionsLoaded = TJAValues.isModLoaded(TJAValues.ACTUALLY_ADDITIONS_MOD_ID);
 
         final List<Material> materials = new ArrayList<>(Arrays.asList(Materials.WroughtIron, Materials.Steel, Materials.Aluminium, Materials.StainlessSteel,
                 Materials.Titanium, Materials.TungstenSteel, Materials.RhodiumPlatedPalladium, Materials.Duranium, Materials.Tritanium));
@@ -276,6 +277,20 @@ public class GTRecipes {
                     .outputs(TJAAE2Blocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
                     .EUt(GTValues.VAOC[GTValues.LuV]).duration(1000)
                     .buildAndRegister();
+            if (isActuallyAdditionsLoaded) {
+                // compressed chest
+                ModHandler.addShapedRecipe("compressed_chest", TJAMetaTileEntities.COMPRESSED_CHEST.getStackForm(), "OCO", "PBP", "OCO",
+                        'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
+                        'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
+                        'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
+                        'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
+                // compressed crate
+                ModHandler.addShapedRecipe("compressed_crate", TJAMetaTileEntities.COMPRESSED_CRATE.getStackForm(), "OPO", "CBC", "OPO",
+                        'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
+                        'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
+                        'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
+                        'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
+            }
             if (isGregicalityLoaded) {
                 // ME pattern interface
                 RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
