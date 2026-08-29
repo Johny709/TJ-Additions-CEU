@@ -27,6 +27,7 @@ public final class TJAAE2Items {
     public static final Object2ObjectMap<ResourceLocation, IItemDefinition> TJ_ITEM_DEFINITION_REGISTRY = new Object2ObjectOpenHashMap<>();
     public static final Object2IntMap<Item> UPGRADES = new Object2IntOpenHashMap<>();
 
+    public static IItemDefinition PART_DUAL_INTERFACE_V2;
     public static IItemDefinition PART_SUPER_INTERFACE;
     public static IItemDefinition PART_SUPER_FLUID_INTERFACE;
     public static IItemDefinition PART_SUPER_DUAL_INTERFACE;
@@ -61,6 +62,7 @@ public final class TJAAE2Items {
     public static IItemDefinition ITEM_BLOCK_CONTAINER_SINGULARITY;
 
     public static void init(IForgeRegistry<Item> registry) {
+        PART_DUAL_INTERFACE_V2 = registerItem(registry, item -> new ItemDefinition("me.part.dual_interface_v2", new ItemPartDualInterfaceV2()));
         PART_SUPER_INTERFACE = registerItem(registry, item -> new ItemDefinition("me.part.super_interface", new ItemPartSuperInterface()));
         PART_SUPER_FLUID_INTERFACE = registerItem(registry, item -> new ItemDefinition("me.part.super_fluid_interface", new ItemPartSuperFluidInterface()));
         PART_SUPER_DUAL_INTERFACE = registerItem(registry, item -> new ItemDefinition("me.part.super_dual_interface", new ItemPartSuperDualInterface()));
