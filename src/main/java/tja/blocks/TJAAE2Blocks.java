@@ -29,6 +29,7 @@ public final class TJAAE2Blocks {
 
     public static final Object2ObjectMap<ResourceLocation, BlockDefinition> TJ_BLOCK_DEFINITION_REGISTRY = new Object2ObjectOpenHashMap<>();
 
+    public static BlockDefinition DUAL_INTERFACE_V2;
     public static BlockDefinition SUPER_INTERFACE;
     public static BlockDefinition SUPER_FLUID_INTERFACE;
     public static BlockDefinition SUPER_DUAL_INTERFACE;
@@ -44,6 +45,7 @@ public final class TJAAE2Blocks {
     public static BlockDefinition CRAFTING_STORAGE_SINGULARITY;
 
     public static void init(IForgeRegistry<Block> registry) {
+        DUAL_INTERFACE_V2 = registerBlock(registry, "me.dual_interface_v2", new BlockDualInterfaceV2(), AEBaseItemBlock::new);
         SUPER_INTERFACE = registerBlock(registry, "me.super_interface", new BlockSuperInterface(), AEBaseItemBlock::new);
         SUPER_FLUID_INTERFACE = registerBlock(registry, "me.super_fluid_interface", new BlockSuperFluidInterface(), AEBaseItemBlock::new);
         SUPER_DUAL_INTERFACE = registerBlock(registry, "me.super_dual_interface", new BlockSuperDualInterface(), AEBaseItemBlock::new);
