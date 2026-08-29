@@ -13,7 +13,6 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
-import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.mui.GTGuiTextures;
@@ -52,11 +51,6 @@ public class MetaTileEntityFluidSampler extends TJATieredMetaTileEntity {
     }
 
     @Override
-    protected boolean shouldUpdate(MTETrait trait) {
-        return false;
-    }
-
-    @Override
     public void update() {
         super.update();
         if (!this.getWorld().isRemote) {
@@ -79,7 +73,7 @@ public class MetaTileEntityFluidSampler extends TJATieredMetaTileEntity {
 
         return ModularPanel.defaultPanel("mte.fluid_sampler")
                 .child(new TextWidget<>(IKey.lang(this.getMetaFullName()))
-                        .pos(7, 7))
+                        .pos(7, 5))
                 .child(new ProgressWidget()
                         .size(22)
                         .leftRel(0.5f)
@@ -97,5 +91,10 @@ public class MetaTileEntityFluidSampler extends TJATieredMetaTileEntity {
                         .slot(new ModularSlot(this.exportItems, 0)
                                 .canPut(false)))
                 .bindPlayerInventory();
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.workableHandler.isActive();
     }
 }
