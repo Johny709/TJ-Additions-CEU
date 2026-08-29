@@ -6,8 +6,10 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.registries.IForgeRegistry;
+import tja.TJAValues;
 import tja.blocks.TJAAE2Blocks;
 import tja.items.TJAAE2Items;
+import tja.util.TJAItemUtils;
 
 import static tja.recipes.TJARecipes.resource;
 
@@ -100,5 +102,20 @@ public class AE2Recipes {
                 TJAAE2Items.PART_SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY),
                 NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAAE2Blocks.SUPER_ULTIMATE_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))))
                 .setRegistryName("me.super_ultimate_interface.part"));
+        // ME dual interface v2
+        recipes.register(new ShapelessRecipes(resource("me.dual_interface_v2.block").toString(),
+                TJAAE2Blocks.DUAL_INTERFACE_V2.maybeStack(1).orElse(ItemStack.EMPTY),
+                NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAAE2Items.PART_DUAL_INTERFACE_V2.maybeStack(1).orElse(ItemStack.EMPTY))))
+                .setRegistryName(resource("me.dual_interface_v2.block")));
+        recipes.register(new ShapelessRecipes(resource("me.dual_interface_v2.part").toString(),
+                TJAAE2Items.PART_DUAL_INTERFACE_V2.maybeStack(1).orElse(ItemStack.EMPTY),
+                NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAAE2Blocks.DUAL_INTERFACE_V2.maybeStack(1).orElse(ItemStack.EMPTY))))
+                .setRegistryName(resource("me.dual_interface_v2.part")));
+        if (TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID)) {
+            recipes.register(new ShapelessRecipes(resource("me.dual_interface_v2").toString(),
+                    TJAAE2Blocks.DUAL_INTERFACE_V2.maybeStack(1).orElse(ItemStack.EMPTY),
+                    NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(TJAItemUtils.getItemStackFromName("ae2fc:dual_interface"))))
+                    .setRegistryName(resource("me.dual_interface_v2")));
+        }
     }
 }
