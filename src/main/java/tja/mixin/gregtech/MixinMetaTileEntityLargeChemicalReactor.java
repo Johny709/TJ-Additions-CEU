@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tja.TJAConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,13 +42,13 @@ public abstract class MixinMetaTileEntityLargeChemicalReactor extends RecipeMapM
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void inject_Init(ResourceLocation metaTileEntityId, CallbackInfo ci) {
+        if (!TJAConfig.enableLCRBonus) return;
         this.recipeMapWorkable = new MultiblockRecipeLogic(this, true) {
             @Override
             protected void modifyOverclockPost(@Nonnull OCResult ocResult, @Nonnull RecipePropertyStorage storage) {
                 super.modifyOverclockPost(ocResult, storage);
 
-                if (coilTier <= 0)
-                    return;
+                if (coilTier <= 0) return;
 
                 // each coil above cupronickel (coilTier = 0) uses 5% less energy
                 ocResult.setEut(Math.max(1, (long) (ocResult.eut() * (1.0 - coilTier * 0.05))));
@@ -58,13 +59,15 @@ public abstract class MixinMetaTileEntityLargeChemicalReactor extends RecipeMapM
     @SideOnly(Side.CLIENT)
     @Inject(method = "addInformation", at = @At("TAIL"))
     private void injectAddInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced, CallbackInfo ci) {
-        tooltip.add(I18n.format("gregtech.multiblock.large_chemical_reactor.coil_bonus"));
+        if (TJAConfig.enableLCRBonus)
+            tooltip.add(I18n.format("gregtech.multiblock.large_chemical_reactor.coil_bonus"));
     }
 
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        IHeatingCoilBlockStats coilBlockStats = context.getOrDefault("CoilType", BlockWireCoil.CoilType.CUPRONICKEL);
+        if (!TJAConfig.enableLCRBonus) return;
+        final IHeatingCoilBlockStats coilBlockStats = context.getOrDefault("CoilType", BlockWireCoil.CoilType.CUPRONICKEL);
         this.coilTier = coilBlockStats.getTier();
     }
 
@@ -77,17 +80,15 @@ public abstract class MixinMetaTileEntityLargeChemicalReactor extends RecipeMapM
     @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         super.configureDisplayText(builder);
+        if (!TJAConfig.enableLCRBonus) return;
         builder.addEmptyLine()
                 .addCustom((keyManager, syncer) -> {
                     // Coil energy discount line
-                    IKey energyDiscount = KeyUtil.number(TextFormatting.AQUA, syncer.syncLong(100 - 5L * this.coilTier), "%");
-
-                    IKey base = KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.cracking_unit.energy", energyDiscount);
-
-                    IKey hover = KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.cracking_unit.energy_hover");
-
-                    if (syncer.syncBoolean(this.isStructureFormed()))
-                        keyManager.add(KeyUtil.setHover(base, hover));
+                    if (!this.isStructureFormed()) return;
+                    final IKey energyDiscount = KeyUtil.number(TextFormatting.AQUA, syncer.syncLong(100 - 5L * this.coilTier), "%");
+                    final IKey base = KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.cracking_unit.energy", energyDiscount);
+                    final IKey hover = KeyUtil.lang(TextFormatting.GRAY, "gregtech.multiblock.cracking_unit.energy_hover");
+                    keyManager.add(KeyUtil.setHover(base, hover));
                 });
     }
 }
