@@ -15,8 +15,6 @@ public class LateMixinLoader implements ILateMixinLoader {
             builder.add("mixins.tja.gregtech.json");
         if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID))
             builder.add("mixins.tja.ae2.json");
-        if (TJAValues.isModLoaded(TJAValues.THEONEPROBE_MOD_ID))
-            builder.add("mixins.tja.theoneprobe.json");
         return builder.build();
     }
 }

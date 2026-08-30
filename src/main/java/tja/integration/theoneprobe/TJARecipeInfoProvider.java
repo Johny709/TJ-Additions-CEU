@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
 import tja.integration.theoneprobe.impl.ElementFluidStack;
+import tja.integration.theoneprobe.impl.ElementTJAText;
 import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
@@ -32,16 +33,16 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         final List<FluidStack> fluidInputs = recipeInfo.getFluidInputs();
         final List<FluidStack> fluidOutputs = recipeInfo.getFluidOutputs();
         if (recipeInfo.getEnergyPerTick() > 0)
-            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + String.format("{*tja.machine.universal.eut[*%s;%s*]*}",
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText(String.format("{*tja.machine.universal.eut[*%s;%s*]*}",
                     recipeInfo.getEnergyPerTick(),
-                    GTValues.VOCNF[TJAUtility.getTierFromVoltage(recipeInfo.getEnergyPerTick())]));
+                    GTValues.VOCNF[TJAUtility.getTierFromVoltage(recipeInfo.getEnergyPerTick())])));
         if (recipeInfo.hasProblem()) {
-            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + "{*tja.machine.universal.has_problems*}");
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.machine.universal.has_problems*}"));
         } else if (recipeInfo.isActive()) {
-            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + "{*tja.machine.universal.running*}");
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.machine.universal.running*}"));
         }
         if (!itemInputs.isEmpty() || !fluidInputs.isEmpty()) {
-            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + "{*tja.top.inputs*}");
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.inputs*}"));
             final IProbeInfo inputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
             for (FluidStack fluidStack : fluidInputs)
                 inputInfo.element(new ElementFluidStack(fluidStack));
@@ -49,7 +50,7 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
                 inputInfo.item(itemStack);
         }
         if (!itemOutputs.isEmpty() | !fluidOutputs.isEmpty()) {
-            probeInfo.vertical(probeInfo.defaultLayoutStyle()).text(TextStyleClass.INFO + "{*tja.top.outputs*}");
+            probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.outputs*}"));
             final IProbeInfo outputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
             for (FluidStack fluidStack : fluidOutputs)
                 outputInfo.element(new ElementFluidStack(fluidStack));
