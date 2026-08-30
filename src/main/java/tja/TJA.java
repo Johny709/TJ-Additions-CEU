@@ -17,7 +17,8 @@ import tja.machines.TJAMetaTileEntities;
 import tja.textures.TJATextures;
 
 
-@Mod(modid = TJA.MOD_ID, name = TJA.MOD_NAME, version = TJA.VERSION, dependencies = "required-after:modularui@[3.1.6,)")
+@Mod(modid = TJA.MOD_ID, name = TJA.MOD_NAME, version = TJA.VERSION, dependencies = "required-after:modularui@[3.1.6,);" +
+    "after:gregtech@[2.9.0-beta,)")
 public class TJA {
     public static final String MOD_ID = "tja";
     public static final String MOD_NAME = "TJ Additions CEU";
