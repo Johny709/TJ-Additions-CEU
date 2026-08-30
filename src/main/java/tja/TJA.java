@@ -32,6 +32,10 @@ public class TJA {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("Hello From {}!", MOD_NAME);
+        for (String modid : TJAConfig.modids) {
+            if (!TJAValues.isModLoaded(modid))
+                throw new IllegalStateException(String.format("Mod %s is not loaded", modid));
+        }
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             TJAMetaTileEntities.init();
             TJAMetaItems.init();

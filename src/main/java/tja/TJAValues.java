@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class TJAValues {
+public final class TJAValues {
 
     public static final String GREGTECH_MOD_ID = "gregtech";
     public static final String AE2_MOD_ID = "appliedenergistics2";
