@@ -9,11 +9,15 @@ import com.circulation.random_complement.common.interfaces.RCIConfigurableObject
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.TJAValues;
 import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperInterface;
@@ -25,6 +29,12 @@ public class TilePatternInterface extends TileInterface implements IGuiHolder<Po
 
     public TilePatternInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 40, 36, 288), "duality");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(TJA.MOD_ID, mainPanel);
     }
 
     @Override

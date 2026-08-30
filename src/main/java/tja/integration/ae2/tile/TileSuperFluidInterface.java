@@ -4,10 +4,14 @@ import appeng.fluids.tile.TileFluidInterface;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJA;
 import tja.blocks.TJAAE2Blocks;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockSuperFluidInterface;
@@ -18,6 +22,12 @@ public class TileSuperFluidInterface extends TileFluidInterface implements IGuiH
 
     public TileSuperFluidInterface() {
         ObfuscationReflectionHelper.setPrivateValue(TileFluidInterface.class, this, new DualitySuperFluidInterface(this.getProxy(), this, 18), "duality");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModularScreen createScreen(PosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(TJA.MOD_ID, mainPanel);
     }
 
     @Override

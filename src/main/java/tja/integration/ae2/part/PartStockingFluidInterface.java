@@ -22,6 +22,7 @@ import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.factory.GuiFactories;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +39,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJA;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.blocks.BlockStockingFluidInterface;
@@ -76,6 +79,12 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
             GuiFactories.sidedTileEntity().open(player, tileCableBus.getPos(), this.getSide().getFacing());
         }
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModularScreen createScreen(SidedPosGuiData data, ModularPanel mainPanel) {
+        return new ModularScreen(TJA.MOD_ID, mainPanel);
     }
 
     @Override
