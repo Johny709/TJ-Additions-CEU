@@ -60,7 +60,9 @@ public class TJA {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (event.getSide() == Side.CLIENT)
-            TJAAE2Blocks.registerItemModels();
+        if (TJAValues.isModLoaded(TJAValues.AE2_MOD_ID)) {
+            if (event.getSide() == Side.CLIENT)
+                TJAAE2Blocks.registerItemModels();
+        }
     }
 }
