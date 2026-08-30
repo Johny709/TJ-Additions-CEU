@@ -10,6 +10,11 @@ public final class TJAConfig {
     @Config.RequiresMcRestart
     public static String[] modids = new String[0];
 
+    @Config.Name("Singleblock 64B fluid slots")
+    @Config.Comment("All fluid slots of singleblocks can hold up to 64,000L.")
+    @Config.RequiresMcRestart
+    public static boolean singleblock64B;
+
     @Config.Name("LCR Coil Bonus")
     @Config.Comment("enable coil bonus for Large Chemical Reactor (LCR). 5% energy discount every tier higher than cupronickel.")
     @Config.RequiresMcRestart

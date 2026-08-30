@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tja.TJAConfig;
 
 import java.util.function.Function;
 
@@ -29,8 +30,10 @@ public abstract class MixinWorkableTieredMetaTileEntity extends TieredMetaTileEn
 
     @Inject(method = "<init>(Lnet/minecraft/util/ResourceLocation;Lgregtech/api/recipes/RecipeMap;Lgregtech/client/renderer/ICubeRenderer;ILjava/util/function/Function;Z)V", at = @At("TAIL"))
     private void inject_Init(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, ICubeRenderer renderer, int tier, Function<Integer, Integer> tankScalingFunction, boolean handlesRecipeOutputs, CallbackInfo ci) {
-        this.tankScalingFunction = t -> 64000;
-        this.initializeInventory();
-        this.reinitializeEnergyContainer();
+        if (TJAConfig.singleblock64B) {
+            this.tankScalingFunction = t -> 64000;
+            this.initializeInventory();
+            this.reinitializeEnergyContainer();
+        }
     }
 }
