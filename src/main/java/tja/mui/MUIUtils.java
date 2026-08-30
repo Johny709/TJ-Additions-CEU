@@ -136,7 +136,6 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ISuperInterface superInterface) {
-        syncManager.syncValue("priority", new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority));
         syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))));
         syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
@@ -162,7 +161,7 @@ public final class MUIUtils {
                         .size(148, 18)
                         .setMaxLength(11)
                         .autoUpdateOnChange(true)
-                        .syncHandler("priority"))
+                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
@@ -232,7 +231,6 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createFluidPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ISuperFluidInterface superInterface) {
-        syncManager.syncValue("priority", new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority));
         syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))));
         syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
@@ -258,7 +256,7 @@ public final class MUIUtils {
                         .size(148, 18)
                         .setMaxLength(11)
                         .autoUpdateOnChange(true)
-                        .syncHandler("priority"))
+                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
@@ -328,7 +326,6 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ISuperInterface superInterface) {
-        syncManager.syncValue("tick", new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime));
         syncManager.syncValue("tick_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 1))));
         syncManager.syncValue("tick_add_10", new InteractionSyncHandler()
@@ -354,7 +351,7 @@ public final class MUIUtils {
                         .size(148, 18)
                         .setMaxLength(11)
                         .autoUpdateOnChange(true)
-                        .syncHandler("tick"))
+                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
