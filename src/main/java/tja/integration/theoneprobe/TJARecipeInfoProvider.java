@@ -44,18 +44,18 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         if (!itemInputs.isEmpty() || !fluidInputs.isEmpty()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.inputs*}"));
             final IProbeInfo inputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
-            for (FluidStack fluidStack : fluidInputs)
-                inputInfo.element(new ElementFluidStack(fluidStack));
             for (ItemStack itemStack : itemInputs)
                 inputInfo.item(itemStack);
+            for (FluidStack fluidStack : fluidInputs)
+                inputInfo.element(new ElementFluidStack(fluidStack));
         }
         if (!itemOutputs.isEmpty() | !fluidOutputs.isEmpty()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.outputs*}"));
             final IProbeInfo outputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
-            for (FluidStack fluidStack : fluidOutputs)
-                outputInfo.element(new ElementFluidStack(fluidStack));
             for (ItemStack itemStack : itemOutputs)
                 outputInfo.item(itemStack);
+            for (FluidStack fluidStack : fluidOutputs)
+                outputInfo.element(new ElementFluidStack(fluidStack));
         }
     }
 
