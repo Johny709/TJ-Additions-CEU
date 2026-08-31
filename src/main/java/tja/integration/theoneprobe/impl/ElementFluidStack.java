@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import tja.integration.theoneprobe.TheOneProbeModule;
-import tja.mui.TJAGuiUtils;
+import tja.rendering.TJAGuiUtils;
 
 public class ElementFluidStack implements IElement {
 

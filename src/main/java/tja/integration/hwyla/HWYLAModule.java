@@ -4,12 +4,14 @@ import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import mcp.mobius.waila.api.WailaPlugin;
 import tja.TJAValues;
+import tja.integration.hwyla.providers.RecipeInfoDataProvider;
 
-@WailaPlugin(TJAValues.GREGTECH_MOD_ID)
-public final class HWYLAGTModule implements IWailaPlugin {
+@WailaPlugin
+public final class HWYLAModule implements IWailaPlugin {
 
     @Override
     public void register(IWailaRegistrar iWailaRegistrar) {
-        RecipeInfoDataProvider.INSTANCE.register(iWailaRegistrar);
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+            RecipeInfoDataProvider.INSTANCE.register(iWailaRegistrar);
     }
 }

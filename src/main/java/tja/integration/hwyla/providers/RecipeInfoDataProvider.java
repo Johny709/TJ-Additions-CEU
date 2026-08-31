@@ -1,18 +1,17 @@
-package tja.integration.hwyla;
+package tja.integration.hwyla.providers;
 
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
+import mcp.mobius.waila.api.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
 import tja.machines.MetaTileEntityUtils;
@@ -39,6 +38,22 @@ public class RecipeInfoDataProvider implements IWailaDataProvider {
             final IRecipeInfo recipeInfo = metaTileEntity.getCapability(TJACapabilities.CAPABILITY_RECIPE_INFO, null);
             if (recipeInfo != null) {
                 final NBTTagCompound compound = new NBTTagCompound();
+                final NBTTagList itemInputs = new NBTTagList();
+                final NBTTagList itemOutputs = new NBTTagList();
+                final NBTTagList fluidInputs = new NBTTagList();
+                final NBTTagList fluidOutputs = new NBTTagList();
+                for (ItemStack input : recipeInfo.getItemInputs())
+                    itemInputs.appendTag(input.serializeNBT());
+                for (ItemStack output : recipeInfo.getItemOutputs())
+                    itemOutputs.appendTag(output.serializeNBT());
+                for (FluidStack input : recipeInfo.getFluidInputs())
+                    fluidInputs.appendTag(input.writeToNBT(new NBTTagCompound()));
+                for (FluidStack output : recipeInfo.getFluidOutputs())
+                    fluidOutputs.appendTag(output.writeToNBT(new NBTTagCompound()));
+                compound.setTag("itemInputs", itemInputs);
+                compound.setTag("itemOutputs", itemOutputs);
+                compound.setTag("fluidInputs", fluidInputs);
+                compound.setTag("fluidOutputs", fluidOutputs);
                 compound.setLong("energyPerTick", recipeInfo.getEnergyPerTick());
                 compound.setBoolean("active", recipeInfo.isActive());
                 compound.setBoolean("problem", recipeInfo.hasProblem());
@@ -65,6 +80,18 @@ public class RecipeInfoDataProvider implements IWailaDataProvider {
                         tooltip.add(I18n.format("tja.machine.universal.has_problems"));
                     } else if (compound.getBoolean("active")) {
                         tooltip.add(I18n.format("tja.machine.universal.running"));
+                    }
+                    final NBTTagList itemInputs = compound.getTagList("itemInputs", 10);
+                    final NBTTagList itemOutputs = compound.getTagList("itemOutputs", 10);
+                    final NBTTagList fluidInputs = compound.getTagList("fluidInputs", 10);
+                    final NBTTagList fluidOutputs = compound.getTagList("fluidOutputs", 10);
+                    if (!itemInputs.isEmpty() || !fluidInputs.isEmpty()) {
+                        tooltip.add(I18n.format("tja.top.inputs"));
+                        tooltip.add(SpecialChars.getRenderString("tja.recipeinfo", "input"));
+                    }
+                    if (!itemOutputs.isEmpty() || !fluidOutputs.isEmpty()) {
+                        tooltip.add(I18n.format("tja.top.outputs"));
+                        tooltip.add(SpecialChars.getRenderString("tja.recipeinfo", "output"));
                     }
                 }
             }
