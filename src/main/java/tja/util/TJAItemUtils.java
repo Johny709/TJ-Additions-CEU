@@ -1,5 +1,6 @@
 package tja.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -7,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -379,5 +381,18 @@ public final class TJAItemUtils {
      */
     public static ItemStack getItemStackFromName(String name, int count, int meta) {
         return new ItemStack(Optional.ofNullable(Item.getByNameOrId(name)).orElse(Items.AIR), count, meta);
+    }
+
+    /**
+     *
+     * @param itemStacks items in ore dictionary
+     * @param isClient checks total world time in client for tick counter.
+     * @return iterates through the ore dict every second. returns the current item in iteration.
+     */
+    public static ItemStack getItemStackOreDict(ItemStack[] itemStacks, boolean isClient) {
+        final long ticks = isClient ? Minecraft.getMinecraft().world.getTotalWorldTime() :
+                FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter();
+        final int index = (int) Math.min(itemStacks.length - 1, ticks % (itemStacks.length * 20L) / 20);
+        return itemStacks[index];
     }
 }

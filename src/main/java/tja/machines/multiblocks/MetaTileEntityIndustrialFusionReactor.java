@@ -56,7 +56,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
@@ -64,12 +63,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import tja.capability.IRecipeInfo;
-import tja.capability.TJACapabilities;
 import tja.machines.controllers.TJExtendableMultiblockController;
 
 import javax.annotation.Nonnull;
@@ -408,7 +404,7 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
         return this.heat;
     }
 
-    public class IndustrialFusionRecipeLogic extends MultiblockRecipeLogic implements IRecipeInfo {
+    public class IndustrialFusionRecipeLogic extends MultiblockRecipeLogic {
 
         public IndustrialFusionRecipeLogic(MetaTileEntityIndustrialFusionReactor tileEntity) {
             super(tileEntity);
@@ -501,31 +497,8 @@ public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultibloc
 
         @Override
         public <T> T getCapability(Capability<T> capability) {
-            if (capability == TJACapabilities.CAPABILITY_RECIPE_INFO)
-                return TJACapabilities.CAPABILITY_RECIPE_INFO.cast(this);
+            System.out.println("getting capability");
             return super.getCapability(capability);
-        }
-
-        @Nonnull
-        @Override
-        public List<FluidStack> getFluidOutputs() {
-            return this.fluidOutputs;
-        }
-
-        @Nonnull
-        @Override
-        public List<ItemStack> getItemOutputs() {
-            return this.itemOutputs;
-        }
-
-        @Override
-        public boolean hasProblem() {
-            return false;
-        }
-
-        @Override
-        public long getEnergyPerTick() {
-            return 0; // already handled by other TOP info provider
         }
     }
 
