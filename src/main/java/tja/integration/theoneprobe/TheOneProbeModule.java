@@ -6,7 +6,7 @@ import tja.TJAValues;
 import tja.integration.theoneprobe.impl.ElementFluidStack;
 import tja.integration.theoneprobe.impl.ElementTJAText;
 
-public class TheOneProbeModule {
+public final class TheOneProbeModule {
 
     public static int ELEMENT_FLUIDSTACK;
     public static int ELEMENT_TJA_TEXT;

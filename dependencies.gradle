@@ -68,6 +68,8 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+    // e.g. curse.maven:modname-projectId:fileId
+
     implementation(rfg.deobf(project.files("libs/ae2-uel-v0.56.7-5-g26bb598-dev.jar")))
     implementation(rfg.deobf(project.files("libs/gcyl-1.12.2-0.1.0-beta-dev.jar")))
     implementation(rfg.deobf(project.files("libs/gregtech-1.12.2-2.9.0-beta-dev.jar")))
@@ -79,5 +81,6 @@ dependencies {
     implementation("curse.maven:enderio-1530852:8175092")
     implementation("curse.maven:theoneprobe-885670:7718301")
     compileOnly(rfg.deobf("curse.maven:ctm-267602:2915363"))// CTM 1.0.2.31
+    compileOnly(rfg.deobf("curse.maven:hwyla-253449:2568751"))
     api("com.cleanroommc:modularui:3.1.6") { transitive = false }
 }
