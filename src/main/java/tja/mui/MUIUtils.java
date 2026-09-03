@@ -25,6 +25,9 @@ import gregtech.api.metatileentity.multiblock.ui.Operation;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.drawable.GTObjectDrawable;
 import gregtech.api.util.KeyUtil;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -40,8 +43,10 @@ import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.ISuperInterface;
 import tja.items.handlers.FilteredItemStackHandler;
 import tja.mui.slot.TJAModularSlot;
+import tja.util.Counter;
 import tja.util.TJAItemUtils;
 import tja.util.TJAUtility;
+import tja.util.map.Strategies;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -65,21 +70,42 @@ public final class MUIUtils {
         itemInputs = syncer.syncCollection(itemInputs, ByteBufAdapters.ITEM_STACK);
         fluidOutputs = syncer.syncCollection(fluidOutputs, ByteBufAdapters.FLUID_STACK);
         itemOutputs = syncer.syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
+
+        final Object2ObjectMap<ItemStack, Counter> itemInputMap = new Object2ObjectLinkedOpenCustomHashMap<>(Strategies.ITEMSTACK_STRATEGY);
+        final Object2ObjectMap<ItemStack, Counter> itemOutputMap = new Object2ObjectLinkedOpenCustomHashMap<>(Strategies.ITEMSTACK_STRATEGY);
+        final Object2ObjectMap<FluidStack, Counter> fluidInputMap = new Object2ObjectLinkedOpenHashMap<>();
+        final Object2ObjectMap<FluidStack, Counter> fluidOutputMap = new Object2ObjectLinkedOpenHashMap<>();
         final int maxProgress = syncer.syncInt(recipeInfo.getMaxProgress());
-        if (!fluidInputs.isEmpty() || !itemInputs.isEmpty())
+
+        if (!fluidInputs.isEmpty() || !itemInputs.isEmpty()) {
             key.add(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.consuming"));
-        for (FluidStack fluidStack : fluidInputs)
-            MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
-        for (ItemStack stack : itemInputs)
-            MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
+
+            for (ItemStack stack : itemInputs)
+                itemInputMap.computeIfAbsent(stack, item -> new Counter(0))
+                        .increment(stack.getCount());
+            for (FluidStack fluidStack : fluidInputs)
+                fluidInputMap.computeIfAbsent(fluidStack, fluid -> new Counter(0))
+                        .increment(fluidStack.amount);
+            for (Object2ObjectMap.Entry<ItemStack, Counter> entry : itemInputMap.object2ObjectEntrySet())
+                MUIUtils.addItemOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
+            for (Object2ObjectMap.Entry<FluidStack, Counter> entry : fluidInputMap.object2ObjectEntrySet())
+                MUIUtils.addFluidOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
+        }
         if (!fluidOutputs.isEmpty() || !itemOutputs.isEmpty()) {
             key.add(KeyUtil.lang("")); // new line
             key.add(KeyUtil.lang(TextFormatting.GRAY, "gregtech.gui.multiblock.recipe_producing"));
+
+            for (ItemStack stack : itemOutputs)
+                itemOutputMap.computeIfAbsent(stack, item -> new Counter(0))
+                        .increment(stack.getCount());
+            for (FluidStack fluidStack : fluidOutputs)
+                fluidOutputMap.computeIfAbsent(fluidStack, fluid -> new Counter(0))
+                        .increment(fluidStack.amount);
+            for (Object2ObjectMap.Entry<ItemStack, Counter> entry : itemInputMap.object2ObjectEntrySet())
+                MUIUtils.addItemOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
+            for (Object2ObjectMap.Entry<FluidStack, Counter> entry : fluidInputMap.object2ObjectEntrySet())
+                MUIUtils.addFluidOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
         }
-        for (FluidStack fluidStack : fluidOutputs)
-            MUIUtils.addFluidOutputLine(key, fluidStack, fluidStack.amount, maxProgress);
-        for (ItemStack stack : itemOutputs)
-            MUIUtils.addItemOutputLine(key, stack, stack.getCount(), maxProgress);
     }
 
     /**

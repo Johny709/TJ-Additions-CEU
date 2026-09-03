@@ -1,4 +1,4 @@
-package tja.integration.theoneprobe;
+package tja.integration.theoneprobe.providers;
 
 import gregtech.api.GTValues;
 import gregtech.integration.theoneprobe.provider.CapabilityInfoProvider;
@@ -11,7 +11,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
-import tja.integration.theoneprobe.impl.ElementFluidStack;
+import tja.integration.theoneprobe.impl.ElementFluidList;
+import tja.integration.theoneprobe.impl.ElementItemList;
 import tja.integration.theoneprobe.impl.ElementTJAText;
 import tja.util.TJAUtility;
 
@@ -43,18 +44,14 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         if (!itemInputs.isEmpty() || !fluidInputs.isEmpty()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.inputs*}"));
             final IProbeInfo inputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
-            for (ItemStack itemStack : itemInputs)
-                inputInfo.item(itemStack);
-            for (FluidStack fluidStack : fluidInputs)
-                inputInfo.element(new ElementFluidStack(fluidStack));
+            inputInfo.element(new ElementItemList(itemInputs));
+            inputInfo.element(new ElementFluidList(fluidInputs));
         }
         if (!itemOutputs.isEmpty() | !fluidOutputs.isEmpty()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.top.outputs*}"));
             final IProbeInfo outputInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle());
-            for (ItemStack itemStack : itemOutputs)
-                outputInfo.item(itemStack);
-            for (FluidStack fluidStack : fluidOutputs)
-                outputInfo.element(new ElementFluidStack(fluidStack));
+            outputInfo.element(new ElementItemList(itemOutputs));
+            outputInfo.element(new ElementFluidList(fluidOutputs));
         }
     }
 
