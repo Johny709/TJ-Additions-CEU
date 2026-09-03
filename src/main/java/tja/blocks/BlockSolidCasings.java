@@ -1,0 +1,59 @@
+package tja.blocks;
+
+import gregtech.api.block.VariantBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+
+import javax.annotation.Nonnull;
+
+
+public class BlockSolidCasings extends VariantBlock<BlockSolidCasings.SolidCasingType> {
+
+    public BlockSolidCasings() {
+        super(Material.IRON);
+        this.setHardness(5.0f);
+        this.setResistance(10.0f);
+        this.setTranslationKey("solid_casing");
+        this.setRegistryName("solid_casing");
+        this.setSoundType(SoundType.METAL);
+        this.setHarvestLevel("wrench", 2);
+        this.setDefaultState(this.getState(SolidCasingType.BOHRIUM));
+    }
+
+    @Override
+    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityLiving.SpawnPlacementType type) {
+        return false;
+    }
+
+    public enum SolidCasingType implements IStringSerializable {
+        BOHRIUM("bohrium"),
+        VIBRANIUM("vibranium"),
+        ADAMANTIUM("adamantium"),
+        NEUTRONIUM("neutronium"),
+        CHAOS_ALLOY("chaosalloy"),
+        DURANIUM_CASING("duranium"),
+        SEABORGIUM_CASING("seaborgium"),
+        TUNGSTEN_TITANIUM_CARBIDE_CASING("tungsten_titanium_carbide"),
+        HEAVY_QUARK_DEGENERATE_MATTER("heavy_quark_degenerate_matter"),
+        PERIODICIUM("periodicium"),
+        RUTHERFORDIUM_CASING("rutherfordium"),
+        ASSEMBLER_CASING("assembler");
+
+        private final String name;
+
+        SolidCasingType(String name) {
+            this.name = name;
+        }
+
+        @Nonnull
+        @Override
+        public String getName() {
+            return this.name;
+        }
+    }
+}

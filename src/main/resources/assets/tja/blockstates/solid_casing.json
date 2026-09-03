@@ -1,0 +1,70 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all"
+  },
+  "variants": {
+    "variant": {
+      "bohrium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/bohrium"
+        }
+      },
+      "vibranium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/vibranium"
+        }
+      },
+      "adamantium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/adamantium"
+        }
+      },
+      "neutronium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/neutronium"
+        }
+      },
+      "chaosalloy": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/chaos_alloy"
+        }
+      },
+      "duranium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/duranium"
+        }
+      },
+      "seaborgium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/seaborgium"
+        }
+      },
+      "tungsten_titanium_carbide": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/tungsten_titanium_carbide"
+        }
+      },
+      "heavy_quark_degenerate_matter": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/heavy_quark_degenerate_matter"
+        }
+      },
+      "periodicium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/periodicium"
+        }
+      },
+      "rutherfordium": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/rutherfordium"
+        }
+      },
+      "assembler": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/assembler_casing"
+        }
+      }
+    }
+  }
+}

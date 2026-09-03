@@ -20,21 +20,25 @@ public final class TJAMetaBlocks {
 
     public static final BlockBatteryCell BATTERY_CELL = new BlockBatteryCell();
     public static final BlockTieredGlass TIERED_GLASS = new BlockTieredGlass();
+    public static final BlockSolidCasings SOLID_CASINGS = new BlockSolidCasings();
 
     public static void init(IForgeRegistry<Block> blocks) {
         blocks.register(BATTERY_CELL);
         blocks.register(TIERED_GLASS);
+        blocks.register(SOLID_CASINGS);
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> items) {
         items.register(createItemBlock(BATTERY_CELL, VariantItemBlock::new));
         items.register(createItemBlock(TIERED_GLASS, VariantItemBlock::new));
+        items.register(createItemBlock(SOLID_CASINGS, VariantItemBlock::new));
     }
 
     @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
         registerItemModel(BATTERY_CELL);
         registerItemModel(TIERED_GLASS);
+        registerItemModel(SOLID_CASINGS);
     }
 
     @SideOnly(Side.CLIENT)
