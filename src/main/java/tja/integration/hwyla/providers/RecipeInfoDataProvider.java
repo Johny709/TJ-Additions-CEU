@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
 import tja.machines.MetaTileEntityUtils;
@@ -74,8 +75,8 @@ public class RecipeInfoDataProvider implements IWailaDataProvider {
                     final NBTTagCompound compound = accessor.getNBTData().getCompoundTag("tja.recipeinfo");
                     final long energyPerTick = compound.getLong("energyPerTick");
                     if (energyPerTick > 0)
-                        tooltip.add(I18n.format("tja.machine.universal.eut", energyPerTick,
-                                GTValues.VOCNF[TJAUtility.getTierFromVoltage(energyPerTick)]));
+                        tooltip.add(I18n.format("tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
+                                GTValues.VOCNF[TJAUtility.getTierByVoltage(energyPerTick)]));
                     if (compound.getBoolean("problem")) {
                         tooltip.add(I18n.format("tja.machine.universal.has_problems"));
                     } else if (compound.getBoolean("active")) {

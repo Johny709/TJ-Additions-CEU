@@ -3,6 +3,7 @@ package tja.machines.multiblocks;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
 import gregtech.api.GTValues;
@@ -14,7 +15,6 @@ import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.mui.GTGuiTextures;
-import gregtech.api.mui.sync.FixedIntArraySyncValue;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.PatternMatchContext;
@@ -28,12 +28,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJAValues;
 import tja.blocks.BlockSolidCasings;
 import tja.blocks.TJAMetaBlocks;
 import tja.capability.workables.InfiniteFluidDrillWorkableHandler;
 import tja.machines.controllers.TJMultiblockControllerBase;
 import tja.mui.MUIUtils;
 import tja.textures.TJATextures;
+import tja.util.TJAFluidUtils;
 import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
@@ -48,8 +50,6 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
 
     public static final FluidStack DRILLING_MUD = DrillingMud.getFluid(1);
     private final InfiniteFluidDrillWorkableHandler workableHandler = new InfiniteFluidDrillWorkableHandler(this);
-    private long maxVoltage;
-    private int tier;
 
     public MetaTileEntityInfiniteFluidDrill(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -62,7 +62,7 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
 
     @Override
     protected void updateFormedValid() {
-        if ( ((this.getMaintenanceProblems() >> 5) & 1) != 0)
+        if (((this.getMaintenanceProblems() >> 5) & 1) != 0)
             this.workableHandler.update();
     }
 
@@ -100,16 +100,14 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
     }
 
     @Override
-    public void invalidateStructure() {
-        super.invalidateStructure();
-        this.maxVoltage = 0;
-        this.tier = 0;
-    }
-
-    @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addEnergyUsageLine(this.inputEnergyContainer)
                 .addEnergyTierLine(this.tier)
+                .addCustom((key, syncer) -> {
+                    final long energyPerTick = syncer.syncLong(this.workableHandler.getEnergyPerTick());
+                    key.add(KeyUtil.lang("tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
+                            GTValues.VOCNF[TJAUtility.getTierByVoltage(energyPerTick)]));
+                })
                 .addProgressLine(this.workableHandler.getProgress(), this.workableHandler.getMaxProgress())
                 .addRunningPerfectlyLine(this.workableHandler.isActive())
                 .setWorkingStatus(this.workableHandler.isWorkingEnabled(), this.workableHandler.isActive())
@@ -118,17 +116,19 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
 
     @Override
     public void registerBars(List<UnaryOperator<TemplateBarBuilder>> bars, PanelSyncManager panelSyncManager) {
-        final FixedIntArraySyncValue drillingMudValue = new FixedIntArraySyncValue(() ->
-                this.getTotalFluidAmount(DRILLING_MUD, this.importFluidTank), null);
-        bars.add(bar -> bar.progress(() -> drillingMudValue.getValue(1) == 0 ? 0
-                        : 1.0 * drillingMudValue.getValue(0) / drillingMudValue.getValue(1))
-                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION)
+        final DoubleSyncValue drillingMudAmount = new DoubleSyncValue(() -> TJAFluidUtils.getFluidAmountFromTanks(DRILLING_MUD, this.importFluidTank));
+        final DoubleSyncValue drillingMudCapacity = new DoubleSyncValue(() -> TJAFluidUtils.getFluidCapacityFromTanks(DRILLING_MUD, this.importFluidTank));
+        panelSyncManager.syncValue("drilling_mud_amount", drillingMudAmount);
+        panelSyncManager.syncValue("drilling_mud_capacity", drillingMudCapacity);
+        bars.add(bar -> bar.progress(() -> drillingMudCapacity.getDoubleValue() == 0 ? 0
+                        : drillingMudAmount.getDoubleValue() / drillingMudCapacity.getDoubleValue())
+                .texture(GTGuiTextures.PROGRESS_BAR_LCE_FUEL)
                 .tooltipBuilder(tooltip -> {
                     if (this.isStructureFormed()) {
-                        if (drillingMudValue.getValue(1) != 0)
+                        if (drillingMudCapacity.getDoubleValue() != 0)
                             tooltip.add(KeyUtil.lang("tja.multiblock.bars.fluid", DRILLING_MUD.getLocalizedName(),
-                                    drillingMudValue.getValue(0), drillingMudValue.getValue(1),
-                                    100 * drillingMudValue.getValue(0) / drillingMudValue.getValue(1)));
+                                    drillingMudAmount.getDoubleValue(), drillingMudCapacity.getDoubleValue(),
+                                    100 * drillingMudAmount.getDoubleValue() / drillingMudCapacity.getDoubleValue()));
                     } else tooltip.add(KeyUtil.lang("gregtech.multiblock.invalid_structure"));
                 }));
     }
@@ -136,11 +136,6 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
     @Override
     public int getProgressBarCount() {
         return 1;
-    }
-
-    @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return TJATextures.SEABORGIUM;
     }
 
     @Override
@@ -152,12 +147,7 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
     }
 
     @Override
-    public long getMaxVoltage() {
-        return this.maxVoltage;
-    }
-
-    @Override
-    public int getTier() {
-        return this.tier;
+    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
+        return TJATextures.SEABORGIUM;
     }
 }

@@ -7,10 +7,7 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.common.metatileentities.multi.BoilerType;
 import net.minecraft.util.ResourceLocation;
 import tja.TJA;
-import tja.machines.multiblocks.MetaTileEntityIndustrialFusionReactor;
-import tja.machines.multiblocks.MetaTileEntityInfiniteFluidDrill;
-import tja.machines.multiblocks.MetaTileEntityMegaBoiler;
-import tja.machines.multiblocks.MetaTileEntityMegaCokeOven;
+import tja.machines.multiblocks.*;
 import tja.machines.singleblocks.MetaTileEntityCompressedChest;
 import tja.machines.singleblocks.MetaTileEntityCompressedCrate;
 import tja.machines.singleblocks.MetaTileEntityFluidSampler;
@@ -29,6 +26,7 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity INDUSTRIAL_FUSION_REACTOR_MK2 = MetaTileEntities.registerMetaTileEntity(6, new MetaTileEntityIndustrialFusionReactor(resource("industrial_fusion_reactor.mk2"), GTValues.ZPM));
     public static final MetaTileEntity INDUSTRIAL_FUSION_REACTOR_MK3 = MetaTileEntities.registerMetaTileEntity(7, new MetaTileEntityIndustrialFusionReactor(resource("industrial_fusion_reactor.mk3"), GTValues.UV));
     public static final MetaTileEntity INFINITE_FLUID_DRILL = MetaTileEntities.registerMetaTileEntity(10, new MetaTileEntityInfiniteFluidDrill(resource("infinite_fluid_drill")));
+    public static final MetaTileEntity VOID_MORE_MINER = MetaTileEntities.registerMetaTileEntity(11, new MetaTileEntityVoidMOreMiner(resource("void_more_miner")));
 
     public static final MetaTileEntity COMPRESSED_CHEST = MetaTileEntities.registerMetaTileEntity(2000, new MetaTileEntityCompressedChest(resource("compressed_chest"), false));
     public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));

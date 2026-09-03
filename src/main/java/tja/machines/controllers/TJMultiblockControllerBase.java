@@ -32,6 +32,8 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     protected IMultipleTankHandler exportFluidTank;
     protected IEnergyContainer inputEnergyContainer;
     protected IEnergyContainer outputEnergyContainer;
+    protected long maxVoltage;
+    protected int tier;
 
     public TJMultiblockControllerBase(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -62,6 +64,8 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
         this.exportFluidTank = new FluidTankList(true);
         this.inputEnergyContainer = new EnergyContainerList(Collections.emptyList());
         this.outputEnergyContainer = new EnergyContainerList(Collections.emptyList());
+        this.maxVoltage = 0;
+        this.tier = 0;
     }
 
     protected int[] getTotalFluidAmount(FluidStack testStack, IMultipleTankHandler multiTank) {
@@ -114,6 +118,16 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     @Override
     public int getNumMaintenanceProblems() {
         return super.getNumMaintenanceProblems();
+    }
+
+    @Override
+    public long getMaxVoltage() {
+        return this.maxVoltage;
+    }
+
+    @Override
+    public int getTier() {
+        return this.tier;
     }
 
     public static TraceabilityPredicate tieredHatchPredicate() {

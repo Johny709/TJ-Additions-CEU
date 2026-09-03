@@ -28,6 +28,7 @@ tja.machine.industrial_fusion_reactor.mk1.name=Industrial Fusion Reactor Control
 tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Controller MK2 (IFRC2)
 tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
 tja.machine.infinite_fluid_drill.name=Infinite Fluid Drilling Plant (IFDP)
+tja.machine.void_more_miner.name=Void MOre Miner (VMOM)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 
@@ -69,6 +70,7 @@ tja.machine.universal.tooltip.shifted=[Showing more tooltips]
 tja.machine.universal.tooltip.page=[Page: %s / %s]
 tja.machine.universal.tooltip.page_info=§f[Press tab to turn page]
 tja.machine.universal.tooltip.more_jei=Full tooltip can also be viewed in JEI info page.
+tj.machine.universal.temperature=Temperature: §c%s§7 / §c%s§7 °C
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 

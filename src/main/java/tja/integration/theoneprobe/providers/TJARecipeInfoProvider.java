@@ -35,7 +35,7 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         if (recipeInfo.getEnergyPerTick() > 0)
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText(String.format("{*tja.machine.universal.eut[*%s;%s*]*}",
                     recipeInfo.getEnergyPerTick(),
-                    GTValues.VOCNF[TJAUtility.getTierFromVoltage(recipeInfo.getEnergyPerTick())])));
+                    GTValues.VOCNF[TJAUtility.getTierByVoltage(recipeInfo.getEnergyPerTick())])));
         if (recipeInfo.hasProblem()) {
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText("{*tja.machine.universal.has_problems*}"));
         } else if (recipeInfo.isActive()) {
