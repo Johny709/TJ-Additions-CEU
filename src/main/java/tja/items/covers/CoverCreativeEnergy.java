@@ -4,6 +4,7 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
+import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IQuantumStorage;
 import gregtech.api.cover.CoverBase;
@@ -39,7 +40,8 @@ public class CoverCreativeEnergy extends CoverBase implements ITickable {
         final MetaTileEntity metaTileEntity = MetaTileEntityUtils.getMetaTileEntityAt(world, pos);
         return metaTileEntity instanceof IEnergyContainerStorage ||
                 (metaTileEntity instanceof IQuantumStorage<?> &&
-                        ((IQuantumStorage<?>) metaTileEntity).getTypeValue() instanceof IEnergyContainer);
+                        ((IQuantumStorage<?>) metaTileEntity).getTypeValue() instanceof IEnergyContainer) ||
+                (metaTileEntity != null && metaTileEntity.hasCapability(GregtechTileCapabilities.CAPABILITY_LASER, null));
     }
 
     @Override
@@ -66,6 +68,8 @@ public class CoverCreativeEnergy extends CoverBase implements ITickable {
             this.energyContainer = ((IEnergyContainerStorage) metaTileEntity).getEnergyContainer();
         } else if (metaTileEntity instanceof IQuantumStorage<?>) {
             this.energyContainer = (IEnergyContainer) ((IQuantumStorage<?>) metaTileEntity).getTypeValue();
+        } else if (metaTileEntity.hasCapability(GregtechTileCapabilities.CAPABILITY_LASER, null)) {
+            this.energyContainer = metaTileEntity.getCapability(GregtechTileCapabilities.CAPABILITY_LASER, null);
         }
     }
 }

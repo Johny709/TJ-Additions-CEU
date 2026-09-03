@@ -101,9 +101,9 @@ public final class MUIUtils {
             for (FluidStack fluidStack : fluidOutputs)
                 fluidOutputMap.computeIfAbsent(fluidStack, fluid -> new Counter(0))
                         .increment(fluidStack.amount);
-            for (Object2ObjectMap.Entry<ItemStack, Counter> entry : itemInputMap.object2ObjectEntrySet())
+            for (Object2ObjectMap.Entry<ItemStack, Counter> entry : itemOutputMap.object2ObjectEntrySet())
                 MUIUtils.addItemOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
-            for (Object2ObjectMap.Entry<FluidStack, Counter> entry : fluidInputMap.object2ObjectEntrySet())
+            for (Object2ObjectMap.Entry<FluidStack, Counter> entry : fluidOutputMap.object2ObjectEntrySet())
                 MUIUtils.addFluidOutputLine(key, entry.getKey(), entry.getValue().getValue(), maxProgress);
         }
     }
