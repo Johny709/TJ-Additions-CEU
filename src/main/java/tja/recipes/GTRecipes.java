@@ -217,6 +217,30 @@ public class GTRecipes {
                     .output(TJAMetaItems.SUPRA_SOLAR_PANEL)
                     .EUt(983040000).duration(100)
                     .buildAndRegister();
+            // infinite fluid drilling plant
+            RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                    .input(MetaItems.ELECTRIC_MOTOR_UHV, 64)
+                    .input(MetaItems.ELECTRIC_PUMP_UHV, 64)
+                    .input(OrePrefix.foil, GCYLMaterials.Pikyonium, 64)
+                    .input(OrePrefix.pipeHugeFluid, GCYLMaterials.EnrichedNaquadahAlloy, 64)
+                    .input(OrePrefix.wireGtSingle, GCYLMaterials.UHVSuperconductor, 64)
+                    .input(OrePrefix.screw, Materials.Duranium, 48)
+                    .input(OrePrefix.gearSmall, GCYLMaterials.TitanSteel, 32)
+                    .input(OrePrefix.plate, Materials.Seaborgium, 32)
+                    .input(MetaTileEntities.ADVANCED_FLUID_DRILLING_RIG, 16)
+                    .input(OrePrefix.circuit, MarkerMaterials.Tier.UEV)
+                    .input(OrePrefix.stickLong, GCYLMaterials.NaquadriaticTaranium, 16)
+                    .input(OrePrefix.gear, GCYLMaterials.Taranium, 16)
+                    .input(OrePrefix.frameGt, GCYLMaterials.HDCS)
+                    .fluidInputs(Materials.SolderingAlloy.getFluid(4608), GCYLMaterials.Polyetheretherketone.getFluid(9216),
+                            Materials.Lubricant.getFluid(64000), Materials.Naquadria.getFluid(2304))
+                    .output(TJAMetaTileEntities.INFINITE_FLUID_DRILL)
+                    .stationResearch(stationRecipeBuilder -> stationRecipeBuilder
+                            .researchStack(MetaTileEntities.ADVANCED_FLUID_DRILLING_RIG)
+                            .EUt(GTValues.VAOC[GTValues.UEV])
+                            .CWUt(256))
+                    .EUt(GTValues.VAOC[GTValues.UEV]).duration(2400)
+                    .buildAndRegister();
         }
         if (isAE2Loaded) {
             // ME super interface

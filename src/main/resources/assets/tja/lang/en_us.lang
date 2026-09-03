@@ -27,6 +27,7 @@ tja.machine.mega_tungstensteel_boiler.name=Mega TungstenSteel Boiler (MTSB)
 tja.machine.industrial_fusion_reactor.mk1.name=Industrial Fusion Reactor Controller MK1 (IFRC1)
 tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Controller MK2 (IFRC2)
 tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
+tja.machine.infinite_fluid_drill.name=Infinite Fluid Drilling Plant (IFDP)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 

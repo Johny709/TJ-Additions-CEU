@@ -53,9 +53,7 @@ public interface IMachineHandler {
         return false;
     }
 
-    default byte getMaintenanceProblems() {
-        return 0;
-    }
+    int getNumMaintenanceProblems();
 
     default void calculateMaintenance(int duration) {}
 }

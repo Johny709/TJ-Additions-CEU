@@ -1,20 +1,28 @@
 package tja.machines.controllers;
 
+import gregicality.multiblocks.api.metatileentity.GCYMMultiblockAbility;
+import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.EnergyContainerList;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MTETrait;
+import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.util.BlockInfo;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.capability.handler.IMachineHandler;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler {
 
@@ -101,5 +109,32 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     @Override
     public IEnergyContainer getOutputEnergyContainer() {
         return this.outputEnergyContainer;
+    }
+
+    @Override
+    public int getNumMaintenanceProblems() {
+        return super.getNumMaintenanceProblems();
+    }
+
+    public static TraceabilityPredicate tieredHatchPredicate() {
+        return new TraceabilityPredicate(blockWorldState -> {
+            if (blockWorldState.getTileEntity() instanceof MetaTileEntityHolder) {
+                final MetaTileEntityHolder holder = (MetaTileEntityHolder) blockWorldState.getTileEntity();
+                final MetaTileEntity tileEntity = holder.getMetaTileEntity();
+                if (tileEntity instanceof MetaTileEntityTieredHatch) {
+                    final MetaTileEntityTieredHatch tieredHatch = (MetaTileEntityTieredHatch) tileEntity;
+                    final List<MetaTileEntityTieredHatch> tieredHatches = blockWorldState.getMatchContext().getOrCreate("tiered_hatches", ArrayList::new);
+                    tieredHatches.add(tieredHatch);
+                    return tieredHatches.get(0).getTier() == tieredHatch.getTier();
+                }
+            }
+            return false;
+        }, () -> MultiblockAbility.REGISTRY.get(GCYMMultiblockAbility.TIERED_HATCH).stream()
+                .map(tileEntity -> {
+                    final MetaTileEntityHolder holder = new MetaTileEntityHolder();
+                    holder.setMetaTileEntity(tileEntity);
+                    holder.getMetaTileEntity().onPlacement();
+                    return new BlockInfo(tileEntity.getBlock().getDefaultState(), holder);
+                }).toArray(BlockInfo[]::new));
     }
 }

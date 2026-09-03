@@ -97,4 +97,9 @@ public class MetaTileEntityFluidSampler extends TJATieredMetaTileEntity {
     public boolean isActive() {
         return this.workableHandler.isActive();
     }
+
+    @Override
+    public int getNumMaintenanceProblems() {
+        return 0;
+    }
 }
