@@ -7,6 +7,7 @@ import tja.integration.theoneprobe.impl.ElementFluidList;
 import tja.integration.theoneprobe.impl.ElementFluidStack;
 import tja.integration.theoneprobe.impl.ElementItemList;
 import tja.integration.theoneprobe.impl.ElementTJAText;
+import tja.integration.theoneprobe.providers.HeatInfoProvider;
 import tja.integration.theoneprobe.providers.TJARecipeInfoProvider;
 
 public final class TheOneProbeModule {
@@ -25,7 +26,9 @@ public final class TheOneProbeModule {
 
     public static void init() {
         final ITheOneProbe probe = TheOneProbe.theOneProbeImp;
-        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID))
+        if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
+            probe.registerProvider(new HeatInfoProvider());
             probe.registerProvider(new TJARecipeInfoProvider());
+        }
     }
 }

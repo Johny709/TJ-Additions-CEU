@@ -52,6 +52,7 @@ tja.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
 tja.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)
 tja.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
 
+tja.top.progress.heat=Heat:
 tja.top.inputs=Inputs:
 tja.top.outputs=Outputs:
 
