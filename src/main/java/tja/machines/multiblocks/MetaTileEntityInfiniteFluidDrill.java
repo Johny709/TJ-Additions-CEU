@@ -100,6 +100,14 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
+        super.renderMetaTileEntity(renderState, translation, pipeline);
+        Textures.MULTIBLOCK_WORKABLE_OVERLAY.renderOrientedState(renderState, translation, pipeline,
+                this.frontFacing, this.workableHandler.isActive(), this.workableHandler.isWorkingEnabled());
+    }
+
+    @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addEnergyUsageLine(this.inputEnergyContainer)
                 .addEnergyTierLine(this.tier)
@@ -139,15 +147,12 @@ public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
-        super.renderMetaTileEntity(renderState, translation, pipeline);
-        Textures.MULTIBLOCK_WORKABLE_OVERLAY.renderOrientedState(renderState, translation, pipeline,
-                this.frontFacing, this.workableHandler.isActive(), this.workableHandler.isWorkingEnabled());
+    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
+        return TJATextures.SEABORGIUM;
     }
 
     @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return TJATextures.SEABORGIUM;
+    public int getVoidingModeInt() {
+        return this.getVoidingMode();
     }
 }

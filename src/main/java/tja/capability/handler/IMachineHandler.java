@@ -53,7 +53,13 @@ public interface IMachineHandler {
         return false;
     }
 
-    int getNumMaintenanceProblems();
+    default int getVoidingModeInt() {
+        return 0;
+    }
+
+    default int getNumMaintenanceProblems() {
+        return 0;
+    }
 
     default void calculateMaintenance(int duration) {}
 }

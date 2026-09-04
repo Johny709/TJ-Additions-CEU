@@ -29,7 +29,6 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
     private int outputIndex;
     private long drillingMudAmount;
     private long outputFluidAmount;
-    private boolean voidingFluids;
 
     public InfiniteFluidDrillWorkableHandler(MetaTileEntity metaTileEntity) {
         super(metaTileEntity);
@@ -67,7 +66,8 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
     protected boolean completeRecipe() {
         for (int i = this.outputIndex; i < this.fluidOutputsList.size(); i++) {
             final FluidStack stack = this.fluidOutputsList.get(i);
-            if (this.voidingFluids || this.handler.getExportFluidTank().fill(stack, false) == stack.amount) {
+            final boolean voidingFluids = this.handler.getVoidingModeInt() >= 2;
+            if (voidingFluids || this.handler.getExportFluidTank().fill(stack, false) == stack.amount) {
                 this.handler.getExportFluidTank().fill(stack, true);
                 this.outputIndex++;
             } else return false;
@@ -90,7 +90,6 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
         compound.setTag("fluidInputsList", fluidInputsList);
         compound.setTag("fluidOutputsList", fluidOutputsList);
         compound.setInteger("outputIndex", this.outputIndex);
-        compound.setBoolean("voidFluids", this.voidingFluids);
         return compound;
     }
 
@@ -98,8 +97,8 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
     public void deserializeNBT(NBTTagCompound compound) {
         super.deserializeNBT(compound);
         this.outputIndex = compound.getInteger("outputIndex");
-        this.voidingFluids = compound.getBoolean("voidFluids");
-        final NBTTagList fluidInputsList = compound.getTagList("fluidInputsList", 10), fluidOutputsList = compound.getTagList("fluidOutputsList", 10);
+        final NBTTagList fluidInputsList = compound.getTagList("fluidInputsList", 10);
+        final NBTTagList fluidOutputsList = compound.getTagList("fluidOutputsList", 10);
         for (int i = 0; i < fluidInputsList.tagCount(); i++)
             this.fluidInputsList.add(FluidStack.loadFluidStackFromNBT(fluidInputsList.getCompoundTagAt(i)));
         for (int i = 0; i < fluidOutputsList.tagCount(); i++)
@@ -112,15 +111,6 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
 
     public long getDrillingMudAmount() {
         return this.drillingMudAmount;
-    }
-
-    public boolean isVoidingFluids() {
-        return this.voidingFluids;
-    }
-
-    public void setVoidingFluids(boolean voidingFluids) {
-        this.voidingFluids = voidingFluids;
-        this.metaTileEntity.markDirty();
     }
 
     @Nonnull

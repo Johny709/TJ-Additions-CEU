@@ -36,11 +36,10 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
     private final List<FluidStack> fluidInputsList = new ArrayList<>();
     private final List<FluidStack> fluidOutputsList = new ArrayList<>();
 
-    private boolean overheat;
-    private boolean voidingFluids;
+    private double currentDrillingFluid = CONSUME_START;
     private long maxTemperature;
     private long temperature;
-    private double currentDrillingFluid = CONSUME_START;
+    private boolean overheat;
 
     public VoidMOreMinerWorkableHandler(MetaTileEntity metaTileEntity) {
         super(metaTileEntity);
@@ -80,7 +79,8 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
             this.currentDrillingFluid += ((IMaintenance) this.metaTileEntity).getMaintenanceProblems();
 
         final long consumeAmount = (long) this.currentDrillingFluid;
-        if ((this.voidingFluids || TJAFluidUtils.fillIntoTanksLong(this.handler.getExportFluidTank(), USED_DRILLING_MUD, consumeAmount, false) == consumeAmount) &&
+        final boolean voidingFluids = this.handler.getVoidingModeInt() >= 2;
+        if ((voidingFluids || TJAFluidUtils.fillIntoTanksLong(this.handler.getExportFluidTank(), USED_DRILLING_MUD, consumeAmount, false) == consumeAmount) &&
                 TJAFluidUtils.drainFromTanksLong(this.handler.getImportFluidTank(), DRILLING_MUD, consumeAmount, false) == consumeAmount) {
             boolean canMineOres = false;
             final boolean hasEnoughPyrotheum = TJAFluidUtils.drainFromTanksLong(this.handler.getImportFluidTank(), PYROTHEUM, consumeAmount, false) == consumeAmount;
@@ -172,7 +172,6 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
         compound.setLong("temperature", this.temperature);
         compound.setDouble("currentDrillingFluid", this.currentDrillingFluid);
         compound.setBoolean("overheat", this.overheat);
-        compound.setBoolean("voidFluids", this.voidingFluids);
         compound.setTag("oreList", oreList);
         compound.setTag("fluidInputList", fluidOutputList);
         compound.setTag("fluidOutputList", fluidOutputList);
@@ -193,7 +192,6 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
         this.temperature = compound.getLong("temperature");
         this.currentDrillingFluid = compound.getDouble("currentDrillingFluid");
         this.overheat = compound.getBoolean("overheat");
-        this.voidingFluids = compound.getBoolean("voidFluids");
     }
 
     @Override
@@ -205,15 +203,6 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
 
     public boolean isOverheat() {
         return this.overheat;
-    }
-
-    public void setVoidingFluids(boolean voidingFluids) {
-        this.voidingFluids = voidingFluids;
-        this.metaTileEntity.markDirty();
-    }
-
-    public boolean isVoidingFluids() {
-        return this.voidingFluids;
     }
 
     public double getCurrentDrillingFluid() {
