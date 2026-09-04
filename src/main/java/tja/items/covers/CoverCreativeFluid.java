@@ -17,6 +17,7 @@ import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
+import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.cover.CoverBase;
@@ -28,6 +29,7 @@ import gregtech.api.util.KeyUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
@@ -76,15 +78,13 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed / 2)));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
-        final ModularPanel panel = ModularPanel.defaultPanel("creative_fluid_cover_gui", 176, 187);
-        for (int i = 0; i < this.fluidFilter.getTanks(); i++) {
-            panel.child(new FluidSlot()
-                    .left(61 + (18 * (i % 3)))
-                    .top(25 + (18 * (i / 3)))
-                    .syncHandler(new FluidSlotSyncHandler(this.fluidFilter.getTankAt(i).getDelegate())
-                            .phantom(true)));
-        }
-        return panel.bindPlayerInventory()
+        return ModularPanel.defaultPanel("creative_fluid_cover_gui", 176, 187)
+                .child(new Grid()
+                        .pos(61, 25)
+                        .size(54)
+                        .gridOfSizeWidth(this.fluidFilter.getTanks(), 3, (x, y, i) -> new FluidSlot()
+                                .syncHandler(new FluidSlotSyncHandler(this.fluidFilter.getTankAt(i).getDelegate())
+                                        .phantom(true))))
                 .child(new RichTextWidget()
                         .size(54, 18)
                         .pos(63, 80)
@@ -111,7 +111,8 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
                         .disableHoverBackground()
                         .overlay(true, detail, GTGuiTextures.BUTTON_POWER[1])
                         .overlay(false, detail, GTGuiTextures.BUTTON_POWER[0])
-                        .syncHandler("is_working"));
+                        .syncHandler("is_working"))
+                .bindPlayerInventory();
     }
 
     @Override
@@ -132,6 +133,18 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
     }
 
     @Override
+    public void writeInitialSyncData(@Nonnull PacketBuffer packetBuffer) {
+        packetBuffer.writeBoolean(this.isWorking);
+        packetBuffer.writeInt(this.speed);
+    }
+
+    @Override
+    public void readInitialSyncData(@Nonnull PacketBuffer packetBuffer) {
+        this.isWorking = packetBuffer.readBoolean();
+        this.speed = packetBuffer.readInt();
+    }
+
+    @Override
     public void writeToNBT(@Nonnull NBTTagCompound data) {
         super.writeToNBT(data);
         data.setTag("fluidFilter", this.fluidFilter.serializeNBT());
@@ -143,9 +156,8 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
     public void readFromNBT(@Nonnull NBTTagCompound data) {
         super.readFromNBT(data);
         this.fluidFilter.deserializeNBT(data.getCompoundTag("fluidFilter"));
+        this.speed = Math.max(1, data.getInteger("speed"));
         this.isWorking = data.getBoolean("isWorking");
-        if (data.hasKey("speed"))
-            this.speed = data.getInteger("speed");
     }
 
     public void setWorking(boolean isWorking) {

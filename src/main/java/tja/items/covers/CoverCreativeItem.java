@@ -14,6 +14,7 @@ import com.cleanroommc.modularui.value.sync.*;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
+import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import gregtech.api.cover.CoverBase;
@@ -26,10 +27,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import tja.TJA;
 import tja.items.handlers.LargeItemStackHandler;
 import tja.textures.TJATextures;
 import tja.util.TJAItemUtils;
@@ -70,15 +73,13 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed / 2)));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
-        final ModularPanel panel = ModularPanel.defaultPanel("creative_item_cover_gui", 176, 187);
-        for (int i = 0; i < this.itemFilter.getSlots(); i++) {
-            panel.child(new PhantomItemSlot()
-                    .left(61 + (18 * (i % 3)))
-                    .top(25 + (18 * (i / 3)))
-                    .syncHandler(new PhantomItemSlotSH(new ModularSlot(this.itemFilter, i)
-                            .ignoreMaxStackSize(true))));
-        }
-        return panel.bindPlayerInventory()
+        return ModularPanel.defaultPanel("creative_item_cover_gui", 176, 187)
+                .child(new Grid()
+                        .pos(61, 25)
+                        .size(54)
+                        .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new PhantomItemSlot()
+                                .syncHandler(new PhantomItemSlotSH(new ModularSlot(this.itemFilter, i)
+                                        .ignoreMaxStackSize(true)))))
                 .child(new RichTextWidget()
                         .size(54, 18)
                         .pos(63, 80)
@@ -105,7 +106,8 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                         .disableHoverBackground()
                         .overlay(true, detail, GTGuiTextures.BUTTON_POWER[1])
                         .overlay(false, detail, GTGuiTextures.BUTTON_POWER[0])
-                        .syncHandler("is_working"));
+                        .syncHandler("is_working"))
+                .bindPlayerInventory();
     }
 
     @Override
@@ -124,10 +126,22 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
     }
 
     @Override
+    public void writeInitialSyncData(@Nonnull PacketBuffer packetBuffer) {
+        packetBuffer.writeBoolean(this.isWorking);
+        packetBuffer.writeInt(this.speed);
+    }
+
+    @Override
+    public void readInitialSyncData(@Nonnull PacketBuffer packetBuffer) {
+        this.isWorking = packetBuffer.readBoolean();
+        this.speed = packetBuffer.readInt();
+    }
+
+    @Override
     public void writeToNBT(@Nonnull NBTTagCompound data) {
         super.writeToNBT(data);
-        data.setInteger("speed", this.speed);
         data.setTag("itemFilter", this.itemFilter.serializeNBT());
+        data.setInteger("speed", this.speed);
         data.setBoolean("isWorking", this.isWorking);
     }
 
@@ -135,9 +149,8 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
     public void readFromNBT(@Nonnull NBTTagCompound data) {
         super.readFromNBT(data);
         this.itemFilter.deserializeNBT(data.getCompoundTag("itemFilter"));
+        this.speed = Math.max(1, data.getInteger("speed"));
         this.isWorking = data.getBoolean("isWorking");
-        if (data.hasKey("speed"))
-            this.speed = data.getInteger("speed");
     }
 
     private void setWorking(boolean isWorking) {
