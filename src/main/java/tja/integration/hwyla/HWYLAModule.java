@@ -4,6 +4,7 @@ import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import mcp.mobius.waila.api.WailaPlugin;
 import tja.TJAValues;
+import tja.integration.hwyla.providers.CoverWorkableInfoDataProvider;
 import tja.integration.hwyla.providers.HeatInfoDataProvider;
 import tja.integration.hwyla.providers.RecipeInfoDataProvider;
 
@@ -15,6 +16,7 @@ public final class HWYLAModule implements IWailaPlugin {
         if (TJAValues.isModLoaded(TJAValues.GREGTECH_MOD_ID)) {
             HeatInfoDataProvider.INSTANCE.register(iWailaRegistrar);
             RecipeInfoDataProvider.INSTANCE.register(iWailaRegistrar);
+            CoverWorkableInfoDataProvider.INSTANCE.register(iWailaRegistrar);
         }
     }
 }

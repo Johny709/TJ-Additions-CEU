@@ -19,6 +19,8 @@ import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
+import gregtech.api.capability.GregtechTileCapabilities;
+import gregtech.api.capability.IWorkable;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.cover.CoverBase;
 import gregtech.api.cover.CoverDefinition;
@@ -32,6 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -42,7 +45,7 @@ import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWithUI {
+public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWithUI, IWorkable {
 
     private final FluidTankList fluidFilter = new FluidTankList(true, IntStream.range(0, 9)
             .mapToObj(i -> new FluidTank(Integer.MAX_VALUE))
@@ -160,6 +163,13 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
         this.isWorking = data.getBoolean("isWorking");
     }
 
+    @Override
+    public <T> T getCapability(@Nonnull Capability<T> capability, T defaultValue) {
+        if (capability == GregtechTileCapabilities.CAPABILITY_WORKABLE)
+            return GregtechTileCapabilities.CAPABILITY_WORKABLE.cast(this);
+        return null;
+    }
+
     public void setWorking(boolean isWorking) {
         this.isWorking = isWorking;
         this.markAsDirty();
@@ -169,4 +179,27 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
         this.speed = (int) Math.max(1, Math.min(Integer.MAX_VALUE, speed));
         this.markAsDirty();
     }
+
+    @Override
+    public int getProgress() {
+        return (int) this.getOffsetTimer() % this.speed;
+    }
+
+    @Override
+    public int getMaxProgress() {
+        return this.speed;
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.isWorking;
+    }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return this.isWorking;
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {}
 }
