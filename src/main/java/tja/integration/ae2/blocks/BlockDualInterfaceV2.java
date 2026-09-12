@@ -146,7 +146,7 @@ public class BlockDualInterfaceV2 extends BlockInterface {
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superDualInterface));
         return ModularPanel.defaultPanel("me.dual_interface.gui", 176, 292)
-                .childIf(TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID), () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
+                .childIf(patternMultiTool.getValue() != -1, () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)

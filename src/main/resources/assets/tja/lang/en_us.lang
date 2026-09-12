@@ -109,6 +109,8 @@ item.me.part.super_ultimate_interface.name=ME Super Ultimate Interface
 item.me.part.super_interface_terminal.name=ME Super Interface Terminal
 item.me.part.cell_terminal.name=ME Cell Terminal
 
+item.me.part.super_pattern_multiplier.name=Super Pattern Multi-Tool
+
 tile.me.dual_interface_v2.name=ME Dual Interface V2
 tile.me.super_interface.name=ME Super Interface
 tile.me.super_fluid_interface.name=ME Super Fluid Interface

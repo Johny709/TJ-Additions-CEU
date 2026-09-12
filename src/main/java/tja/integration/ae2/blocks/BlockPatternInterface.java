@@ -47,6 +47,7 @@ import tja.TJAValues;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.helpers.DualitySuperInterface;
 import tja.integration.ae2.tile.TilePatternInterface;
+import tja.items.TJAAE2Items;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
 import tja.mui.slot.TJAModularSlot;
@@ -125,7 +126,7 @@ public class BlockPatternInterface extends BlockInterface {
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
         final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
         return ModularPanel.defaultPanel("me.pattern_interface.gui", 176, 292)
-                .childIf(TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID), () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
+                .childIf(patternMultiTool.getValue() != -1, () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)

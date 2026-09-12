@@ -7,6 +7,7 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.recipes.ingredients.GTRecipeItemInput;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Material;
@@ -27,6 +28,7 @@ import tja.blocks.BlockBatteryCell;
 import tja.blocks.BlockTieredGlass;
 import tja.blocks.TJAAE2Blocks;
 import tja.blocks.TJAMetaBlocks;
+import tja.items.TJAAE2Items;
 import tja.items.TJAMetaItems;
 import tja.machines.TJAMetaTileEntities;
 import tja.util.TJAItemUtils;
@@ -39,6 +41,7 @@ public class GTRecipes {
 
     public static void init(IForgeRegistry<IRecipe> recipes) {
         final boolean isAE2Loaded = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID);
+        final boolean isNAE2Loaded = TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID);
         final boolean isGregicalityLoaded = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID);
         final boolean isSuperCriticalLoaded = TJAValues.isModLoaded(TJAValues.SUPERCRITICAL_MOD_ID);
         final boolean isActuallyAdditionsLoaded = TJAValues.isModLoaded(TJAValues.ACTUALLY_ADDITIONS_MOD_ID);
@@ -202,6 +205,20 @@ public class GTRecipes {
                     .EUt(4L << i * 2).duration(400)
                     .buildAndRegister();
         }
+        if (isActuallyAdditionsLoaded) {
+            // compressed chest
+            ModHandler.addShapedRecipe("compressed_chest", TJAMetaTileEntities.COMPRESSED_CHEST.getStackForm(), "OCO", "PBP", "OCO",
+                    'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
+                    'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
+                    'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
+                    'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
+            // compressed crate
+            ModHandler.addShapedRecipe("compressed_crate", TJAMetaTileEntities.COMPRESSED_CRATE.getStackForm(), "OPO", "CBC", "OPO",
+                    'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
+                    'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
+                    'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
+                    'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
+        }
         if (isGregicalityLoaded) {
             // supra solar panel (max)
             RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
@@ -286,7 +303,7 @@ public class GTRecipes {
                     .outputs(TJAAE2Blocks.STOCKING_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
                     .EUt(GTValues.VAOC[GTValues.LuV]).duration(1000)
                     .buildAndRegister();
-            // ME stocking fluid inteface
+            // ME stocking fluid interface
             RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
                     .circuitMeta(3)
                     .inputs(Api.INSTANCE.definitions().blocks().quartzVibrantGlass().maybeStack(16).orElse(ItemStack.EMPTY))
@@ -301,20 +318,20 @@ public class GTRecipes {
                     .outputs(TJAAE2Blocks.STOCKING_FLUID_INTERFACE.maybeStack(1).orElse(ItemStack.EMPTY))
                     .EUt(GTValues.VAOC[GTValues.LuV]).duration(1000)
                     .buildAndRegister();
-            if (isActuallyAdditionsLoaded) {
-                // compressed chest
-                ModHandler.addShapedRecipe("compressed_chest", TJAMetaTileEntities.COMPRESSED_CHEST.getStackForm(), "OCO", "PBP", "OCO",
-                        'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
-                        'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
-                        'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
-                        'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
-                // compressed crate
-                ModHandler.addShapedRecipe("compressed_crate", TJAMetaTileEntities.COMPRESSED_CRATE.getStackForm(), "OPO", "CBC", "OPO",
-                        'O', new UnificationEntry(OrePrefix.block, Materials.Obsidian),
-                        'P', MetaItems.ELECTRIC_PISTON_MV.getStackForm(),
-                        'C', TJAItemUtils.getItemStackFromName("actuallyadditions:block_giant_chest_large"),
-                        'B', TJAItemUtils.getItemStackFromName("actuallyadditions:item_crate_keeper"));
-            }
+            // Super Pattern Multi-Tool
+            RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .input(OrePrefix.plate, Materials.Titanium, 32)
+                    .inputs(Api.INSTANCE.definitions().materials().blankPattern().maybeStack(16).orElse(ItemStack.EMPTY),
+                            Api.INSTANCE.definitions().materials().engProcessor().maybeStack(4).orElse(ItemStack.EMPTY),
+                            Api.INSTANCE.definitions().materials().calcProcessor().maybeStack(4).orElse(ItemStack.EMPTY))
+                    .inputs(new GTRecipeItemInput(isNAE2Loaded ? new ItemStack[]{TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")} :
+                            new ItemStack[]{Api.INSTANCE.definitions().parts().monitor().maybeStack(1).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().parts().semiDarkMonitor().maybeStack(1).orElse(ItemStack.EMPTY),
+                                    Api.INSTANCE.definitions().parts().darkMonitor().maybeStack(1).orElse(ItemStack.EMPTY)}))
+                    .input(OrePrefix.circuit, MarkerMaterials.Tier.IV, 2)
+                    .outputs(TJAAE2Items.SUPER_PATTERN_MULTIPLIER.maybeStack(1).orElse(ItemStack.EMPTY))
+                    .EUt(GTValues.VAOC[GTValues.EV]).duration(1200)
+                    .buildAndRegister();
             if (isGregicalityLoaded) {
                 // ME pattern interface
                 RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()

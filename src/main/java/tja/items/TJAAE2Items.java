@@ -40,6 +40,8 @@ public final class TJAAE2Items {
     public static IItemDefinition PART_SUPER_INTERFACE_TERMINAL;
     public static IItemDefinition PART_CELL_TERMINAL;
 
+    public static IItemDefinition SUPER_PATTERN_MULTIPLIER;
+
     public static IItemDefinition MATERIAL_ITEM_CELL_65536K;
     public static IItemDefinition MATERIAL_ITEM_CELL_262144K;
     public static IItemDefinition MATERIAL_ITEM_CELL_1048M;
@@ -74,6 +76,8 @@ public final class TJAAE2Items {
 
         PART_SUPER_INTERFACE_TERMINAL = registerItem(registry, item -> new ItemDefinition("me.part.super_interface_terminal", new ItemPartSuperInterfaceTerminal()));
         PART_CELL_TERMINAL = registerItem(registry, item -> new ItemDefinition("me.part.cell_terminal", new ItemPartCellTerminal()));
+
+        SUPER_PATTERN_MULTIPLIER = registerItem(registry, item -> new ItemDefinition("me.part.super_pattern_multiplier", item));
 
         MATERIAL_ITEM_CELL_65536K = registerItem(registry, item -> new ItemDefinition("me.material.item_cell.65536k", item));
         MATERIAL_ITEM_CELL_262144K = registerItem(registry, item -> new ItemDefinition("me.material.item_cell.262144k", item));

@@ -9,10 +9,12 @@ import com.cleanroommc.modularui.factory.PosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widget.Widget;
+import com.cleanroommc.modularui.widget.scroll.HorizontalScrollData;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -41,6 +43,7 @@ import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.ISuperInterface;
+import tja.items.TJAAE2Items;
 import tja.items.handlers.FilteredItemStackHandler;
 import tja.mui.slot.TJAModularSlot;
 import tja.util.Counter;
@@ -543,14 +546,15 @@ public final class MUIUtils {
     }
 
     public static Widget<?> createPatternMultiToolWidget(PanelSyncManager syncManager, UISettings settings, ItemStack patternMultiTool) {
+        final boolean isUpgraded = patternMultiTool.isItemEqual(TJAAE2Items.SUPER_PATTERN_MULTIPLIER.maybeStack(1).orElse(ItemStack.EMPTY));
         final NBTTagCompound compound = TJAItemUtils.getCompoundFromStack(patternMultiTool);
         final NBTTagCompound invTag = compound.getCompoundTag("inv");
         final NBTTagCompound upgradeTag = compound.getCompoundTag("upgrades");
-        final FilteredItemStackHandler multiPatternSlots = new FilteredItemStackHandler(36, 64)
+        final FilteredItemStackHandler multiPatternSlots = new FilteredItemStackHandler(isUpgraded ? 72 : 36, 64)
                 .setItemStackPredicate((slot, itemStack) -> itemStack.isItemEqual(Api.INSTANCE.definitions().materials().blankPattern().maybeStack(1).orElse(ItemStack.EMPTY)) ||
                         itemStack.isItemEqual(Api.INSTANCE.definitions().items().encodedPattern().maybeStack(1).orElse(ItemStack.EMPTY)) || itemStack.isItemEqual(TJAItemUtils.getItemStackFromName("ae2fc:dense_encoded_pattern")));
         multiPatternSlots.setOnContentsChangedPost((slot, itemStack) -> writePatternMultiToolToNBT(multiPatternSlots, invTag));
-        final FilteredItemStackHandler multiUpgradeSlots = new FilteredItemStackHandler(3, 1)
+        final FilteredItemStackHandler multiUpgradeSlots = new FilteredItemStackHandler(isUpgraded ? 7 : 3, 1)
                 .setItemStackPredicate((slot, itemStack) -> itemStack.isItemEqual(Api.INSTANCE.definitions().materials().cardCapacity().maybeStack(1).orElse(ItemStack.EMPTY)));
         multiUpgradeSlots.setOnContentsChangedPost((slot, itemStack) -> writePatternMultiToolToNBT(multiUpgradeSlots, upgradeTag));
 
@@ -575,7 +579,8 @@ public final class MUIUtils {
         syncManager.syncValue("pattern_clear", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> TJAUtility.clearPatterns(multiPatternSlots,
                         () -> writePatternMultiToolToNBT(multiPatternSlots, invTag))));
-
+        final IntSyncValue multiPatternUpgrades = new IntSyncValue(multiUpgradeSlots::getSlotsFilled);
+        syncManager.syncValue("multi_pattern_upgrades", multiPatternUpgrades);
 
         syncManager.registerSlotGroup(new SlotGroup("multi_tool_inventory", 4, 0, true));
         syncManager.registerSlotGroup(new SlotGroup("multi_tool_upgrade_inventory", 1, 1, true));
@@ -597,26 +602,30 @@ public final class MUIUtils {
 
         return patternMultiTool.isEmpty() ? new Widget<>() :
                 flow.rightRel(1.12f)
-                        .size(105, 218)
+                        .size(105, 222)
                         .background(GuiTextures.MC_BACKGROUND)
-                        .child(new TextWidget<>(IKey.lang("item.nae2.pattern_multiplier.name"))
+                        .child(new TextWidget<>(IKey.str(patternMultiTool.getDisplayName()))
                                 .pos(7, 4))
                         .child(new Grid()
                                 .pos(7, 14)
-                                .size(72, 162)
-                                .gridOfSizeWidth(multiPatternSlots.getSlots(), 4, (x, y, i) -> new ItemSlot()
+                                .size(72, 166)
+                                .scrollable(new HorizontalScrollData() {{
+                                    this.setScrollSize(multiPatternSlots.getSlots() * 18 / 9);
+                                }})
+                                .gridOfSizeHeight(multiPatternSlots.getSlots(), 9, (x, y, i) -> new ItemSlot()
+                                        .setEnabledIf(slot -> x <= multiPatternUpgrades.getIntValue())
                                         .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
                                         .slot(new TJAModularSlot(multiPatternSlots, i)
                                                 .slotGroup("multi_tool_inventory"))))
                         .child(Flow.col()
                                 .pos(79, 14)
-                                .size(18, 54)
+                                .size(18, multiUpgradeSlots.getSlots() * 18)
                                 .children(multiUpgradeSlots.getSlots(), i -> new ItemSlot()
                                         .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                         .slot(new TJAModularSlot(multiUpgradeSlots, i)
                                                 .slotGroup("multi_tool_upgrade_inventory"))))
                         .child(new ButtonWidget<>()
-                                .pos(7, 176)
+                                .pos(7, 180)
                                 .size(18)
                                 .overlay(IKey.str("*2"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -625,7 +634,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_multiply_2"))
                         .child(new ButtonWidget<>()
-                                .pos(25, 176)
+                                .pos(25, 180)
                                 .size(18)
                                 .overlay(IKey.str("*3"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -634,7 +643,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_multiply_3"))
                         .child(new ButtonWidget<>()
-                                .pos(43, 176)
+                                .pos(43, 180)
                                 .size(18)
                                 .overlay(IKey.str("+1"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -643,7 +652,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_add_1"))
                         .child(new ButtonWidget<>()
-                                .pos(7, 194)
+                                .pos(7, 198)
                                 .size(18)
                                 .overlay(IKey.str("/2"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -652,7 +661,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_divide_2"))
                         .child(new ButtonWidget<>()
-                                .pos(25, 194)
+                                .pos(25, 198)
                                 .size(18)
                                 .overlay(IKey.str("/3"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -661,7 +670,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_divide_3"))
                         .child(new ButtonWidget<>()
-                                .pos(43, 194)
+                                .pos(43, 198)
                                 .size(18)
                                 .overlay(IKey.str("-1"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -670,7 +679,7 @@ public final class MUIUtils {
                                         .style(TextFormatting.GRAY))
                                 .syncHandler("pattern_sub_1"))
                         .child(new ButtonWidget<>()
-                                .pos(61, 176)
+                                .pos(61, 180)
                                 .size(36)
                                 .overlay(IKey.str("X"))
                                 .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
@@ -683,16 +692,18 @@ public final class MUIUtils {
     public static Pair<ItemStack, Integer> getPatternMultiTool(PosGuiData data) {
         return Optional.of(data.getPlayer().inventory.mainInventory)
                 .map(inventory -> {
+                    final ItemStack multiPattern = TJAAE2Items.SUPER_PATTERN_MULTIPLIER.maybeStack(1).orElse(ItemStack.EMPTY);
                     for (int i = 0; i < inventory.size(); i++) {
                         final ItemStack stack = inventory.get(i);
-                        if (stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                        if ((TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID) && stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier"))) ||
+                        stack.isItemEqual(multiPattern))
                             return Pair.of(stack, i);
                     }
                     if (TJAValues.isModLoaded(TJAValues.BAUBLES_MOD_ID)) {
                         final IItemHandlerModifiable baubleSlots = BaublesApi.getBaublesHandler(data.getPlayer());
                         for (int i = 0; i < baubleSlots.getSlots(); i++)
                             if (baubleSlots.getStackInSlot(i).isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
-                                return Pair.of(baubleSlots.getStackInSlot(i), -1);
+                                return Pair.of(baubleSlots.getStackInSlot(i), Integer.MIN_VALUE);
                     }
                     return Pair.of(ItemStack.EMPTY, -1);
                 }).get();
