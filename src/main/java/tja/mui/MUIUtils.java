@@ -35,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -727,7 +728,8 @@ public final class MUIUtils {
             final NBTTagCompound compound = tagList.getCompoundTagAt(i);
             if (compound.hasKey("Slot")) {
                 final ItemStack patternStack = TJAItemUtils.getItemStackFromName(compound.getString("id"), compound.getInteger("Count"), compound.getShort("Damage"));
-                patternStack.setTagCompound(compound.getCompoundTag("tag"));
+                if (compound.hasKey("tag", Constants.NBT.TAG_COMPOUND))
+                    patternStack.setTagCompound(compound.getCompoundTag("tag"));
                 itemHandler.setStackInSlot(compound.getInteger("Slot"), patternStack);
             }
         }
