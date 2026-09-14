@@ -709,7 +709,7 @@ public final class MUIUtils {
                 }).get();
     }
 
-    private static void writePatternMultiToolToNBT(IItemHandler itemHandler, NBTTagCompound compound) {
+    public static void writePatternMultiToolToNBT(IItemHandler itemHandler, NBTTagCompound compound) {
         final NBTTagList tagList = new NBTTagList();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             final ItemStack stack = itemHandler.getStackInSlot(i);
@@ -722,7 +722,7 @@ public final class MUIUtils {
         compound.setTag("Items", tagList);
     }
 
-    private static void readPatternMultiToolNBT(IItemHandlerModifiable itemHandler, NBTTagList tagList) {
+    public static void readPatternMultiToolNBT(IItemHandlerModifiable itemHandler, NBTTagList tagList) {
         for (int i = 0; i < tagList.tagCount(); i++) {
             final NBTTagCompound compound = tagList.getCompoundTagAt(i);
             if (compound.hasKey("Slot")) {
