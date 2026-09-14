@@ -24,6 +24,7 @@ import net.minecraftforge.items.IItemHandler;
 import tja.TJA;
 import tja.integration.ae2.inventory.TJAppEngNetworkInventory;
 import tja.items.TJAItems;
+import tja.mui.slot.ISlotUpdate;
 import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
@@ -96,7 +97,7 @@ public class DualitySuperInterface extends DualityInterface {
         this.getConfigManager().putSetting(Settings.CONDENSER_OUTPUT, CondenserOutput.values()[data.getInteger("blockModeExCycle")]);
     }
 
-    public static class DualityUpgradeInventory extends UpgradeInventory {
+    public static class DualityUpgradeInventory extends UpgradeInventory implements ISlotUpdate {
 
         private int installedCapacity;
         private int installedPatterns;
@@ -107,6 +108,7 @@ public class DualitySuperInterface extends DualityInterface {
             this.setFilter(new DualityFilter((DualityInterface) parent));
         }
 
+        @Override
         public void updateContentsAt(int slot) {
             this.onContentsChanged(slot);
         }

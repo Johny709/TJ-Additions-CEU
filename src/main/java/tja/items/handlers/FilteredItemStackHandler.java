@@ -2,13 +2,14 @@ package tja.items.handlers;
 
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.util.TriConsumer;
+import tja.mui.slot.ISlotUpdate;
 
 import javax.annotation.Nonnull;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 
-public class FilteredItemStackHandler extends LargeItemStackHandler {
+public class FilteredItemStackHandler extends LargeItemStackHandler implements ISlotUpdate {
 
     private TriConsumer<Integer, ItemStack, Boolean> onContentsChangedPre;
     private BiConsumer<Integer, ItemStack> onContentsChangedPost;
@@ -74,5 +75,10 @@ public class FilteredItemStackHandler extends LargeItemStackHandler {
     protected void onContentsChanged(int slot) {
         if (this.onContentsChangedPost != null)
             this.onContentsChangedPost.accept(slot, this.getStackInSlot(slot));
+    }
+
+    @Override
+    public void updateContentsAt(int slot) {
+        this.onContentsChanged(slot);
     }
 }
