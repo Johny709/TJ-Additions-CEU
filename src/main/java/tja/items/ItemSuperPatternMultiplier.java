@@ -100,7 +100,7 @@ public class ItemSuperPatternMultiplier extends Item implements IGuiHolder<GuiDa
                             this.setScrollSize(multiPatternSlots.getSlots() * 18 / 9);
                         }})
                         .gridOfSizeWidth(multiPatternSlots.getSlots(), 9, (x, y, i) -> new ItemSlot()
-                                .setEnabledIf(slot -> multiPatternUpgrades.getIntValue() / 9 <= multiUpgradeSlots.getSlotsFilled())
+                                .setEnabledIf(slot -> i / 9 <= multiPatternUpgrades.getIntValue())
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.PATTERN_OVERLAY)
                                 .slot(new TJAModularSlot(multiPatternSlots, i)
                                         .slotGroup("pattern_slots"))))
