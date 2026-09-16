@@ -34,6 +34,7 @@ public final class TJATextures {
     public static final TJASimpleOverlayRenderer SUPRA_SOLAR_PANEL_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/cover/overlay_solar_panel_supra");
     public static final TJASimpleOverlayRenderer CREATIVE_ENERGY_COVER_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/cover/creative_energy_cover_overlay");
     public static final TJASimpleOverlayRenderer CREATIVE_FLUID_COVER_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/cover/creative_fluid_cover_overlay");
+    public static final TJASimpleOverlayRenderer SUPER_HATCH_OVERLAY = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/overlay/super_hatch_overlay");
     public static final TJAOrientedOverlayRenderer PRINTER_OVERLAY = new TJAOrientedOverlayRenderer(TJA.MOD_ID, "overlay/printer", TJAOverlayFace.FRONT);
 
     @SideOnly(Side.CLIENT)

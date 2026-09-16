@@ -10,6 +10,7 @@ import tja.TJA;
 import tja.machines.multiblocks.*;
 import tja.machines.singleblocks.MetaTileEntityCompressedChest;
 import tja.machines.singleblocks.MetaTileEntityCompressedCrate;
+import tja.machines.singleblocks.MetaTileEntityCreativeFluidHatch;
 import tja.machines.singleblocks.MetaTileEntityFluidSampler;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));
     public static final MetaTileEntity INFINITY_CHEST = MetaTileEntities.registerMetaTileEntity(2002, new MetaTileEntityCompressedChest(resource("infinity_chest"), true));
     public static final MetaTileEntity INFINITY_CRATE = MetaTileEntities.registerMetaTileEntity(2003, new MetaTileEntityCompressedCrate(resource("infinity_crate"), true));
+
+    public static final MetaTileEntity CREATIVE_FLUID_HATCH = MetaTileEntities.registerMetaTileEntity(3001, new MetaTileEntityCreativeFluidHatch(resource("creative_fluid_hatch")));
 
     public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
