@@ -19,6 +19,7 @@ tja.machine.compressed_crate.name=Compressed Crate
 tja.machine.infinity_chest.name=Infinity Chest
 tja.machine.infinity_crate.name=Infinity Crate
 
+tja.machine.creative_item_bus.name=Creative Item Bus
 tja.machine.creative_fluid_hatch.name=Creative Fluid Hatch
 
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)

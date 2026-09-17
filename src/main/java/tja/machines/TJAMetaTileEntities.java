@@ -8,10 +8,7 @@ import gregtech.common.metatileentities.multi.BoilerType;
 import net.minecraft.util.ResourceLocation;
 import tja.TJA;
 import tja.machines.multiblocks.*;
-import tja.machines.singleblocks.MetaTileEntityCompressedChest;
-import tja.machines.singleblocks.MetaTileEntityCompressedCrate;
-import tja.machines.singleblocks.MetaTileEntityCreativeFluidHatch;
-import tja.machines.singleblocks.MetaTileEntityFluidSampler;
+import tja.machines.singleblocks.*;
 
 import java.util.List;
 import java.util.function.IntFunction;
@@ -34,6 +31,7 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity INFINITY_CHEST = MetaTileEntities.registerMetaTileEntity(2002, new MetaTileEntityCompressedChest(resource("infinity_chest"), true));
     public static final MetaTileEntity INFINITY_CRATE = MetaTileEntities.registerMetaTileEntity(2003, new MetaTileEntityCompressedCrate(resource("infinity_crate"), true));
 
+    public static final MetaTileEntity CREATIVE_ITEM_BUS = MetaTileEntities.registerMetaTileEntity(3000, new MetaTileEntityCreativeItemBus(resource("creative_item_bus")));
     public static final MetaTileEntity CREATIVE_FLUID_HATCH = MetaTileEntities.registerMetaTileEntity(3001, new MetaTileEntityCreativeFluidHatch(resource("creative_fluid_hatch")));
 
     public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
