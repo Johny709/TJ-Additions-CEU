@@ -4,6 +4,7 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.FluidSlotSyncHandler;
@@ -13,22 +14,27 @@ import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.GhostCircuitItemStackHandler;
+import gregtech.api.capability.impl.NotifiableFluidTank;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.AbilityInstances;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.IMetaTileEntityGuiHolder;
 import gregtech.api.mui.MetaTileEntityGuiData;
+import gregtech.api.mui.widget.GhostCircuitSlotWidget;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockNotifiablePart;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,11 +43,14 @@ import tja.textures.TJATextures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNotifiablePart implements IMetaTileEntityGuiHolder, IMultiblockAbilityPart<IFluidTank> {
+
+    private final GhostCircuitItemStackHandler circuitSlot = new GhostCircuitItemStackHandler(this);
 
     public MetaTileEntityCreativeFluidHatch(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTValues.MAX, false);
@@ -61,7 +70,7 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
     @Override
     protected FluidTankList createImportFluidHandler() {
         return new FluidTankList(true, IntStream.range(0, 16)
-                .mapToObj(i -> new FluidTank(Integer.MAX_VALUE) {
+                .mapToObj(i -> new NotifiableFluidTank(Integer.MAX_VALUE, this.getController(), false) {
                     @Override
                     public FluidStack drain(FluidStack resource, boolean doDrain) {
                         FluidStack fluidStack = this.getFluid();
@@ -85,6 +94,18 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
     }
 
     @Override
+    public void addToMultiBlock(MultiblockControllerBase controllerBase) {
+        super.addToMultiBlock(controllerBase);
+        this.circuitSlot.addNotifiableMetaTileEntity(controllerBase);
+    }
+
+    @Override
+    public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
+        super.removeFromMultiBlock(controllerBase);
+        this.circuitSlot.removeNotifiableMetaTileEntity(controllerBase);
+    }
+
+    @Override
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData metaTileEntityGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
         return ModularPanel.defaultPanel("creative_fluid_hatch.gui", 196, 184)
                 .child(new TextWidget<>(IKey.lang(this.getMetaFullName()))
@@ -95,11 +116,16 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
                         .gridOfSizeWidth(this.importFluids.getTanks(), 4, (x, y, i) -> new FluidSlot()
                                 .syncHandler(new FluidSlotSyncHandler(this.importFluids.getTankAt(i))
                                         .phantom(true))))
+                .child(new GhostCircuitSlotWidget()
+                        .pos(162, 78)
+                        .background(GuiTextures.SLOT_ITEM, GTGuiTextures.INT_CIRCUIT_OVERLAY)
+                        .slot(this.circuitSlot, 0))
                 .bindPlayerInventory();
     }
 
     @Override
     public void registerAbilities(@Nonnull AbilityInstances abilityInstances) {
+        abilityInstances.add(this.circuitSlot);
         abilityInstances.add(this.importFluids);
     }
 
@@ -125,7 +151,21 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
     }
 
     @Override
-    public @Nullable MultiblockAbility<IFluidTank> getAbility() {
-        return MultiblockAbility.IMPORT_FLUIDS;
+    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+        super.writeToNBT(data);
+        this.circuitSlot.write(data);
+        return data;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        this.circuitSlot.read(data);
+    }
+
+    @Nonnull
+    @Override
+    public List<MultiblockAbility<?>> getAbilities() {
+        return Arrays.asList(MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS);
     }
 }
