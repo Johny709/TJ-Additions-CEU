@@ -21,6 +21,7 @@ tja.machine.infinity_crate.name=Infinity Crate
 
 tja.machine.creative_item_bus.name=Creative Item Bus
 tja.machine.creative_fluid_hatch.name=Creative Fluid Hatch
+tja.machine.creative_energy_hatch.name=Creative Energy Hatch
 
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)
 tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
@@ -201,6 +202,10 @@ metaitem.creative_item_cover.name=Creative Item Cover
 metaitem.creative_fluid_cover.name=Creative Fluid Cover
 metaitem.ingot.mixed_metal.name=Mixed Metal Ingot
 metaitem.plate.advanced_alloy.name=Advanced Alloy Plate
+
+metaitem.creative_energy_cover.set.energy_rate=Set Energy Rate
+metaitem.creative_energy_cover.set.voltage=Set Voltage
+metaitem.creative_energy_cover.set.amps=Set Amps
 
 metaitem.supra_solar_panel.tooltip.1=Amount of §fAmps§7 depends on the §eEnergy Container§7 the §fSupra Solar Panel§7 is placed in.
 metaitem.creative_item_cover.tooltip.1=Provides unlimited §6items.§7 Put or drag §6items§7 into slots to generate them. throughput is determined by §6item's§7 current stack size. §fClick§7 on slot to adjust throughput.
