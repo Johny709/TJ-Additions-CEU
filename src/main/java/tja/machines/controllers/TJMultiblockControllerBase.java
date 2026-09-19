@@ -51,8 +51,12 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
         this.exportItemInventory = new ItemHandlerList(this.getAbilities(MultiblockAbility.EXPORT_ITEMS));
         this.importFluidTank = new FluidTankList(true, this.getAbilities(MultiblockAbility.IMPORT_FLUIDS));
         this.exportFluidTank = new FluidTankList(true, this.getAbilities(MultiblockAbility.EXPORT_FLUIDS));
-        this.inputEnergyContainer = new EnergyContainerList(this.getAbilities(MultiblockAbility.INPUT_ENERGY));
-        this.outputEnergyContainer = new EnergyContainerList(this.getAbilities(MultiblockAbility.OUTPUT_ENERGY));
+        final List<IEnergyContainer> inputEnergy = new ArrayList<>(this.getAbilities(MultiblockAbility.INPUT_ENERGY));
+        inputEnergy.addAll(this.getAbilities(MultiblockAbility.INPUT_LASER));
+        final List<IEnergyContainer> outputEnergy = new ArrayList<>(this.getAbilities(MultiblockAbility.OUTPUT_ENERGY));
+        outputEnergy.addAll(this.getAbilities(MultiblockAbility.OUTPUT_LASER));
+        this.inputEnergyContainer = new EnergyContainerList(inputEnergy);
+        this.outputEnergyContainer = new EnergyContainerList(outputEnergy);
     }
 
     @Override
