@@ -3,12 +3,26 @@ package tja.machines.singleblocks;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.drawable.GuiTextures;
+import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.PhantomItemSlotSH;
+import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import gregtech.api.GTValues;
+import gregtech.api.capability.impl.GhostCircuitItemStackHandler;
 import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.AbilityInstances;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.mui.GTGuiTextures;
+import gregtech.api.mui.IMetaTileEntityGuiHolder;
+import gregtech.api.mui.MetaTileEntityGuiData;
+import gregtech.api.mui.widget.GhostCircuitSlotWidget;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
 import net.minecraft.client.resources.I18n;
@@ -20,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import tja.TJAValues;
 import tja.items.handlers.LargeItemStackHandler;
 import tja.textures.TJATextures;
@@ -30,14 +43,14 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockPart implements IMultiblockAbilityPart<IItemHandlerModifiable> {
+public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockPart implements IMultiblockAbilityPart<IItemHandlerModifiable>, IMetaTileEntityGuiHolder {
 
-    private final ItemStackHandler circuitInventory = new ItemStackHandler(1);
+    private final GhostCircuitItemStackHandler circuitSlot = new GhostCircuitItemStackHandler(this);
     private final IItemHandlerModifiable combinedInventory;
 
     public MetaTileEntityCreativeItemBus(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTValues.MAX);
-        this.combinedInventory = new ItemHandlerList(Arrays.asList(this.circuitInventory, this.importItems));
+        this.combinedInventory = new ItemHandlerList(Arrays.asList(this.circuitSlot, this.importItems));
     }
 
     @Override
@@ -48,7 +61,7 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockPart 
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        tooltip.add(I18n.format("cover.creative.only"));
+        tooltip.add(I18n.format("metaitem.creative_cover.tooltip.1"));
     }
 
     @Override
@@ -64,6 +77,22 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockPart 
                 return stack;
             }
         };
+    }
+
+    @Override
+    public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData metaTileEntityGuiData, PanelSyncManager panelSyncManager, UISettings uiSettings) {
+        return ModularPanel.defaultPanel("creative_item_bus.gui", 196, 184)
+                .child(new Grid()
+                        .pos(43, 24)
+                        .size(72, 72)
+                        .gridOfSizeWidth(this.importItems.getSlots(), 4, (x, y, i) -> new PhantomItemSlot()
+                                .syncHandler(new PhantomItemSlotSH(new ModularSlot(this.importItems, i)
+                                        .ignoreMaxStackSize(true)))))
+                .child(new GhostCircuitSlotWidget()
+                        .pos(162, 78)
+                        .background(GuiTextures.SLOT_ITEM, GTGuiTextures.INT_CIRCUIT_OVERLAY)
+                        .slot(this.circuitSlot, 0))
+                .bindPlayerInventory();
     }
 
     @Override
@@ -88,20 +117,25 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockPart 
             renderState.baseColour = oldBaseColor;
             renderState.alphaOverride = oldAlphaOverride;
         }
-        Textures.PIPE_IN_OVERLAY.renderSided(getFrontFacing(), renderState, translation, pipeline);
-        Textures.ITEM_HATCH_INPUT_OVERLAY.renderSided(getFrontFacing(), renderState, translation, pipeline);
+        Textures.PIPE_IN_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+        Textures.ITEM_HATCH_INPUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
-        data.setTag("ghostCircuit", this.circuitInventory.serializeNBT());
+        this.circuitSlot.write(data);
         return data;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
-        this.circuitInventory.deserializeNBT(data.getCompoundTag("ghostCircuit"));
+        this.circuitSlot.read(data);
+    }
+
+    @Override
+    public @Nullable MultiblockAbility<IItemHandlerModifiable> getAbility() {
+        return MultiblockAbility.IMPORT_ITEMS;
     }
 }

@@ -15,6 +15,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.AbilityInstances;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.mui.IMetaTileEntityGuiHolder;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.client.renderer.texture.Textures;
@@ -52,7 +53,7 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockPa
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        tooltip.add(I18n.format("cover.creative.only"));
+        tooltip.add(I18n.format("metaitem.creative_cover.tooltip.1"));
     }
 
     @Override
@@ -115,7 +116,12 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockPa
             renderState.baseColour = oldBaseColor;
             renderState.alphaOverride = oldAlphaOverride;
         }
-        Textures.PIPE_IN_OVERLAY.renderSided(getFrontFacing(), renderState, translation, pipeline);
-        Textures.FLUID_HATCH_INPUT_OVERLAY.renderSided(getFrontFacing(), renderState, translation, pipeline);
+        Textures.PIPE_IN_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+        Textures.FLUID_HATCH_INPUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+    }
+
+    @Override
+    public @Nullable MultiblockAbility<IFluidTank> getAbility() {
+        return MultiblockAbility.IMPORT_FLUIDS;
     }
 }
