@@ -3,19 +3,10 @@ package tja.integration.ae2;
 import appeng.fluids.helper.IConfigurableFluidInventory;
 import appeng.fluids.helper.IFluidInterfaceHost;
 import appeng.helpers.ICustomNameObject;
-import appeng.helpers.IPriorityHost;
 
-public interface ISuperFluidInterface extends ICustomNameObject, IPriorityHost, IFluidInterfaceHost, IConfigurableFluidInventory {
-
-    void setPriority(String priority);
+public interface ISuperFluidInterface extends ICustomNameObject, IPrioritySetter, IFluidInterfaceHost, IConfigurableFluidInventory, ITIckSetter {
 
     default void setFluidAutoPull(boolean autoPull) {}
 
     default void setFluidAutoPush(boolean autoPush) {}
-
-    default int getTickTime() {
-        return 1;
-    }
-
-    default void setTickTime(String tickTime) {}
 }

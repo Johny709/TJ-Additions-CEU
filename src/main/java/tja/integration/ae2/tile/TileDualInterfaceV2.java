@@ -194,6 +194,8 @@ public class TileDualInterfaceV2 extends TileInterface implements IGuiHolder<Pos
 
     @Override
     public void setPriority(String priority) {
+        if (priority == null || priority.isEmpty())
+            priority = String.valueOf(0);
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
     }

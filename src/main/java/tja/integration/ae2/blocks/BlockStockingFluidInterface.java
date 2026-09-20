@@ -92,8 +92,8 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
         final Flow buttonArea = Flow.col();
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createFluidPriorityPanel(panelBuilder, subPanel, superFluidInterface));
-        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createFluidTicksPanel(panelBuilder, subPanel, superFluidInterface));
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superFluidInterface));
+        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, superFluidInterface));
         return ModularPanel.defaultPanel("me.stocking_fluid_interface.gui", 176, 292)
                 .child(new RichTextWidget()
                         .pos(7, 2)

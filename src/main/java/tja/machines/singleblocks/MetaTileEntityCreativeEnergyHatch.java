@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJAValues;
+import tja.mui.MUIUtils;
 import tja.textures.TJATextures;
 
 import javax.annotation.Nonnull;
@@ -119,6 +120,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(18)
                         .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.energy_rate"))
                         .syncHandler("energy_stored"))
@@ -127,6 +129,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.voltage"))
                         .syncHandler("input_voltage"))
@@ -135,6 +138,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.amps"))
                         .syncHandler("input_amps"))
@@ -225,18 +229,24 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
         this.inputAmps = data.getLong("inputAmps");
     }
 
-    public void setEnergyStored(String text) {
-        this.energyStored = (long) Math.max(0, Math.min(Long.MAX_VALUE, Double.parseDouble(text)));
+    public void setEnergyStored(String amount) {
+        if (amount == null || amount.isEmpty())
+            amount = String.valueOf(0);
+        this.energyStored = (long) Math.max(0, Math.min(Long.MAX_VALUE, Double.parseDouble(amount)));
         this.markDirty();
     }
 
-    public void setInputVoltage(String text) {
-        this.inputVoltage = Math.max(0, Math.min(2147483648L, Long.parseLong(text)));
+    public void setInputVoltage(String amount) {
+        if (amount == null || amount.isEmpty())
+            amount = String.valueOf(0);
+        this.inputVoltage = Math.max(0, Math.min(2147483648L, Long.parseLong(amount)));
         this.markDirty();
     }
 
-    public void setInputAmps(String text) {
-        this.inputAmps = Math.max(0, Math.min(4294967295L, Long.parseLong(text)));
+    public void setInputAmps(String amount) {
+        if (amount == null || amount.isEmpty())
+            amount = String.valueOf(0);
+        this.inputAmps = Math.max(0, Math.min(4294967295L, Long.parseLong(amount)));
         this.markDirty();
     }
 

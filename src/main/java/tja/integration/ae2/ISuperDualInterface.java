@@ -5,16 +5,6 @@ import com.cleanroommc.modularui.drawable.UITexture;
 
 public interface ISuperDualInterface extends ISuperInterface, ISuperFluidInterface {
 
-    @Override
-    default int getTickTime() {
-        return ISuperInterface.super.getTickTime();
-    }
-
-    @Override
-    default void setTickTime(String tickTime) {
-        ISuperInterface.super.setTickTime(tickTime);
-    }
-
     default IDrawable getItemTabTexture() {
         return UITexture.EMPTY;
     }

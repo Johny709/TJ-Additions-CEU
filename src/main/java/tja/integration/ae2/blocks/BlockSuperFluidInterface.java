@@ -90,7 +90,7 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
         final Flow upgradeArea = Flow.row();
         settings.getRecipeViewerSettings().addExclusionArea(upgradeArea);
 
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.fluid_interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createFluidPriorityPanel(panelBuilder, subPanel, superFluidInterface));
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.fluid_interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superFluidInterface));
         return ModularPanel.defaultPanel("me.super_fluid_interface.gui", 176, 292)
                 .child(new RichTextWidget()
                         .pos(7, 2)

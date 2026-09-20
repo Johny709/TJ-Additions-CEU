@@ -303,12 +303,16 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
 
     @Override
     public void setPriority(String priority) {
+        if (priority == null || priority.isEmpty())
+            priority = String.valueOf(0);
         this.getInterfaceDuality().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
         this.markDirty();
     }
 
     @Override
     public void setTickTime(String tickTime) {
+        if (tickTime == null || tickTime.isEmpty())
+            tickTime = String.valueOf(0);
         this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.markDirty();
     }

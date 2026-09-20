@@ -4,9 +4,8 @@ import appeng.api.config.CondenserOutput;
 import appeng.api.config.LockCraftingMode;
 import appeng.helpers.ICustomNameObject;
 import appeng.helpers.IInterfaceHost;
-import appeng.helpers.IPriorityHost;
 
-public interface ISuperInterface extends ICustomNameObject, IPriorityHost, IInterfaceHost {
+public interface ISuperInterface extends ICustomNameObject, IPrioritySetter, IInterfaceHost, ITIckSetter {
 
     void setBlockingMode(boolean blockingMode);
 
@@ -26,15 +25,7 @@ public interface ISuperInterface extends ICustomNameObject, IPriorityHost, IInte
 
     String getStackSize(int index);
 
-    void setPriority(String priority);
-
     default void setItemAutoPull(boolean autoPull) {}
 
     default void setItemAutoPush(boolean autoPush) {}
-
-    default int getTickTime() {
-        return 1;
-    }
-
-    default void setTickTime(String tickTime) {}
 }
