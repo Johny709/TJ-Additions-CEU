@@ -507,18 +507,20 @@ public final class MUIUtils {
     public static Pair<ItemStack, Integer> getPatternMultiTool(PosGuiData data) {
         return Optional.of(data.getPlayer().inventory.mainInventory)
                 .map(inventory -> {
-                    final ItemStack multiPattern = TJAAE2Items.SUPER_PATTERN_MULTIPLIER.maybeStack(1).orElse(ItemStack.EMPTY);
+                    final ItemStack multiPattern = TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier");
+                    final ItemStack multiPattern2 = TJAAE2Items.SUPER_PATTERN_MULTIPLIER.maybeStack(1).orElse(ItemStack.EMPTY);
                     for (int i = 0; i < inventory.size(); i++) {
                         final ItemStack stack = inventory.get(i);
-                        if ((TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID) && stack.isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier"))) ||
-                        stack.isItemEqual(multiPattern))
+                        if ((TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID) && stack.isItemEqual(multiPattern)) || stack.isItemEqual(multiPattern2))
                             return Pair.of(stack, i);
                     }
                     if (TJAValues.isModLoaded(TJAValues.BAUBLES_MOD_ID)) {
                         final IItemHandlerModifiable baubleSlots = BaublesApi.getBaublesHandler(data.getPlayer());
-                        for (int i = 0; i < baubleSlots.getSlots(); i++)
-                            if (baubleSlots.getStackInSlot(i).isItemEqual(TJAItemUtils.getItemStackFromName("nae2:pattern_multiplier")))
+                        for (int i = 0; i < baubleSlots.getSlots(); i++) {
+                            final ItemStack stack = baubleSlots.getStackInSlot(i);
+                            if ((TJAValues.isModLoaded(TJAValues.NAE2_MOD_ID) && stack.isItemEqual(multiPattern)) || stack.isItemEqual(multiPattern2))
                                 return Pair.of(baubleSlots.getStackInSlot(i), Integer.MIN_VALUE);
+                        }
                     }
                     return Pair.of(ItemStack.EMPTY, -1);
                 }).get();

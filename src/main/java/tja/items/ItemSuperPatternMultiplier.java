@@ -1,6 +1,9 @@
 package tja.items;
 
 import appeng.core.Api;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import baubles.api.cap.BaublesCapabilities;
 import com.cleanroommc.modularui.api.IGuiHolder;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiTextures;
@@ -24,9 +27,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.common.Optional;
+import tja.TJAValues;
 import tja.items.handlers.FilteredItemStackHandler;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
@@ -35,8 +43,10 @@ import tja.util.TJAItemUtils;
 import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class ItemSuperPatternMultiplier extends Item implements IGuiHolder<GuiData> {
+@Optional.Interface(iface = "baubles.api.IBauble", modid = TJAValues.BAUBLES_MOD_ID)
+public class ItemSuperPatternMultiplier extends Item implements IGuiHolder<GuiData>, IBauble {
 
     @Override
     public ModularPanel buildUI(GuiData data, PanelSyncManager syncManager, UISettings settings) {
@@ -189,5 +199,31 @@ public class ItemSuperPatternMultiplier extends Item implements IGuiHolder<GuiDa
         if (!worldIn.isRemote && TJAAE2Items.SUPER_PATTERN_MULTIPLIER.isSameAs(playerIn.getHeldItemMainhand()))
             GuiFactories.playerInventory().openFromHand(playerIn, handIn);
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+    }
+
+    @Nullable
+    @Override
+    @Optional.Method(modid = TJAValues.BAUBLES_MOD_ID)
+    public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new ICapabilityProvider() {
+            @Override
+            public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+                return capability == BaublesCapabilities.CAPABILITY_ITEM_BAUBLE;
+            }
+
+            @Nullable
+            @Override
+            public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+                if (capability == BaublesCapabilities.CAPABILITY_ITEM_BAUBLE)
+                    return BaublesCapabilities.CAPABILITY_ITEM_BAUBLE.cast(ItemSuperPatternMultiplier.this);
+                return null;
+            }
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = TJAValues.BAUBLES_MOD_ID)
+    public BaubleType getBaubleType(ItemStack itemStack) {
+        return BaubleType.TRINKET;
     }
 }
