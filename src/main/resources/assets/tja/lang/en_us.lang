@@ -22,6 +22,7 @@ tja.machine.infinity_crate.name=Infinity Crate
 tja.machine.creative_item_bus.name=Creative Item Bus
 tja.machine.creative_fluid_hatch.name=Creative Fluid Hatch
 tja.machine.creative_energy_hatch.name=Creative Energy Hatch
+tja.machine.water_reservoir_hatch.name=Water Reservoir Hatch
 
 tja.machine.mega_coke_oven.name=Mega Coke Oven (MCO)
 tja.machine.mega_bronze_boiler.name=Mega Bronze Boiler (MBB)
@@ -35,6 +36,8 @@ tja.machine.infinite_fluid_drill.name=Infinite Fluid Drilling Plant (IFDP)
 tja.machine.void_more_miner.name=Void MOre Miner (VMOM)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
+
+tja.machine.water_reservoir_hatch.description=Provides up to §b2,147,483,647L/t§7 of water per extraction. Meaning, 4 multiblocks sharing this hatch effectively provides up to §b8,589,934,588L/t§7 of water.
 
 tja.machine.compressed_chest.description=Keeps the items stored inside when broken.
 tja.machine.compressed_chest.slot=Slot: §6%s,§7 Item: §5%s,§7 Count: §6%s

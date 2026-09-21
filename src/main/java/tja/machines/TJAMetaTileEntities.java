@@ -34,6 +34,7 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity CREATIVE_ITEM_BUS = MetaTileEntities.registerMetaTileEntity(3000, new MetaTileEntityCreativeItemBus(resource("creative_item_bus")));
     public static final MetaTileEntity CREATIVE_FLUID_HATCH = MetaTileEntities.registerMetaTileEntity(3001, new MetaTileEntityCreativeFluidHatch(resource("creative_fluid_hatch")));
     public static final MetaTileEntity CREATIVE_ENERGY_HATCH = MetaTileEntities.registerMetaTileEntity(3002, new MetaTileEntityCreativeEnergyHatch(resource("creative_energy_hatch")));
+    public static final MetaTileEntity WATER_RESERVOIR_HATCH = MetaTileEntities.registerMetaTileEntity(3003, new MetaTileEntityWaterReservoirHatch(resource("water_reservoir_hatch")));
 
     public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
