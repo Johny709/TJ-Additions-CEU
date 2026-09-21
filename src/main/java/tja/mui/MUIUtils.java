@@ -167,7 +167,6 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, IPrioritySetter superInterface) {
-        syncManager.syncValue("priority", new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority));
         syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))));
         syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
@@ -195,7 +194,7 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .syncHandler("priority"))
+                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
@@ -265,7 +264,6 @@ public final class MUIUtils {
     }
 
     public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ITIckSetter superInterface) {
-        syncManager.syncValue("ticks", new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime));
         syncManager.syncValue("tick_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 1))));
         syncManager.syncValue("tick_add_10", new InteractionSyncHandler()
@@ -293,7 +291,7 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .syncHandler("ticks"))
+                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
