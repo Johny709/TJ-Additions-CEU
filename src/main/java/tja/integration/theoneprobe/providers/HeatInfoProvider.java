@@ -7,10 +7,10 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import tja.TJAValues;
 import tja.capability.IHeatInfo;
 import tja.capability.TJACapabilities;
-import tja.integration.theoneprobe.impl.ElementTJAText;
+import tja.integration.theoneprobe.impl.ElementProgressBar;
+import tja.util.Color;
 
 import javax.annotation.Nonnull;
 
@@ -25,19 +25,11 @@ public class HeatInfoProvider extends CapabilityInfoProvider<IHeatInfo> {
 
     @Override
     protected void addProbeInfo(IHeatInfo heatInfo, IProbeInfo probeInfo, EntityPlayer entityPlayer, TileEntity tileEntity, IProbeHitData iProbeHitData) {
-        final long heat = heatInfo.heat();
-        final long maxHeat = heatInfo.maxHeat();
-        final int progressScaled = maxHeat == 0 ? 0 : (int) Math.floor(heat / (maxHeat * 1.0) * 100);
-        final String displayHeat = String.format("%s/%s °C | ", TJAValues.thousandFormat.format(heat), TJAValues.thousandFormat.format(maxHeat));
+        final String heat = String.valueOf(heatInfo.heat());
+        final String maxHeat = String.valueOf(heatInfo.maxHeat());
 
-        IProbeInfo pageInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_TOPLEFT));
-        pageInfo.element(new ElementTJAText("{*tja.top.progress.heat*}"));
-        pageInfo.progress(progressScaled, 100, probeInfo.defaultProgressStyle()
-                .width((int) (displayHeat.length() * 6.2))
-                .prefix(displayHeat)
-                .suffix("%")
-                .alternateFilledColor(0xFFF10000)
-                .filledColor(0xFFF10000));
+        final IProbeInfo pageInfo = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_TOPLEFT));
+        pageInfo.element(new ElementProgressBar("{*tja.top.progress.heat*}", heat, maxHeat, "°C", "°C", Color.RED.toString(), ",###"));
     }
 
     @Override

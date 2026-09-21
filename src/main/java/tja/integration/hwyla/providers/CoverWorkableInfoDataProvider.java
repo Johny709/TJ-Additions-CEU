@@ -49,7 +49,7 @@ public class CoverWorkableInfoDataProvider extends CoverCapabilityInfoDataProvid
         final boolean isWorking = compound.getBoolean("working");
         final boolean isActive = compound.getBoolean("active");
 
-        tooltip.add(SpecialChars.getRenderString("tja.progressinfo", I18n.format("gregtech.top.progress"),
+        tooltip.add(SpecialChars.getRenderString("tja.progressinfo", I18n.format("tja.top.progress"),
                 String.valueOf(progress), String.valueOf(maxProgress), "s", "s", Color.GREEN.toString(), ",##0.00"));
         if (!isWorking) {
             tooltip.add(I18n.format("gregtech.multiblock.work_paused"));

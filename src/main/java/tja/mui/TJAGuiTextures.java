@@ -16,6 +16,8 @@ public final class TJAGuiTextures {
 
     public static final UITexture SLOW_DOWN = UITexture.fullImage(resource("textures/gui/widgets/slot_down"));
 
+    public static final UITexture BAR_BLUE = UITexture.builder().location(resource("textures/gui/bar/bar_blue"))
+            .imageSize(16, 16).adaptable(1).build();
     public static final UITexture BAR_GREEN = UITexture.builder().location(resource("textures/gui/bar/bar_green"))
             .imageSize(16, 16).adaptable(1).build();
     public static final UITexture BAR_ORANGE = UITexture.builder().location(resource("textures/gui/bar/bar_orange"))
@@ -44,6 +46,18 @@ public final class TJAGuiTextures {
 
     public static final IDrawable CERTUS_QUARTZ_WRENCH = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID) ? new ItemDrawable(Api.INSTANCE.definitions().items().certusQuartzWrench().maybeStack(1).orElse(ItemStack.EMPTY)) : UITexture.EMPTY;
     public static final IDrawable CLOCK = new ItemDrawable(new ItemStack(Objects.requireNonNull(Item.getByNameOrId("minecraft:clock"))));
+
+    private TJAGuiTextures() {}
+
+    public static UITexture getBarByColor(String color) {
+        switch (color) {
+            case "§b": return BAR_BLUE;
+            case "§e": return BAR_YELLOW;
+            case "§a": return BAR_GREEN;
+            case "§6": return BAR_ORANGE;
+            default: return BAR_RED;
+        }
+    }
 
     private static ResourceLocation resource(String path) {
         return new ResourceLocation(TJA.MOD_ID, path);

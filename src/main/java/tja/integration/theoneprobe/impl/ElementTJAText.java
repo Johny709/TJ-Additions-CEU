@@ -44,7 +44,7 @@ public class ElementTJAText implements IElement {
         return TheOneProbeModule.ELEMENT_TJA_TEXT;
     }
 
-    private static String formatLocaleText(String text) {
+    static String formatLocaleText(String text) {
         while (text.contains("{*") && text.contains("*}")) {
             final int start = text.indexOf("{*");
             final int end = text.lastIndexOf("*}");

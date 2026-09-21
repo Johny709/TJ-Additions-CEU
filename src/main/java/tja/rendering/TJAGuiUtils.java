@@ -15,11 +15,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tja.TJAValues;
+import tja.mui.TJAGuiTextures;
 
 import javax.annotation.Nullable;
+
+import java.awt.*;
+import java.text.DecimalFormat;
 
 import static gregtech.client.utils.RenderUtil.setGlColorFromInt;
 
@@ -27,10 +31,6 @@ import static gregtech.client.utils.RenderUtil.setGlColorFromInt;
 public final class TJAGuiUtils {
 
     private TJAGuiUtils() {}
-
-    public static boolean isServer() {
-        return FMLCommonHandler.instance().getEffectiveSide().isServer();
-    }
 
     /**
      *
@@ -188,5 +188,75 @@ public final class TJAGuiUtils {
         GlStateManager.popMatrix();
         GlStateManager.enableBlend();
         GlStateManager.color(1.0f, 1.0f, 1.0f);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static Dimension getBarSize(String name,
+                                       String progressStr,
+                                       String maxProgressStr,
+                                       String progressSuffixStr,
+                                       String maxProgressSuffixStr,
+                                       String decimalFormat) {
+        final int text = Minecraft.getMinecraft().fontRenderer.getStringWidth(name + " ");
+        final double progress = Double.parseDouble(progressStr);
+        final double  maxProgress = Double.parseDouble(maxProgressStr);
+        final DecimalFormat progressFormat = new DecimalFormat(decimalFormat);
+        final String percentage = String.format("%s%%", TJAValues.thousandFormat.format(progress / maxProgress * 100));
+        final int progressWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressFormat.format(progress));
+        final int slash = Minecraft.getMinecraft().fontRenderer.getStringWidth(" / ");
+        final int maxProgressWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressFormat.format(maxProgress));
+        final int colon = Minecraft.getMinecraft().fontRenderer.getStringWidth(" : ");
+        final int percentageWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(percentage);
+        final int progressSuffix = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressSuffixStr);
+        final int maxProgressSuffix = Minecraft.getMinecraft().fontRenderer.getStringWidth(maxProgressSuffixStr);
+        return new Dimension(text + Math.max(50, progressWidth + progressSuffix + slash + maxProgressWidth + maxProgressSuffix + colon + percentageWidth),
+                12);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawBar(int x,
+                               int y,
+                               String name,
+                               String progressStr,
+                               String maxProgressStr,
+                               String progressSuffixStr,
+                               String maxProgressSuffixStr,
+                               String color,
+                               String decimalFormat,
+                               int nameColor) {
+        final int offsetX = Minecraft.getMinecraft().fontRenderer.getStringWidth(name + " ");
+        final double progress = Double.parseDouble(progressStr);
+        final double maxProgress = Double.parseDouble(maxProgressStr);
+        final DecimalFormat progressFormat = new DecimalFormat(decimalFormat);
+        final String percentage = String.format("%s%%", TJAValues.thousandFormat.format(progress / maxProgress * 100));
+        final int progressWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressFormat.format(progress));
+        final int slashWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(" / ");
+        final int maxProgressWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressFormat.format(maxProgress));
+        final int colonWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(" : ");
+        final int percentageWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(percentage);
+        final int progressSuffixWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(progressSuffixStr);
+        final int maxProgressSuffixWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(maxProgressSuffixStr);
+        final int totalLength = Math.max(50,
+                progressWidth + progressSuffixWidth + slashWidth + maxProgressWidth + maxProgressSuffixWidth + colonWidth + percentageWidth + 6);
+        final int barWidth = maxProgress == 0 ? 0 : (int) (totalLength * (progress / maxProgress));
+
+        GlStateManager.disableBlend();
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GuiTextures.DISPLAY.draw(x + offsetX, y, totalLength, 12);
+        TJAGuiTextures.getBarByColor(color).draw(x + offsetX + 1, y + 1, barWidth - 1, 10);
+        GlStateManager.enableBlend();
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(name, x, y + 2, nameColor);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(progressFormat.format(progress), x + offsetX + 3, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(progressSuffixStr, x + offsetX + 3 + progressWidth, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(" / ", x + offsetX + 3 + progressWidth + progressSuffixWidth, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(progressFormat.format(maxProgress),
+                x + offsetX + 3 + progressWidth + progressSuffixWidth + slashWidth, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(maxProgressSuffixStr,
+                x + offsetX + 3 + progressWidth + progressSuffixWidth + slashWidth + maxProgressWidth, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(" : ",
+                x + offsetX + 3 + progressWidth + progressSuffixWidth + slashWidth + maxProgressWidth + maxProgressSuffixWidth, y + 2, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(percentage,
+                x + offsetX + 3 + progressWidth + progressSuffixWidth + slashWidth + maxProgressWidth + maxProgressSuffixWidth + colonWidth,
+                y + 2, 0xFFFFFF);
     }
 }
