@@ -26,6 +26,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
     protected boolean wasActiveAndNeedsUpdate;
     protected boolean isDistinct;
     protected boolean hasProblem;
+    protected boolean isOutputsFull;
     protected long energyPerTick;
     protected int progress;
     protected int maxProgress;
@@ -94,7 +95,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
             }
         }
         if (this.progress < 1) {
-            if (this.sleepTimer > 1) {
+            if (!this.shouldSearchForRecipes()) {
                 this.sleepRecipe();
                 return;
             }
@@ -173,9 +174,58 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         return fluidStack != null && fluidStack.amount == amount || amount == 0;
     }
 
-    public boolean canOutputFluid(FluidStack fluid, int amount) {
-        final int fluidStack = this.handler.getExportFluidTank().fill(fluid, false);
-        return fluidStack == amount || amount == 0;
+    /**
+     * @return true if recipes should be searched for
+     */
+    protected boolean shouldSearchForRecipes() {
+        return this.canWorkWithInputs() && this.canFitNewOutputs();
+    }
+
+    /**
+     * @return true if the input inventory's content can be worked with
+     */
+    protected boolean canWorkWithInputs() {
+        // if the inputs were bad last time, check if they've changed before trying to find a new recipe.
+        if (!this.hasNotifiedInputs()) return false;
+
+        // the change in inputs (especially by removal of ingredient by the player) might change the current valid
+        // recipe.
+        // and if the previous recipe produced fluids and the new recipe doesn't, then outputs are not full.
+        this.isOutputsFull = false;
+        this.metaTileEntity.getNotifiedItemInputList().clear();
+        this.metaTileEntity.getNotifiedFluidInputList().clear();
+        return true;
+    }
+
+    /**
+     * @return if the output inventory can fit new outputs
+     */
+    protected boolean canFitNewOutputs() {
+        // if the output is full check if the output changed, so we can process recipes results again.
+        if (this.isOutputsFull && !this.hasNotifiedOutputs()) {
+            return false;
+        } else {
+            this.isOutputsFull = false;
+            this.metaTileEntity.getNotifiedItemOutputList().clear();
+            this.metaTileEntity.getNotifiedFluidOutputList().clear();
+            return true;
+        }
+    }
+
+    /**
+     * @return true if output inventory contents have changed
+     */
+    protected boolean hasNotifiedOutputs() {
+        return !this.metaTileEntity.getNotifiedItemOutputList().isEmpty() ||
+                !this.metaTileEntity.getNotifiedFluidOutputList().isEmpty();
+    }
+
+    /**
+     * @return true if input inventory contents have changed
+     */
+    protected boolean hasNotifiedInputs() {
+        return !this.metaTileEntity.getNotifiedItemInputList().isEmpty() ||
+                !this.metaTileEntity.getNotifiedFluidInputList().isEmpty();
     }
 
     @Override

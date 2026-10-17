@@ -49,6 +49,7 @@ public class MegaBoilerRecipeLogic extends AbstractWorkableHandler<IBoilerHandle
 
     @Override
     protected boolean startRecipe() {
+        System.out.println("Searching recipe");
         int fuelMaxBurnTime = this.findFluidInputs();
         if (fuelMaxBurnTime == 0)
             fuelMaxBurnTime = this.findItemInputs();
