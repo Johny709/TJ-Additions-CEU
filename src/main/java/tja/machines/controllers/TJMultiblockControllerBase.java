@@ -17,6 +17,8 @@ import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.util.BlockInfo;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.capability.handler.IMachineHandler;
 
@@ -57,6 +59,10 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
         outputEnergy.addAll(this.getAbilities(MultiblockAbility.OUTPUT_LASER));
         this.inputEnergyContainer = new EnergyContainerList(inputEnergy);
         this.outputEnergyContainer = new EnergyContainerList(outputEnergy);
+        for (IFluidTank tank : this.getAbilities(MultiblockAbility.IMPORT_FLUIDS)) {
+            this.getNotifiedFluidInputList().add((IFluidHandler)tank);
+        }
+        this.getNotifiedItemInputList().addAll(this.getAbilities(MultiblockAbility.IMPORT_ITEMS));
     }
 
     @Override

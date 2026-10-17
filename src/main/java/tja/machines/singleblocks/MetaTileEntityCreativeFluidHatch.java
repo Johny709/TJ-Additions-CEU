@@ -77,6 +77,7 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
                         if (fluidStack == null || !fluidStack.isFluidEqual(resource)) return null;
                         fluidStack = fluidStack.copy();
                         fluidStack.amount = Math.min(fluidStack.amount, resource.amount);
+                        this.onContentsChanged();
                         return fluidStack;
                     }
 
@@ -88,6 +89,7 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
                         if (fluidStack == null) return null;
                         fluidStack = fluidStack.copy();
                         fluidStack.amount = Math.min(fluidStack.amount, maxDrain);
+                        this.onContentsChanged();
                         return fluidStack;
                     }
                 }).collect(Collectors.toList()));

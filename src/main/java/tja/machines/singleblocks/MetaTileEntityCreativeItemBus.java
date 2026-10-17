@@ -77,6 +77,7 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockNotif
                     return super.extractItem(slot, amount, simulate);
                 final ItemStack stack = this.getStackInSlot(slot).copy();
                 stack.setCount(Math.min(stack.getCount(), amount));
+                this.onContentsChanged(slot);
                 return stack;
             }
         };
