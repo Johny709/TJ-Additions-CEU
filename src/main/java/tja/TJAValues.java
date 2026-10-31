@@ -21,6 +21,8 @@ public final class TJAValues {
     public static final String NAE2_MOD_ID = "nae2";
     public static final String RANDOM_COMPLEMENT_MOD_ID = "random_complement";
     public static final String BAUBLES_MOD_ID = "baubles";
+    public static final String ARCHITECTURE_CRAFT_MOD_ID = "architecturecraft";
+    public static final String CHISEL_MOD_ID = "chisel";
     public static final String ACTUALLY_ADDITIONS_MOD_ID = "actuallyadditions";
     public static final int[] VC = {0x6b5f55, 0x9b9b9b, 0xf78b2c, 0xffb900, 0x656565, 0xffffff, 0xffb0b0, 0xffe9e9, 0xc6ffad, 0xffc4f8, 0x2776ff, 0xf0ff00, 0x9500cd, 0xff6565, 0xfff7f7};
     public static final String[] VCC = {"§c", "§7", "§6", "§e", "§8", "§a", "§d", "§b", "§2", "§9", "§5", "§1§l", "§c§l§n", "§4§l§n", "§f§l§n"};

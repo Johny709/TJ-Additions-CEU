@@ -7,9 +7,11 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.common.metatileentities.multi.BoilerType;
 import net.minecraft.util.ResourceLocation;
 import tja.TJA;
+import tja.TJAValues;
 import tja.machines.multiblocks.*;
 import tja.machines.singleblocks.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.IntFunction;
 
@@ -40,8 +42,12 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
     /** occupies id range 1000 - 1014 */
     public static final List<MetaTileEntity> FLUID_SAMPLERS = mteList(1000, i -> new MetaTileEntityFluidSampler(resource("fluid_sampler." + GTValues.VN[i]), i));
-    /** occupies id range 1015 -  */
-    public static final List<MetaTileEntity> ARCHITECT_WORKBENCHES = mteList(1015, i -> new MetaTileEntityArchitectWorkbench(resource("architect_workbench." + GTValues.VN[i]), i));
+    /** occupies id range 1015 - 1029 */
+    public static final List<MetaTileEntity> ARCHITECT_WORKBENCHES = !TJAValues.isModLoaded(TJAValues.ARCHITECTURE_CRAFT_MOD_ID) ? Collections.emptyList() :
+            mteList(1015, i -> new MetaTileEntityArchitectWorkbench(resource("architect_workbench." + GTValues.VN[i]), i));
+    /** occupies id range 1030 - 1044 */
+    public static final List<MetaTileEntity> CHISEL_WORKBENCH = !TJAValues.isModLoaded(TJAValues.CHISEL_MOD_ID) ? Collections.emptyList() :
+            mteList(1030, i -> new MetaTileEntityChiselWorkbench(resource("chisel_workbench." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization

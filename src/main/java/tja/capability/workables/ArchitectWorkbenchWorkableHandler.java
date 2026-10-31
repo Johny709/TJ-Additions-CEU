@@ -1,5 +1,6 @@
 package tja.capability.workables;
 
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
     private ItemStack catalyst = ItemStack.EMPTY;
     private int outputIndex;
     private boolean voiding;
+    private boolean foundRecipe;
 
     public ArchitectWorkbenchWorkableHandler(MetaTileEntity metaTileEntity) {
         super(metaTileEntity);
@@ -36,29 +38,28 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
 
     @Override
     protected boolean startRecipe() {
-        boolean foundRecipe;
         IItemHandlerModifiable itemInputs;
         if (this.isDistinct) {
             itemInputs = this.handler.getInputBus(this.lastInputIndex);
-            foundRecipe = this.findCatalyst(itemInputs) && this.findInputs(itemInputs);
-            if (!foundRecipe) for (int i = 0; i < this.busCount; i++) {
+            this.foundRecipe = this.findCatalyst(itemInputs) && this.findAndConsumeInputs(itemInputs, true);
+            if (!this.foundRecipe) for (int i = 0; i < this.busCount; i++) {
                 if (i == this.lastInputIndex) continue;
                 itemInputs = this.handler.getInputBus(i);
-                foundRecipe = this.findCatalyst(itemInputs) && this.findInputs(itemInputs);
-                if (foundRecipe) {
+                this.foundRecipe = this.findCatalyst(itemInputs) && this.findAndConsumeInputs(itemInputs, true);
+                if (this.foundRecipe) {
                     this.lastInputIndex = i;
                     break;
                 }
             }
         } else {
             itemInputs = this.handler.getImportItemInventory();
-            foundRecipe = this.findCatalyst(itemInputs) && this.findInputs(itemInputs);
+            this.foundRecipe = this.findCatalyst(itemInputs) && this.findAndConsumeInputs(itemInputs, true);
         }
-        if (foundRecipe) {
+        if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
+            this.findAndConsumeInputs(itemInputs, false);
             this.maxProgress = this.calculateOverclock(30, 200, 2.8F);
             return true;
-        }
-        return false;
+        } else return false;
     }
 
     @Override
@@ -70,6 +71,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
                 this.outputIndex++;
             } else return false;
         }
+        this.foundRecipe = false;
         this.outputIndex = 0;
         this.itemInputs.clear();
         this.itemOutputs.clear();
@@ -88,21 +90,20 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
         return false;
     }
 
-    private boolean findInputs(IItemHandlerModifiable itemInputs) {
+    private boolean findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
         int availableParallels = this.handler.getParallel();
         for (int i = 0; i < itemInputs.getSlots() && availableParallels > 0; i++) {
             final ItemStack stack = itemInputs.getStackInSlot(i);
-            if (stack.isEmpty() || this.isArchitectureStack(stack.getTagCompound()))
-                continue;
-            if (!this.handler.getImportItemInventory().extractItem(i, availableParallels, true).isEmpty()) {
-                final ItemStack input = this.handler.getImportItemInventory().extractItem(i, availableParallels, false);
-                final int inputCount = input.getCount();
-                final ItemStack output = new ItemStack(Item.getByNameOrId("architecturecraft:shape"), inputCount);
+            if (stack.isEmpty() || this.isArchitectureStack(stack.getTagCompound())) continue;
+            final ItemStack input = itemInputs.extractItem(i, availableParallels, simulate);
+            final int inputCount = input.getCount();
+            availableParallels -= inputCount;
+            if (!simulate) {
+                final ItemStack output = TJAItemUtils.getItemStackFromName("architecturecraft:shape", inputCount);
                 final NBTTagCompound compound = this.catalyst.getTagCompound().copy();
                 compound.setString("BaseName", Item.REGISTRY.getNameForObject(input.getItem()).toString());
                 compound.setInteger("BaseData", input.getMetadata());
                 output.setTagCompound(compound);
-                availableParallels -= inputCount;
                 this.itemInputs.add(input);
                 this.itemOutputs.add(output);
             }
@@ -144,6 +145,11 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
             this.itemInputs.add(new ItemStack(itemInputList.getCompoundTagAt(i)));
         for (int i = 0; i < itemOutputsList.tagCount(); i++)
             this.itemOutputs.add(new ItemStack(itemOutputsList.getCompoundTagAt(i)));
+    }
+
+    @Override
+    protected boolean otherConditions() {
+        return this.foundRecipe;
     }
 
     @Nonnull

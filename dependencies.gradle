@@ -81,6 +81,7 @@ dependencies {
     implementation("curse.maven:groovyscript-687577:7925117")
     implementation("curse.maven:enderio-1530852:8175092")
     implementation("curse.maven:theoneprobe-885670:7718301")
+    api("curse.maven:chisel-235279:2915375")
     compileOnly(rfg.deobf("curse.maven:ctm-267602:2915363"))// CTM 1.0.2.31
     compileOnly(rfg.deobf("curse.maven:hwyla-253449:2568751"))
     api("com.cleanroommc:modularui:3.1.6") { transitive = false }

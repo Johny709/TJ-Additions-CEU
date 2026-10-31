@@ -58,6 +58,9 @@ public class GTRecipes {
         MetaItem<?>.MetaValueItem[] pistons = {MetaItems.ELECTRIC_MOTOR_LV, MetaItems.ELECTRIC_PISTON_LV,
                 MetaItems.ELECTRIC_PISTON_MV, MetaItems.ELECTRIC_PISTON_HV, MetaItems.ELECTRIC_PISTON_EV, MetaItems.ELECTRIC_PISTON_IV,
                 MetaItems.ELECTRIC_PISTON_LUV, MetaItems.ELECTRIC_PISTON_ZPM, MetaItems.ELECTRIC_PISTON_UV};
+        MetaItem<?>.MetaValueItem[] conveyors = {MetaItems.CONVEYOR_MODULE_LV, MetaItems.CONVEYOR_MODULE_LV, MetaItems.CONVEYOR_MODULE_MV,
+                MetaItems.CONVEYOR_MODULE_HV, MetaItems.CONVEYOR_MODULE_EV, MetaItems.CONVEYOR_MODULE_IV, MetaItems.CONVEYOR_MODULE_LuV,
+                MetaItems.CONVEYOR_MODULE_ZPM, MetaItems.CONVEYOR_MODULE_UV};
         final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
                 MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV,
                 MarkerMaterials.Tier.UHV, MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV,
@@ -71,6 +74,8 @@ public class GTRecipes {
                     MetaItems.ELECTRIC_MOTOR_UXV, MetaItems.ELECTRIC_MOTOR_OpV, GCYLCoreItems.ELECTRIC_MOTOR_MAX);
             pistons = ArrayUtils.addAll(pistons, MetaItems.ELECTRIC_PISTON_UHV, MetaItems.ELECTRIC_PISTON_UEV, MetaItems.ELECTRIC_PISTON_UIV,
                     MetaItems.ELECTRIC_PISTON_UXV, MetaItems.ELECTRIC_PISTON_OpV, GCYLCoreItems.ELECTRIC_PISTON_MAX);
+            conveyors = ArrayUtils.addAll(conveyors, MetaItems.CONVEYOR_MODULE_UHV, MetaItems.CONVEYOR_MODULE_UEV, MetaItems.CONVEYOR_MODULE_UIV,
+                    MetaItems.CONVEYOR_MODULE_UXV, MetaItems.CONVEYOR_MODULE_OpV, GCYLCoreItems.CONVEYOR_MODULE_MAX);
         }
         // mega coke oven
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
@@ -137,6 +142,18 @@ public class GTRecipes {
                     'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
                     'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]),
                     'M', motors[i].getStackForm());
+        }
+        // chisel workbench
+        for (int i = 0; i < TJAMetaTileEntities.CHISEL_WORKBENCH.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) continue;
+            ModHandler.addShapedRecipe("chisel_workbench." + GTValues.VN[i], TJAMetaTileEntities.CHISEL_WORKBENCH.get(i).getStackForm(),
+                    "CAC", "RSR", "GWG",
+                    'R', conveyors[i].getStackForm(),
+                    'A', TJAItemUtils.getItemStackFromName("chisel:auto_chisel"),
+                    'S', MetaTileEntities.HULL[i].getStackForm(),
+                    'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]),
+                    'G', new UnificationEntry(OrePrefix.gear, materials[i]));
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
