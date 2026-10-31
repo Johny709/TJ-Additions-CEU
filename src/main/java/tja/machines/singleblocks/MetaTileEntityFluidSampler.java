@@ -13,6 +13,7 @@ import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
+import gregtech.api.capability.impl.NotifiableItemStackHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.mui.GTGuiTextures;
@@ -42,12 +43,12 @@ public class MetaTileEntityFluidSampler extends TJATieredMetaTileEntity {
 
     @Override
     protected IItemHandlerModifiable createImportItemHandler() {
-        return new ItemStackHandler(1);
+        return new NotifiableItemStackHandler(this, 1, this, false);
     }
 
     @Override
     protected IItemHandlerModifiable createExportItemHandler() {
-        return new ItemStackHandler(1);
+        return new NotifiableItemStackHandler(this, 1, this, true);
     }
 
     @Override

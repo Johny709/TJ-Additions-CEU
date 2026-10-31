@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.capability.AbstractWorkableHandler;
 import tja.capability.handler.IMachineHandler;
 import tja.util.TJAItemUtils;
@@ -23,6 +24,7 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
 
     private final List<ItemStack> itemInputs = new ArrayList<>();
     private final List<ItemStack> itemOutputs = new ArrayList<>();
+    private boolean foundRecipe;
 
     public FluidSamplerWorkableHandler(MetaTileEntity metaTileEntity) {
         super(metaTileEntity);
@@ -30,19 +32,33 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
 
     @Override
     protected boolean startRecipe() {
-        if (this.handler.getInputEnergyContainer().getEnergyStored() < GTValues.VAOC[this.handler.getTier()])
+        ItemStack itemStack;
+        IItemHandlerModifiable itemInputs;
+        if (this.isDistinct) {
+            itemInputs = this.handler.getInputBus(this.lastInputIndex);
+            itemStack = this.findAndConsumeInputs(itemInputs, true);
+            if (itemStack.isEmpty()) for (int i = 0; i < this.busCount; i++) {
+                if (i == this.lastInputIndex) continue;
+                itemInputs = this.handler.getInputBus(i);
+                itemStack = this.findAndConsumeInputs(itemInputs, true);
+                if (!itemStack.isEmpty()) {
+                    this.lastInputIndex = i;
+                    break;
+                }
+            }
+        } else {
+            itemInputs = this.handler.getImportItemInventory();
+            itemStack = this.findAndConsumeInputs(itemInputs, true);
+        }
+        if (!TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), itemStack, true).isEmpty())
             return false;
-        for (int i = 0; i < this.handler.getImportItemInventory().getSlots(); i++) {
-            final ItemStack itemStack = this.handler.getImportItemInventory().getStackInSlot(i);
-            if (itemStack.isEmpty() || !MetaItems.TOOL_DATA_STICK.isItemEqual(itemStack)) continue;
-            if (this.handler.getImportItemInventory().extractItem(i, 1, true).isEmpty()) continue;
-            if (!TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), itemStack, true).isEmpty())
-                return false;
-            this.itemInputs.add(this.handler.getImportItemInventory().extractItem(i, 1, false).copy());
+        this.foundRecipe = !itemStack.isEmpty();
+        if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VAOC[this.handler.getTier()]) {
+            final ItemStack dataStick = this.findAndConsumeInputs(itemInputs, false);
             final World world = this.metaTileEntity.getWorld();
             final Chunk chunk = world.getChunk(this.metaTileEntity.getPos());
             final Fluid fluid = BedrockFluidVeinHandler.getFluidInChunk(world, chunk.x, chunk.z);
-            final NBTTagCompound compound = TJAItemUtils.getCompoundFromStack(itemStack);
+            final NBTTagCompound compound = TJAItemUtils.getCompoundFromStack(dataStick);
             final NBTTagCompound fluidCompound = new NBTTagCompound();
             if (fluid != null) {
                 fluidCompound.setString("name", "gregtech.material." + fluid.getName());
@@ -50,11 +66,10 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
                 fluidCompound.setInteger("depletedYield", BedrockFluidVeinHandler.getDepletedFluidYield(world, chunk.x, chunk.z));
             }
             compound.setTag("fluidInChunk", fluidCompound);
-            this.itemOutputs.add(itemStack.copy());
+            this.itemOutputs.add(dataStick);
             this.setMaxProgress(this.calculateOverclock(GTValues.VAOC[0], 1200, 2));
             return true;
-        }
-        return false;
+        } else return false;
     }
 
     @Override
@@ -64,6 +79,18 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
         this.itemInputs.clear();
         this.itemOutputs.clear();
         return true;
+    }
+
+    private ItemStack findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
+        for (int i = 0; i < itemInputs.getSlots(); i++) {
+            if (!MetaItems.TOOL_DATA_STICK.isItemEqual(itemInputs.getStackInSlot(i))) continue;
+            final ItemStack stack = itemInputs.extractItem(i, 1, simulate).copy();
+            if (stack.isEmpty()) continue;
+            if (!simulate)
+                this.itemInputs.add(stack);
+            return stack;
+        }
+        return ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -90,6 +117,11 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
             this.itemInputs.add(new ItemStack(itemInputs.getCompoundTagAt(i)));
         for (int i = 0; i < itemOutputs.tagCount(); i++)
             this.itemOutputs.add(new ItemStack(itemOutputs.getCompoundTagAt(i)));
+    }
+
+    @Override
+    protected boolean otherConditions() {
+        return this.foundRecipe;
     }
 
     @Nonnull

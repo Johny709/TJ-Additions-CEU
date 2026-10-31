@@ -71,13 +71,20 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
     protected FluidTankList createImportFluidHandler() {
         return new FluidTankList(true, IntStream.range(0, 16)
                 .mapToObj(i -> new NotifiableFluidTank(Integer.MAX_VALUE, this.getController(), false) {
+
+                    @Override
+                    public int fill(FluidStack resource, boolean doFill) {
+                        if (doFill)
+                            this.onContentsChanged();
+                        return super.fill(resource, doFill);
+                    }
+
                     @Override
                     public FluidStack drain(FluidStack resource, boolean doDrain) {
                         FluidStack fluidStack = this.getFluid();
                         if (fluidStack == null || !fluidStack.isFluidEqual(resource)) return null;
                         fluidStack = fluidStack.copy();
                         fluidStack.amount = Math.min(fluidStack.amount, resource.amount);
-                        this.onContentsChanged();
                         return fluidStack;
                     }
 
@@ -89,7 +96,6 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
                         if (fluidStack == null) return null;
                         fluidStack = fluidStack.copy();
                         fluidStack.amount = Math.min(fluidStack.amount, maxDrain);
-                        this.onContentsChanged();
                         return fluidStack;
                     }
                 }).collect(Collectors.toList()));

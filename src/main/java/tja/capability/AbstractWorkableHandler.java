@@ -82,6 +82,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
             if (this.completeRecipe()) {
                 this.progress = 0;
                 this.energyPerTick = 0;
+                this.clearNotifiable();
                 if (this.handler.hasMaintenanceHatch())
                     this.handler.calculateMaintenance(this.maxProgress);
                 if (this.hasProblem)
@@ -95,19 +96,21 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
             }
         }
         if (this.progress < 1) {
-            if (!this.shouldSearchForRecipes()) {
-                this.sleepRecipe();
-                return;
-            }
-            final boolean canStart = this.startRecipe();
-            if (canStart) {
-                this.sleepTime = 1;
-                this.progress = 1;
-                this.progressRecipe(this.progress);
-                if (!this.isActive)
-                    this.setActive(true);
-            } else this.failRecipe();
-            this.wasActiveAndNeedsUpdate = !canStart;
+            final boolean isNotified = this.isInventoryNotified();
+            if (isNotified || this.otherConditions()) {
+                this.clearNotifiable();
+                if (isNotified || this.sleepTimer < 1) {
+                    final boolean canStart = this.startRecipe();
+                    if (canStart) {
+                        this.progress = 1;
+                        this.sleepTime = 1;
+                        this.progressRecipe(this.progress);
+                        if (!this.isActive)
+                            this.setActive(true);
+                    } else this.failRecipe();
+                    this.wasActiveAndNeedsUpdate = !canStart;
+                } else this.sleepRecipe();
+            } else this.sleepRecipe();
         } else this.progressRecipe(this.progress);
     }
 
@@ -158,6 +161,25 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         return false;
     }
 
+    /**
+     * Check for other conditions before recipe logic goes into lookdown.
+     */
+    protected boolean otherConditions() {
+        return false;
+    }
+
+    public boolean isInventoryNotified() {
+        return !this.metaTileEntity.getNotifiedItemInputList().isEmpty() || !this.metaTileEntity.getNotifiedFluidInputList().isEmpty() ||
+                !this.metaTileEntity.getNotifiedItemOutputList().isEmpty() || !this.metaTileEntity.getNotifiedFluidOutputList().isEmpty();
+    }
+
+    public void clearNotifiable() {
+        this.metaTileEntity.getNotifiedItemInputList().clear();
+        this.metaTileEntity.getNotifiedFluidInputList().clear();
+        this.metaTileEntity.getNotifiedItemOutputList().clear();
+        this.metaTileEntity.getNotifiedFluidOutputList().clear();
+    }
+
     protected int calculateOverclock(long baseEnergy, int duration, float multiplier) {
         final long voltage = this.handler.getMaxVoltage();
         baseEnergy *= 4;
@@ -172,60 +194,6 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
     public boolean hasEnoughFluid(FluidStack fluid, int amount) {
         final FluidStack fluidStack = this.handler.getImportFluidTank().drain(fluid, false);
         return fluidStack != null && fluidStack.amount == amount || amount == 0;
-    }
-
-    /**
-     * @return true if recipes should be searched for
-     */
-    protected boolean shouldSearchForRecipes() {
-        return this.canWorkWithInputs() && this.canFitNewOutputs();
-    }
-
-    /**
-     * @return true if the input inventory's content can be worked with
-     */
-    protected boolean canWorkWithInputs() {
-        // if the inputs were bad last time, check if they've changed before trying to find a new recipe.
-        if (!this.hasNotifiedInputs()) return false;
-
-        // the change in inputs (especially by removal of ingredient by the player) might change the current valid
-        // recipe.
-        // and if the previous recipe produced fluids and the new recipe doesn't, then outputs are not full.
-        this.isOutputsFull = false;
-        this.metaTileEntity.getNotifiedItemInputList().clear();
-        this.metaTileEntity.getNotifiedFluidInputList().clear();
-        return true;
-    }
-
-    /**
-     * @return if the output inventory can fit new outputs
-     */
-    protected boolean canFitNewOutputs() {
-        // if the output is full check if the output changed, so we can process recipes results again.
-        if (this.isOutputsFull && !this.hasNotifiedOutputs()) {
-            return false;
-        } else {
-            this.isOutputsFull = false;
-            this.metaTileEntity.getNotifiedItemOutputList().clear();
-            this.metaTileEntity.getNotifiedFluidOutputList().clear();
-            return true;
-        }
-    }
-
-    /**
-     * @return true if output inventory contents have changed
-     */
-    protected boolean hasNotifiedOutputs() {
-        return !this.metaTileEntity.getNotifiedItemOutputList().isEmpty() ||
-                !this.metaTileEntity.getNotifiedFluidOutputList().isEmpty();
-    }
-
-    /**
-     * @return true if input inventory contents have changed
-     */
-    protected boolean hasNotifiedInputs() {
-        return !this.metaTileEntity.getNotifiedItemInputList().isEmpty() ||
-                !this.metaTileEntity.getNotifiedFluidInputList().isEmpty();
     }
 
     @Override
