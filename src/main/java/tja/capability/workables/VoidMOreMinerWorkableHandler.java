@@ -76,7 +76,7 @@ public class VoidMOreMinerWorkableHandler extends AbstractWorkableHandler<IMachi
         }
 
         if (this.metaTileEntity instanceof IMaintenance)
-            this.currentDrillingFluid += ((IMaintenance) this.metaTileEntity).getMaintenanceProblems();
+            this.currentDrillingFluid += ((IMaintenance) this.metaTileEntity).getNumMaintenanceProblems();
 
         final long consumeAmount = (long) this.currentDrillingFluid;
         final boolean voidingFluids = this.handler.getVoidingModeInt() >= 2;
