@@ -40,6 +40,8 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
     /** occupies id range 1000 - 1014 */
     public static final List<MetaTileEntity> FLUID_SAMPLERS = mteList(1000, i -> new MetaTileEntityFluidSampler(resource("fluid_sampler." + GTValues.VN[i]), i));
+    /** occupies id range 1015 -  */
+    public static final List<MetaTileEntity> ARCHITECT_WORKBENCHES = mteList(1015, i -> new MetaTileEntityArchitectWorkbench(resource("architect_workbench." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization

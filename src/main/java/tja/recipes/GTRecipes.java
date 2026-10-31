@@ -4,6 +4,7 @@ import appeng.core.Api;
 import com.fulltrix.gcyl.item.GCYLCoreItems;
 import com.fulltrix.gcyl.materials.GCYLMaterials;
 import gregtech.api.GTValues;
+import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
@@ -22,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.commons.lang3.ArrayUtils;
 import supercritical.api.unification.material.SCMaterials;
 import tja.TJAValues;
 import tja.blocks.BlockBatteryCell;
@@ -46,19 +48,29 @@ public class GTRecipes {
         final boolean isSuperCriticalLoaded = TJAValues.isModLoaded(TJAValues.SUPERCRITICAL_MOD_ID);
         final boolean isActuallyAdditionsLoaded = TJAValues.isModLoaded(TJAValues.ACTUALLY_ADDITIONS_MOD_ID);
 
-        final List<Material> materials = new ArrayList<>(Arrays.asList(Materials.WroughtIron, Materials.Steel, Materials.Aluminium, Materials.StainlessSteel,
-                Materials.Titanium, Materials.TungstenSteel, Materials.RhodiumPlatedPalladium, Materials.Duranium, Materials.Tritanium));
-        final List<Material> cableMaterials = new ArrayList<>(Arrays.asList(Materials.RedAlloy, Materials.Tin, Materials.Copper, Materials.Gold,
-                Materials.Aluminium, Materials.Platinum, Materials.Niobium, Materials.Naquadah, Materials.NaquadahAlloy));
+        Material[] materials = {Materials.WroughtIron, Materials.Steel, Materials.Aluminium, Materials.StainlessSteel,
+                Materials.Titanium, Materials.TungstenSteel, Materials.RhodiumPlatedPalladium, Materials.Duranium, Materials.Tritanium};
+        Material[] cableMaterials = {Materials.RedAlloy, Materials.Tin, Materials.Copper, Materials.Gold,
+                Materials.Aluminium, Materials.Platinum, Materials.Niobium, Materials.Naquadah, Materials.NaquadahAlloy};
+        MetaItem<?>.MetaValueItem[] motors = {MetaItems.ELECTRIC_PISTON_LV, MetaItems.ELECTRIC_MOTOR_LV,
+                MetaItems.ELECTRIC_MOTOR_MV, MetaItems.ELECTRIC_MOTOR_HV, MetaItems.ELECTRIC_MOTOR_EV, MetaItems.ELECTRIC_MOTOR_IV,
+                MetaItems.ELECTRIC_MOTOR_LuV, MetaItems.ELECTRIC_MOTOR_ZPM, MetaItems.ELECTRIC_MOTOR_UV};
+        MetaItem<?>.MetaValueItem[] pistons = {MetaItems.ELECTRIC_MOTOR_LV, MetaItems.ELECTRIC_PISTON_LV,
+                MetaItems.ELECTRIC_PISTON_MV, MetaItems.ELECTRIC_PISTON_HV, MetaItems.ELECTRIC_PISTON_EV, MetaItems.ELECTRIC_PISTON_IV,
+                MetaItems.ELECTRIC_PISTON_LUV, MetaItems.ELECTRIC_PISTON_ZPM, MetaItems.ELECTRIC_PISTON_UV};
         final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
                 MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV,
                 MarkerMaterials.Tier.UHV, MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV,
                 MarkerMaterials.Tier.MAX};
         if (isGregicalityLoaded) {
-            materials.addAll(Arrays.asList(Materials.Seaborgium, Materials.Bohrium, GCYLMaterials.Quantum, GCYLMaterials.BlackTitanium,
-                    GCYLMaterials.HeavyQuarkDegenerateMatter, Materials.Neutronium));
-            cableMaterials.addAll(Arrays.asList(GCYLMaterials.AbyssalAlloy, GCYLMaterials.TitanSteel, GCYLMaterials.BlackTitanium,
-                    GCYLMaterials.NaquadriaticTaranium, Materials.Neutronium, GCYLMaterials.CosmicNeutronium));
+            materials = ArrayUtils.addAll(materials, Materials.Seaborgium, Materials.Bohrium, GCYLMaterials.Quantum, GCYLMaterials.BlackTitanium,
+                    GCYLMaterials.HeavyQuarkDegenerateMatter, Materials.Neutronium);
+            cableMaterials = ArrayUtils.addAll(cableMaterials, GCYLMaterials.AbyssalAlloy, GCYLMaterials.TitanSteel, GCYLMaterials.BlackTitanium,
+                    GCYLMaterials.NaquadriaticTaranium, Materials.Neutronium, GCYLMaterials.CosmicNeutronium);
+            motors = ArrayUtils.addAll(motors, MetaItems.ELECTRIC_MOTOR_UHV, MetaItems.ELECTRIC_MOTOR_UEV, MetaItems.ELECTRIC_MOTOR_UIV,
+                    MetaItems.ELECTRIC_MOTOR_UXV, MetaItems.ELECTRIC_MOTOR_OpV, GCYLCoreItems.ELECTRIC_MOTOR_MAX);
+            pistons = ArrayUtils.addAll(pistons, MetaItems.ELECTRIC_PISTON_UHV, MetaItems.ELECTRIC_PISTON_UEV, MetaItems.ELECTRIC_PISTON_UIV,
+                    MetaItems.ELECTRIC_PISTON_UXV, MetaItems.ELECTRIC_PISTON_OpV, GCYLCoreItems.ELECTRIC_PISTON_MAX);
         }
         // mega coke oven
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
@@ -109,10 +121,22 @@ public class GTRecipes {
             ModHandler.addShapedRecipe("fluid_sampler." + GTValues.VN[i], TJAMetaTileEntities.FLUID_SAMPLERS.get(i).getStackForm(),
                     "GGG", "PHP", "CDC",
                     'G', TJAItemUtils.getItemStackFromName("minecraft:glass"),
-                    'P', new UnificationEntry(OrePrefix.plate, materials.get(i)),
+                    'P', new UnificationEntry(OrePrefix.plate, materials[i]),
                     'H', MetaTileEntities.HULL[i].getStackForm(),
-                    'C', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials.get(i)),
-                    'D', new UnificationEntry(OrePrefix.toolHeadDrill, materials.get(i)));
+                    'C', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]),
+                    'D', new UnificationEntry(OrePrefix.toolHeadDrill, materials[i]));
+        }
+        // architect workbench
+        for (int i = 0; i < TJAMetaTileEntities.ARCHITECT_WORKBENCHES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) continue;
+            ModHandler.addShapedRecipe("architech_workbench." + GTValues.VN[i], TJAMetaTileEntities.ARCHITECT_WORKBENCHES.get(i).getStackForm(),
+                    "PAP", "CSC", "MWM",
+                    'P', pistons[i].getStackForm(),
+                    'A', TJAItemUtils.getItemStackFromName("architecturecraft:sawbench"),
+                    'S', MetaTileEntities.HULL[i].getStackForm(),
+                    'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]),
+                    'M', motors[i].getStackForm());
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",

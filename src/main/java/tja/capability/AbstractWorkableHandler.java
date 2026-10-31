@@ -40,6 +40,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         super(metaTileEntity);
         if (metaTileEntity instanceof IMachineHandler) {
             this.handler = (H) metaTileEntity;
+            this.addToNotifiable();
         } else throw new IllegalArgumentException("MetaTileEntity must implement IMachineHandler to use this workable handler");
     }
 
@@ -82,7 +83,7 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
             if (this.completeRecipe()) {
                 this.progress = 0;
                 this.energyPerTick = 0;
-                this.clearNotifiable();
+                this.addToNotifiable();
                 if (this.handler.hasMaintenanceHatch())
                     this.handler.calculateMaintenance(this.maxProgress);
                 if (this.hasProblem)
@@ -178,6 +179,11 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
         this.metaTileEntity.getNotifiedFluidInputList().clear();
         this.metaTileEntity.getNotifiedItemOutputList().clear();
         this.metaTileEntity.getNotifiedFluidOutputList().clear();
+    }
+
+    public void addToNotifiable() {
+        this.metaTileEntity.getNotifiedItemOutputList().add(this.handler.getImportItemInventory());
+        this.metaTileEntity.getNotifiedFluidOutputList().add(this.handler.getExportFluidTank());
     }
 
     protected int calculateOverclock(long baseEnergy, int duration, float multiplier) {
