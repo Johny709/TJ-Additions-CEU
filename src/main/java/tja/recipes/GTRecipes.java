@@ -173,6 +173,17 @@ public class GTRecipes {
                     'D', new UnificationEntry(OrePrefix.block, Materials.Diamond),
                     'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]));
         }
+        // naming machine
+        for (int i = 0; i < TJAMetaTileEntities.NAMING_MACHINES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("naming_machine." + GTValues.VN[i], TJAMetaTileEntities.NAMING_MACHINES.get(i).getStackForm(),
+                    "GPG", "CHC", "GAG",
+                    'G', new UnificationEntry(OrePrefix.gearSmall, materials[i]),
+                    'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'P', pistons[i].getStackForm(),
+                    'H', MetaTileEntities.HULL[i].getStackForm(),
+                    'A', new ItemStack(Blocks.ANVIL));
+        }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
                 'A', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Iron), OreDictUnifier.get(OrePrefix.plate, Materials.Nickel)),

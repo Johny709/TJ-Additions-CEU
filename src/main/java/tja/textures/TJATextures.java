@@ -42,6 +42,7 @@ public final class TJATextures {
     public static final TJASimpleOverlayRenderer CHISEL = new TJASimpleOverlayRenderer(TJAValues.CHISEL_MOD_ID, "items/chisel_iron");
     public static final TJASimpleOverlayRenderer ENCHANTED_BOOK = new TJASimpleOverlayRenderer("minecraft", "items/book_enchanted");
     public static final TJASimpleOverlayRenderer ENCHANTING_TABLE = new TJASimpleOverlayRenderer("minecraft", "blocks/enchanting_table_top");
+    public static final TJASimpleOverlayRenderer NAME_TAG = new TJASimpleOverlayRenderer("minecraft", "items/name_tag");
     public static final TJAOrientedOverlayRenderer PRINTER_OVERLAY = new TJAOrientedOverlayRenderer(TJA.MOD_ID, "overlay/printer", TJAOverlayFace.FRONT);
 
     @SideOnly(Side.CLIENT)

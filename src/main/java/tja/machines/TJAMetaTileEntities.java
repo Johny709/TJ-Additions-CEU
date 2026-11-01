@@ -50,6 +50,8 @@ public final class TJAMetaTileEntities {
             mteList(1030, i -> new MetaTileEntityChiselWorkbench(resource("chisel_workbench." + GTValues.VN[i]), i));
     /** occupies id range 1045 - 1059 */
     public static final List<MetaTileEntity> ENCHANTERS = mteList(1045, i -> new MetaTileEntityEnchanter(resource("enchanter." + GTValues.VN[i]), i));
+    /** occupies id range 1060 - 1074 */
+    public static final List<MetaTileEntity> NAMING_MACHINES = mteList(1060, i -> new MetaTileEntityNamingMachine(resource("naming_machine." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization
