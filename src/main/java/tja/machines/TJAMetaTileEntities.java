@@ -46,8 +46,10 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> ARCHITECT_WORKBENCHES = !TJAValues.isModLoaded(TJAValues.ARCHITECTURE_CRAFT_MOD_ID) ? Collections.emptyList() :
             mteList(1015, i -> new MetaTileEntityArchitectWorkbench(resource("architect_workbench." + GTValues.VN[i]), i));
     /** occupies id range 1030 - 1044 */
-    public static final List<MetaTileEntity> CHISEL_WORKBENCH = !TJAValues.isModLoaded(TJAValues.CHISEL_MOD_ID) ? Collections.emptyList() :
+    public static final List<MetaTileEntity> CHISEL_WORKBENCHES = !TJAValues.isModLoaded(TJAValues.CHISEL_MOD_ID) ? Collections.emptyList() :
             mteList(1030, i -> new MetaTileEntityChiselWorkbench(resource("chisel_workbench." + GTValues.VN[i]), i));
+    /** occupies id range 1045 - 1059 */
+    public static final List<MetaTileEntity> ENCHANTERS = mteList(1045, i -> new MetaTileEntityEnchanter(resource("enchanter." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization

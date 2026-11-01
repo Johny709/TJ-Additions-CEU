@@ -57,7 +57,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
         }
         if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
             this.findAndConsumeInputs(itemInputs, false);
-            this.maxProgress = this.calculateOverclock(30, 200, 2.8F);
+            this.maxProgress = this.calculateOverclock(30, 200, 2);
             return true;
         } else return false;
     }
