@@ -152,7 +152,7 @@ public class TileSuperUltimateInterface extends TileInterface implements IGuiHol
                                 final int extract = stack.getCount() - inserted;
                                 if (extract < 1) continue;
                                 final ItemStack otherStack = itemHandler.extractItem(i, extract, false);
-                                TJAItemUtils.insertIntoItemHandler(destItemHandler, otherStack, false);
+                                TJAItemUtils.insertIntoItemHandlerNotifiable(destItemHandler, otherStack, false);
                             }
                         }
                     }

@@ -122,7 +122,7 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
         if (this.isWorking && this.getOffsetTimer() % this.speed == 0) {
             for (int i = 0; i < 9; i++) {
                 final ItemStack filterStack = this.itemFilter.getStackInSlot(i).copy();
-                TJAItemUtils.insertIntoItemHandler(this.itemHandler, filterStack, false);
+                TJAItemUtils.insertIntoItemHandlerNotifiable(this.itemHandler, filterStack, false);
             }
         }
     }
