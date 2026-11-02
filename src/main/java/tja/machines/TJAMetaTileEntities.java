@@ -30,6 +30,7 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity LARGE_ARCHITECT_WORKBENCH = MetaTileEntities.registerMetaTileEntity(12, new MetaTileEntityLargeArchitectWorkbench(resource("large_architect_workbench")));
     public static final MetaTileEntity LARGE_CHISEL_WORKBENCH = MetaTileEntities.registerMetaTileEntity(13, new MetaTileEntityLargeChiselWorkbench(resource("large_chisel_workbench")));
     public static final MetaTileEntity LARGE_ENCHANTER = MetaTileEntities.registerMetaTileEntity(14, new MetaTileEntityLargeEnchanter(resource("large_enchanter")));
+    public static final MetaTileEntity LARGE_NAMING_MACHINE = MetaTileEntities.registerMetaTileEntity(15, new MetaTileEntityLargeNamingMachine(resource("large_naming_machine")));
 
     public static final MetaTileEntity COMPRESSED_CHEST = MetaTileEntities.registerMetaTileEntity(2000, new MetaTileEntityCompressedChest(resource("compressed_chest"), false));
     public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));

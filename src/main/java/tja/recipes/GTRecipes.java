@@ -132,6 +132,14 @@ public class GTRecipes {
                         .researchStack(TJAMetaTileEntities.ENCHANTERS.get(8).getStackForm()))
                 .EUt(GTValues.VAOC[8]).duration(600)
                 .buildAndRegister();
+        // large naming machine
+        ModHandler.addShapedRecipe("large_naming_machine", TJAMetaTileEntities.LARGE_NAMING_MACHINE.getStackForm(),
+                "GPG", "CHC", "GAG",
+                'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[5]),
+                'P', pistons[5].getStackForm(),
+                'G', new UnificationEntry(OrePrefix.gear, Materials.TungstenSteel),
+                'H', TJAMetaTileEntities.NAMING_MACHINES.get(5).getStackForm(),
+                'A', new ItemStack(Blocks.ANVIL));
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);

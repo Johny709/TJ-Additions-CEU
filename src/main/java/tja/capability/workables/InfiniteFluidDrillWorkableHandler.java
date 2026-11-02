@@ -64,9 +64,9 @@ public class InfiniteFluidDrillWorkableHandler extends AbstractWorkableHandler<I
 
     @Override
     protected boolean completeRecipe() {
+        final boolean voidingFluids = this.handler.getVoidingModeInt() >= 2;
         for (int i = this.outputIndex; i < this.fluidOutputsList.size(); i++) {
             final FluidStack stack = this.fluidOutputsList.get(i);
-            final boolean voidingFluids = this.handler.getVoidingModeInt() >= 2;
             if (voidingFluids || this.handler.getExportFluidTank().fill(stack, false) == stack.amount) {
                 this.handler.getExportFluidTank().fill(stack, true);
                 this.outputIndex++;

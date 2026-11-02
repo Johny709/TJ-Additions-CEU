@@ -112,6 +112,7 @@ tja.machine.void_more_miner.name=Void MOre Miner (VMOM)
 tja.machine.large_architect_workbench.name=Large Architect Workbench (LAW)
 tja.machine.large_chisel_workbench.name=Large Chisel Workbench (LCW)
 tja.machine.large_enchanter.name=Large Enchanter (LE)
+tja.machine.large_naming_machine.name=Large Naming Machine (LNM)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 
