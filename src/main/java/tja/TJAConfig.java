@@ -19,4 +19,31 @@ public final class TJAConfig {
     @Config.Comment("enable coil bonus for Large Chemical Reactor (LCR). 5% energy discount every tier higher than cupronickel.")
     @Config.RequiresMcRestart
     public static boolean enableLCRBonus;
+
+    @Config.Comment("Large Architect's Workbench")
+    public static LargeArchitectWorkbench largeArchitectWorkbench = new LargeArchitectWorkbench();
+
+    public static class LargeArchitectWorkbench {
+
+        @Config.Name("EU/t Percentage")
+        @Config.RequiresMcRestart
+        public int eutPercentage = 90;
+
+        @Config.Name("Duration Percentage")
+        @Config.RequiresMcRestart
+        public int durationPercentage = 80;
+
+        @Config.Name("Chance Percentage")
+        @Config.RequiresMcRestart
+        public int chancePercentage = 100;
+
+        @Config.Name("Stack Size")
+        @Config.RequiresMcRestart
+        public int stack = 16;
+
+        @Config.Name("Slice Limit")
+        @Config.Comment("Adjust the maximum number of slices the Large Architect Workbench can have")
+        @Config.RequiresMcRestart
+        public int maximumSlices = 64;
+    }
 }

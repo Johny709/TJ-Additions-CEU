@@ -17,11 +17,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class TJRecipeMapSteamMultiblockController extends RecipeMapMultiblockController {
+public abstract class TJARecipeMapSteamMultiblockController extends RecipeMapMultiblockController {
 
     protected IMultipleTankHandler steamTank;
 
-    public TJRecipeMapSteamMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
+    public TJARecipeMapSteamMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap);
     }
 

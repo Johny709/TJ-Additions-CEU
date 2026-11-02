@@ -33,7 +33,7 @@ import tja.TJAValues;
 import tja.blocks.BlockSolidCasings;
 import tja.blocks.TJAMetaBlocks;
 import tja.capability.workables.VoidMOreMinerWorkableHandler;
-import tja.machines.controllers.TJMultiblockControllerBase;
+import tja.machines.controllers.TJAMultiblockControllerBase;
 import tja.mui.MUIUtils;
 import tja.textures.TJATextures;
 import tja.util.TJAFluidUtils;
@@ -46,7 +46,7 @@ import java.util.function.UnaryOperator;
 
 import static tja.machines.multiblocks.MetaTileEntityInfiniteFluidDrill.DRILLING_MUD;
 
-public class MetaTileEntityVoidMOreMiner extends TJMultiblockControllerBase implements ProgressBarMultiblock {
+public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase implements ProgressBarMultiblock {
 
     public static final FluidStack USED_DRILLING_MUD = GCYLMaterials.UsedDrillingMud.getFluid(1);
     public static final FluidStack PYROTHEUM = GCYLMaterials.Pyrotheum.getFluid(1);

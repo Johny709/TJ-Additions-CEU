@@ -34,7 +34,7 @@ import tja.TJAValues;
 import tja.blocks.BlockSolidCasings;
 import tja.blocks.TJAMetaBlocks;
 import tja.capability.workables.InfiniteFluidDrillWorkableHandler;
-import tja.machines.controllers.TJMultiblockControllerBase;
+import tja.machines.controllers.TJAMultiblockControllerBase;
 import tja.mui.MUIUtils;
 import tja.textures.TJATextures;
 import tja.util.TJAFluidUtils;
@@ -48,7 +48,7 @@ import java.util.function.UnaryOperator;
 
 import static com.fulltrix.gcyl.materials.GCYLMaterials.DrillingMud;
 
-public class MetaTileEntityInfiniteFluidDrill extends TJMultiblockControllerBase implements ProgressBarMultiblock {
+public class MetaTileEntityInfiniteFluidDrill extends TJAMultiblockControllerBase implements ProgressBarMultiblock {
 
     public static final FluidStack DRILLING_MUD = DrillingMud.getFluid(1);
     private final InfiniteFluidDrillWorkableHandler workableHandler = new InfiniteFluidDrillWorkableHandler(this);

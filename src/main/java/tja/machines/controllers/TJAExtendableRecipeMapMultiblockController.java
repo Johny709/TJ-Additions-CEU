@@ -13,11 +13,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import tja.capability.TJADataCodes;
 
-public abstract class TJExtendableMultiblockController extends RecipeMapMultiblockController {
+public abstract class TJAExtendableRecipeMapMultiblockController extends RecipeMapMultiblockController {
 
     protected int slices = 1;
 
-    public TJExtendableMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
+    public TJAExtendableRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap);
     }
 

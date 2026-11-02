@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler, IControllable {
+public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler, IControllable {
 
     protected IItemHandlerModifiable importItemInventory;
     protected IItemHandlerModifiable exportItemInventory;
@@ -38,7 +38,7 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     protected long maxVoltage;
     protected int tier;
 
-    public TJMultiblockControllerBase(ResourceLocation metaTileEntityId) {
+    public TJAMultiblockControllerBase(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
     }
 

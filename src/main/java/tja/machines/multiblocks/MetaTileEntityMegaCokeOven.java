@@ -12,16 +12,16 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.util.ResourceLocation;
-import tja.capability.workables.TJSteamMultiblockRecipeLogic;
-import tja.machines.controllers.TJRecipeMapSteamMultiblockController;
+import tja.capability.workables.TJASteamMultiblockRecipeLogic;
+import tja.machines.controllers.TJARecipeMapSteamMultiblockController;
 
 import javax.annotation.Nonnull;
 
-public class MetaTileEntityMegaCokeOven extends TJRecipeMapSteamMultiblockController {
+public class MetaTileEntityMegaCokeOven extends TJARecipeMapSteamMultiblockController {
 
     public MetaTileEntityMegaCokeOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMap.getByName("coke_oven_2"));
-        this.recipeMapWorkable = new TJSteamMultiblockRecipeLogic(this, true);
+        this.recipeMapWorkable = new TJASteamMultiblockRecipeLogic(this, true);
         this.recipeMapWorkable.setParallelLimit(512);
     }
 

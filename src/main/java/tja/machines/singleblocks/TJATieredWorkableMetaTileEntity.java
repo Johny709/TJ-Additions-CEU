@@ -1,29 +1,20 @@
 package tja.machines.singleblocks;
 
 import codechicken.lib.raytracer.CuboidRayTraceResult;
-import gregtech.api.GTValues;
 import gregtech.api.capability.*;
 import gregtech.api.cover.CoverRayTracer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
-import tja.TJAValues;
 import tja.capability.IJEIRecipeUID;
 import tja.capability.handler.IMachineHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Serves as a basis to implement your own recipe or workable handler for single blocks.

@@ -47,14 +47,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.capability.handler.IBoilerHandler;
 import tja.capability.workables.MegaBoilerRecipeLogic;
-import tja.machines.controllers.TJMultiblockControllerBase;
+import tja.machines.controllers.TJAMultiblockControllerBase;
 import tja.mui.MUIUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase implements IBoilerHandler, ProgressBarMultiblock {
+public class MetaTileEntityMegaBoiler extends TJAMultiblockControllerBase implements IBoilerHandler, ProgressBarMultiblock {
 
     private final MegaBoilerRecipeLogic recipeLogic = new MegaBoilerRecipeLogic(this);
     private final BoilerType boilerType;

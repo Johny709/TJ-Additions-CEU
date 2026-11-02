@@ -66,7 +66,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import tja.machines.controllers.TJExtendableMultiblockController;
+import tja.machines.controllers.TJAExtendableRecipeMapMultiblockController;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -76,7 +76,7 @@ import java.util.function.UnaryOperator;
 import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 import static gregtech.api.util.RelativeDirection.*;
 
-public class MetaTileEntityIndustrialFusionReactor extends TJExtendableMultiblockController implements IFastRenderMetaTileEntity, IBloomEffect, ProgressBarMultiblock {
+public class MetaTileEntityIndustrialFusionReactor extends TJAExtendableRecipeMapMultiblockController implements IFastRenderMetaTileEntity, IBloomEffect, ProgressBarMultiblock {
 
     protected static final int NO_COLOR = 0;
 

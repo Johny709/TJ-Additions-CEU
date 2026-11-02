@@ -11,33 +11,33 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import tja.capability.IRecipeInfo;
 import tja.capability.TJACapabilities;
-import tja.machines.controllers.TJRecipeMapSteamMultiblockController;
+import tja.machines.controllers.TJARecipeMapSteamMultiblockController;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TJSteamMultiblockRecipeLogic extends MultiblockRecipeLogic implements IRecipeInfo {
+public class TJASteamMultiblockRecipeLogic extends MultiblockRecipeLogic implements IRecipeInfo {
 
     private final boolean runAtZeroEnergy;
     private FluidStack steamConsumption;
 
-    public TJSteamMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity) {
+    public TJASteamMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity) {
         this(tileEntity, false);
     }
 
-    public TJSteamMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, boolean runAtZeroEnergy) {
+    public TJASteamMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, boolean runAtZeroEnergy) {
         super(tileEntity);
         this.runAtZeroEnergy = runAtZeroEnergy;
     }
 
     @Override
     protected boolean drawEnergy(long recipeEUt, boolean simulate) {
-        return this.runAtZeroEnergy || this.steamConsumption.isFluidStackIdentical(((TJRecipeMapSteamMultiblockController) this.metaTileEntity).getSteamTank().drain(this.steamConsumption, !simulate));
+        return this.runAtZeroEnergy || this.steamConsumption.isFluidStackIdentical(((TJARecipeMapSteamMultiblockController) this.metaTileEntity).getSteamTank().drain(this.steamConsumption, !simulate));
     }
 
     @Override
     protected boolean hasEnoughPower(long eut, int duration) {
-        return this.runAtZeroEnergy || this.steamConsumption.isFluidStackIdentical(((TJRecipeMapSteamMultiblockController) this.metaTileEntity).getSteamTank().drain(this.steamConsumption, false));
+        return this.runAtZeroEnergy || this.steamConsumption.isFluidStackIdentical(((TJARecipeMapSteamMultiblockController) this.metaTileEntity).getSteamTank().drain(this.steamConsumption, false));
     }
 
     @Override
