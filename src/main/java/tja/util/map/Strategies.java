@@ -10,6 +10,7 @@ import java.util.Arrays;
 public final class Strategies {
     public static final ItemStackStrategy ITEMSTACK_STRATEGY = new ItemStackStrategy();
     public static final IngredientStrategy INGREDIENT_STRATEGY = new IngredientStrategy();
+    public static final ItemStackStrategyWithNBT ITEMSTACK_STRATEGY_NBT = new ItemStackStrategyWithNBT();
     public static final ChancedItemStrategy CHANCED_ITEM_STRATEGY = new ChancedItemStrategy();
     public static final ChancedFluidStrategy CHANCED_FLUID_STRATEGY = new ChancedFluidStrategy();
 
@@ -74,6 +75,19 @@ public final class Strategies {
                     a.getIngredient().isFluidEqual(b.getIngredient()) &&
                     a.getChance() == b.getChance() &&
                     a.getChanceBoost() == b.getChanceBoost();
+        }
+    }
+
+    public static class ItemStackStrategyWithNBT implements Hash.Strategy<ItemStack> {
+
+        @Override
+        public int hashCode(ItemStack o) {
+            return o.getItem().hashCode();
+        }
+
+        @Override
+        public boolean equals(ItemStack a, ItemStack b) {
+            return b != null && a.getItem() == b.getItem() && a.getMetadata() == b.getMetadata() && ItemStack.areItemStackShareTagsEqual(a, b);
         }
     }
 }

@@ -65,6 +65,8 @@ public class GTRecipes {
         MetaItem<?>.MetaValueItem[] pumps = {MetaItems.ELECTRIC_PUMP_LV, MetaItems.ELECTRIC_PUMP_LV, MetaItems.ELECTRIC_PUMP_MV,
                 MetaItems.ELECTRIC_PUMP_HV, MetaItems.ELECTRIC_PUMP_EV, MetaItems.ELECTRIC_PUMP_IV, MetaItems.ELECTRIC_PUMP_LuV,
                 MetaItems.ELECTRIC_PUMP_ZPM, MetaItems.ELECTRIC_PUMP_UV};
+        MetaItem<?>.MetaValueItem[] robotArms = {MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_MV, MetaItems.ROBOT_ARM_HV,
+                MetaItems.ROBOT_ARM_EV, MetaItems.ROBOT_ARM_IV, MetaItems.ROBOT_ARM_LuV, MetaItems.ROBOT_ARM_ZPM, MetaItems.ROBOT_ARM_UV};
         final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
                 MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV,
                 MarkerMaterials.Tier.UHV, MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV,
@@ -82,6 +84,8 @@ public class GTRecipes {
                     MetaItems.CONVEYOR_MODULE_UXV, MetaItems.CONVEYOR_MODULE_OpV, GCYLCoreItems.CONVEYOR_MODULE_MAX);
             pumps = ArrayUtils.addAll(pumps, MetaItems.ELECTRIC_PUMP_UHV, MetaItems.ELECTRIC_PUMP_UEV, MetaItems.ELECTRIC_PUMP_UIV,
                     MetaItems.ELECTRIC_PUMP_UXV, MetaItems.ELECTRIC_PUMP_OpV, GCYLCoreItems.ELECTRIC_PUMP_MAX);
+            robotArms = ArrayUtils.addAll(robotArms, MetaItems.ROBOT_ARM_UHV, MetaItems.ROBOT_ARM_UEV, MetaItems.ROBOT_ARM_UIV, MetaItems.ROBOT_ARM_UXV,
+                    MetaItems.ROBOT_ARM_OpV, GCYLCoreItems.ROBOT_ARM_MAX);
         }
         // mega coke oven
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
@@ -183,6 +187,18 @@ public class GTRecipes {
                     'P', pistons[i].getStackForm(),
                     'H', MetaTileEntities.HULL[i].getStackForm(),
                     'A', new ItemStack(Blocks.ANVIL));
+        }
+        // super fisher
+        for (int i = 0; i < TJAMetaTileEntities.SUPER_FISHERS.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("super_fisher." + GTValues.VN[i], TJAMetaTileEntities.SUPER_FISHERS.get(i).getStackForm(),
+                    "FRF", "PHP", "ECE",
+                    'F', TJAItemUtils.getItemStackFromName("minecraft:fishing_rod"),
+                    'E', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]),
+                    'R', robotArms[i].getStackForm(),
+                    'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'P', new UnificationEntry(OrePrefix.plate, materials[i]),
+                    'H', MetaTileEntities.HULL[i].getStackForm());
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
