@@ -26,9 +26,12 @@ import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.mui.widget.GhostCircuitSlotWidget;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.core.sound.GTSoundEvents;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -37,7 +40,9 @@ import tja.textures.TJATextures;
 import tja.util.EnumFacingHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEntity {
 
@@ -56,6 +61,14 @@ public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEnti
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
         return new MetaTileEntityChiselWorkbench(this.metaTileEntityId, this.getTier());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(I18n.format("tja.multiblock.parallel", this.parallel));
+        tooltip.add(I18n.format("tja.multiblock.large_chisel_workbench.description"));
     }
 
     @Override

@@ -125,14 +125,19 @@ tja.multiblock.mega_tungstensteel_boiler.description=Mega version of §5Large Tu
 tja.multiblock.mega_boiler.warning=WARNING: Building with freedom wrench is not recommended. The game might crash due to how many blocks there are to build at once!
 tja.multiblock.mega_boiler.parallel.description=Generates §c%sx§7 as much steam as §5Large Boiler.
 
+tja.multiblock.large_architect_workbench.description=A machine to automate creation of architecturecraft blocks. Input an ArchitectureCraft item as a non-consumable catalyst. any non-Architecture items are processed into the shape of the catalyst's.
+tja.multiblock.large_chisel_workbench.description=Automates the chiseling of blocks. Input Integrated Circuits to determine chisel index. Add more circuits to get chisel index above 32.
+tja.multiblock.large_enchanter.level.max=Max Enchantment Level: §b%s
+tja.machine.naming_machine.description=Changes the display name of items like an anvil would. Place in a nametag with the specified name as a catalyst. If there's no nametag then it'll use the name from the textbox.
+
 tja.multiblock.parallel.layer.increment=Increased slices to: §b%,d
 tja.multiblock.parallel.layer.decrement=Decreased slices to: §b%,d
 tja.multiblock.parallel.layer.increment.fail=Already reached slices layers: §b%,d
 tja.multiblock.parallel.layer.decrement.fail=Already reached slices layers: §b%,d
-
 tja.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
 tja.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)
 tja.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
+tja.multiblock.parallel=Parallel: §5%s
 
 tja.top.progress=Progress:
 tja.top.progress.heat=Heat:

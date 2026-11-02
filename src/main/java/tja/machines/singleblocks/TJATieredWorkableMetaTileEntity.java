@@ -50,15 +50,6 @@ public abstract class TJATieredWorkableMetaTileEntity extends TJATieredMetaTileE
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        final String color = TJAValues.VCC[this.getTier()];
-        tooltip.add(I18n.format("machine.universal.tooltip.voltage_in", this.energyContainer.getInputVoltage(), color, GTValues.VN[this.getTier()]));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", this.energyContainer.getEnergyCapacity()));
-    }
-
-    @Override
     public void update() {
         super.update();
         if (!this.getWorld().isRemote) {
