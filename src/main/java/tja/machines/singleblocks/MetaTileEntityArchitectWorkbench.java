@@ -6,9 +6,11 @@ import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
@@ -35,7 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MetaTileEntityArchitectWorkbench extends TJATieredMetaTileEntity {
+public class MetaTileEntityArchitectWorkbench extends TJATieredWorkableMetaTileEntity {
 
     private final ArchitectWorkbenchWorkableHandler workableHandler = new ArchitectWorkbenchWorkableHandler(this);
     private final int parallel;
@@ -80,6 +82,7 @@ public class MetaTileEntityArchitectWorkbench extends TJATieredMetaTileEntity {
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("progress", new DoubleSyncValue(() -> this.workableHandler.getProgress() == 0 ? 0 :
                 1.0 * this.workableHandler.getProgress() / this.workableHandler.getMaxProgress()));
+        syncManager.syncValue("item_input", new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput));
         syncManager.registerSlotGroup(new SlotGroup("item_input", 2, 1, true));
 
         return ModularPanel.defaultPanel("architect_workbench.gui", 176, 166)
@@ -97,6 +100,10 @@ public class MetaTileEntityArchitectWorkbench extends TJATieredMetaTileEntity {
                         .gridOfSizeWidth(this.exportItems.getSlots(), 2, (x, y, i) -> new ItemSlot()
                                 .slot(new ModularSlot(this.exportItems, i)
                                         .canPut(false))))
+                .child(new ToggleButton()
+                        .pos(7, 62)
+                        .background(GTGuiTextures.BUTTON_ITEM_OUTPUT)
+                        .syncHandler("item_input"))
                 .child(new ProgressWidget()
                         .leftRel(0.5f)
                         .topRelAnchor(0.25f, 0.5f)
