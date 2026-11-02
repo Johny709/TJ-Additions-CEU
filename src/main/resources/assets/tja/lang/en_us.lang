@@ -113,6 +113,7 @@ tja.machine.large_architect_workbench.name=Large Architect Workbench (LAW)
 tja.machine.large_chisel_workbench.name=Large Chisel Workbench (LCW)
 tja.machine.large_enchanter.name=Large Enchanter (LE)
 tja.machine.large_naming_machine.name=Large Naming Machine (LNM)
+tja.machine.large_super_fisher.name=Large Super Fisher (LSF)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 

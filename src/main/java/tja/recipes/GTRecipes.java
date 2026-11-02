@@ -23,6 +23,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
 import supercritical.api.unification.material.SCMaterials;
@@ -140,6 +141,15 @@ public class GTRecipes {
                 'G', new UnificationEntry(OrePrefix.gear, Materials.TungstenSteel),
                 'H', TJAMetaTileEntities.NAMING_MACHINES.get(5).getStackForm(),
                 'A', new ItemStack(Blocks.ANVIL));
+        // large super fisher
+        ModHandler.addShapedRecipe("large_super_fisher", TJAMetaTileEntities.LARGE_SUPER_FISHER.getStackForm(),
+                "PRP", "DHD", "MCM",
+                'P', pumps[6].getStackForm(),
+                'R', robotArms[6].getStackForm(),
+                'D', new UnificationEntry(OrePrefix.plateDense, Materials.RhodiumPlatedPalladium),
+                'H', TJAMetaTileEntities.SUPER_FISHERS.get(6).getStackForm(),
+                'M', motors[6].getStackForm(),
+                'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[6]));
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);
