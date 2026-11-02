@@ -114,9 +114,11 @@ public class MetaTileEntityInfiniteFluidDrill extends TJAMultiblockControllerBas
         builder.addEnergyUsageLine(this.inputEnergyContainer)
                 .addEnergyTierLine(this.tier)
                 .addCustom((key, syncer) -> {
+                    if (!this.isStructureFormed()) return;
                     final long energyPerTick = syncer.syncLong(this.workableHandler.getEnergyPerTick());
+                    if (energyPerTick < 1) return;
                     key.add(KeyUtil.lang("tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
-                            GTValues.VOCNF[TJAUtility.getTierByVoltage(energyPerTick)]));
+                            GTValues.VOCNF[TJAUtility.getTierFromVoltage(energyPerTick)]));
                 })
                 .addProgressLine(this.workableHandler.getProgress(), this.workableHandler.getMaxProgress())
                 .addRunningPerfectlyLine(this.workableHandler.isActive())
@@ -149,6 +151,7 @@ public class MetaTileEntityInfiniteFluidDrill extends TJAMultiblockControllerBas
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
         return TJATextures.SEABORGIUM;
     }

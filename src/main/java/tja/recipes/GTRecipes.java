@@ -96,6 +96,14 @@ public class GTRecipes {
                 .output(TJAMetaTileEntities.MEGA_COKE_OVEN)
                 .EUt(30).duration(1200)
                 .buildAndRegister();
+        // large architect workbench
+        ModHandler.addShapedRecipe("large_architect_workbench", TJAMetaTileEntities.LARGE_ARCHITECT_WORKBENCH.getStackForm(),
+                "GCG", "RSB", "GCG",
+                'G', new UnificationEntry(OrePrefix.gear, Materials.Steel),
+                'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[5]),
+                'R', robotArms[5].getStackForm(),
+                'B', conveyors[5].getStackForm(),
+                'S', TJAMetaTileEntities.ARCHITECT_WORKBENCHES.get(5).getStackForm());
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);

@@ -119,9 +119,12 @@ public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase imp
         builder.addEnergyUsageLine(this.inputEnergyContainer)
                 .addEnergyTierLine(this.tier)
                 .addCustom((key, syncer) -> {
+                    if (!this.isStructureFormed()) return;
                     final long energyPerTick = syncer.syncLong(this.workableHandler.getEnergyPerTick());
-                    key.add(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
-                            GTValues.VOCNF[TJAUtility.getTierByVoltage(energyPerTick)]));
+                    if (energyPerTick > 0) {
+                        key.add(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
+                                GTValues.VOCNF[TJAUtility.getTierFromVoltage(energyPerTick)]));
+                    }
                     final long heat = syncer.syncLong(this.workableHandler.heat());
                     final long maxHeat = syncer.syncLong(this.workableHandler.maxHeat());
                     key.add(KeyUtil.lang(TextFormatting.GRAY, "tj.machine.universal.temperature", TJAValues.thousandFormat.format(heat),
@@ -188,6 +191,7 @@ public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase imp
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
         return TJATextures.HEAVY_QUARK_DEGENERATE_MATTER;
     }

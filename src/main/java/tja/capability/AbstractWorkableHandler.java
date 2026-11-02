@@ -4,6 +4,7 @@ import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IWorkable;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.util.function.BooleanConsumer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -271,6 +272,8 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
     public void setDistinct(boolean distinct) {
         if (distinct && this.busCount < 1) return;
         this.isDistinct = distinct;
+        // mark buses as changed on distinct toggle
+        this.metaTileEntity.getNotifiedItemInputList().add(this.handler.getImportItemInventory());
         this.metaTileEntity.markDirty();
     }
 

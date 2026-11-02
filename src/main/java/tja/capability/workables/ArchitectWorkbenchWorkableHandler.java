@@ -24,7 +24,6 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
     @Nonnull
     private ItemStack catalyst = ItemStack.EMPTY;
     private int outputIndex;
-    private boolean voiding;
     private boolean foundRecipe;
 
     public ArchitectWorkbenchWorkableHandler(MetaTileEntity metaTileEntity) {
@@ -66,7 +65,8 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
     protected boolean completeRecipe() {
         for (int i = this.outputIndex; i < this.itemOutputs.size(); i++) {
             final ItemStack stack = this.itemOutputs.get(i);
-            if (this.voiding || TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, true).isEmpty()) {
+            final boolean voidingMode = this.handler.getVoidingModeInt() == 1 || this.handler.getVoidingModeInt() == 3;
+            if (voidingMode || TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, true).isEmpty()) {
                 TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, false);
                 this.outputIndex++;
             } else return false;
@@ -129,7 +129,6 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
         compound.setTag("itemInputs", itemInputList);
         compound.setTag("itemOutputs", itemOutputList);
         compound.setInteger("outputIndex", this.outputIndex);
-        compound.setBoolean("voiding", this.voiding);
         return compound;
     }
 
@@ -140,7 +139,6 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
         if (compound.hasKey("catalyst"))
             this.catalyst = new ItemStack(compound.getCompoundTag("catalyst"));
         this.outputIndex = compound.getInteger("outputIndex");
-        this.voiding = compound.getBoolean("voiding");
         for (int i = 0; i < itemInputList.tagCount(); i++)
             this.itemInputs.add(new ItemStack(itemInputList.getCompoundTagAt(i)));
         for (int i = 0; i < itemOutputsList.tagCount(); i++)
@@ -162,14 +160,5 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
     @Override
     public List<ItemStack> getItemOutputs() {
         return this.itemOutputs;
-    }
-
-    public void setVoiding(boolean voiding) {
-        this.voiding = voiding;
-        this.metaTileEntity.markDirty();
-    }
-
-    public boolean isVoiding() {
-        return this.voiding;
     }
 }

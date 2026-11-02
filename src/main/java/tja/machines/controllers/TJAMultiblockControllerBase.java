@@ -3,6 +3,7 @@ package tja.machines.controllers;
 import gregicality.multiblocks.api.metatileentity.GCYMMultiblockAbility;
 import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
 import gregtech.api.capability.IControllable;
+import gregtech.api.capability.IDistinctBusController;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.EnergyContainerList;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler, IControllable {
+public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler, IControllable, IDistinctBusController {
 
     protected IItemHandlerModifiable importItemInventory;
     protected IItemHandlerModifiable exportItemInventory;
@@ -148,6 +149,19 @@ public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayB
 
     @Override
     public void setWorkingEnabled(boolean b) {}
+
+    @Override
+    public boolean canBeDistinct() {
+        return false;
+    }
+
+    @Override
+    public boolean isDistinct() {
+        return false;
+    }
+
+    @Override
+    public void setDistinct(boolean b) {}
 
     public static TraceabilityPredicate tieredHatchPredicate() {
         return new TraceabilityPredicate(blockWorldState -> {

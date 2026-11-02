@@ -109,6 +109,7 @@ tja.machine.industrial_fusion_reactor.mk2.name=Industrial Fusion Reactor Control
 tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Controller MK3 (IFRC3)
 tja.machine.infinite_fluid_drill.name=Infinite Fluid Drilling Plant (IFDP)
 tja.machine.void_more_miner.name=Void MOre Miner (VMOM)
+tja.machine.large_architect_workbench.name=Large Architect Workbench (LAW)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 
@@ -138,6 +139,7 @@ tja.multiblock.bars.fuel=§7Fuel: (§6%s§7) §6%s / %s L §7(§6%s%%§7)
 tja.multiblock.bars.heat=§7Heat: §c%s / %s °C §7(§c%s%%§7)
 tja.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
 tja.multiblock.parallel=Parallel: §5%s
+tja.multiblock.parallel_tier=Parallel per tier: §5%s
 
 tja.top.progress=Progress:
 tja.top.progress.heat=Heat:
