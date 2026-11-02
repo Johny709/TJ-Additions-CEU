@@ -38,7 +38,9 @@ import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.BoilerType;
+import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -308,5 +310,26 @@ public class MetaTileEntityMegaBoiler extends TJMultiblockControllerBase impleme
     @Override
     public GTGuiTheme getUITheme() {
         return this.boilerType == BoilerType.BRONZE ? GTGuiTheme.BRONZE : this.boilerType == BoilerType.STEEL ? GTGuiTheme.STEEL : super.getUITheme();
+    }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return this.recipeLogic.isWorkingEnabled();
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {
+        this.recipeLogic.setWorkingEnabled(b);
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.recipeLogic.isActive() && super.isActive();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public SoundEvent getSound() {
+        return GTSoundEvents.FIRE;
     }
 }

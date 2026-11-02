@@ -2,6 +2,7 @@ package tja.machines.controllers;
 
 import gregicality.multiblocks.api.metatileentity.GCYMMultiblockAbility;
 import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
+import gregtech.api.capability.IControllable;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.EnergyContainerList;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler {
+public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBase implements IMachineHandler, IControllable {
 
     protected IItemHandlerModifiable importItemInventory;
     protected IItemHandlerModifiable exportItemInventory;
@@ -139,6 +140,14 @@ public abstract class TJMultiblockControllerBase extends MultiblockWithDisplayBa
     public int getTier() {
         return this.tier;
     }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return false;
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {}
 
     public static TraceabilityPredicate tieredHatchPredicate() {
         return new TraceabilityPredicate(blockWorldState -> {
