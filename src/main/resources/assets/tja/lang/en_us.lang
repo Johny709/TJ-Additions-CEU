@@ -110,6 +110,7 @@ tja.machine.industrial_fusion_reactor.mk3.name=Industrial Fusion Reactor Control
 tja.machine.infinite_fluid_drill.name=Infinite Fluid Drilling Plant (IFDP)
 tja.machine.void_more_miner.name=Void MOre Miner (VMOM)
 tja.machine.large_architect_workbench.name=Large Architect Workbench (LAW)
+tja.machine.large_chisel_workbench.name=Large Chisel Workbench (LCW)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 

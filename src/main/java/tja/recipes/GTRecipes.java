@@ -99,11 +99,19 @@ public class GTRecipes {
         // large architect workbench
         ModHandler.addShapedRecipe("large_architect_workbench", TJAMetaTileEntities.LARGE_ARCHITECT_WORKBENCH.getStackForm(),
                 "GCG", "RSB", "GCG",
-                'G', new UnificationEntry(OrePrefix.gear, Materials.Steel),
+                'G', new UnificationEntry(OrePrefix.gear, Materials.StainlessSteel),
                 'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[5]),
                 'R', robotArms[5].getStackForm(),
                 'B', conveyors[5].getStackForm(),
                 'S', TJAMetaTileEntities.ARCHITECT_WORKBENCHES.get(5).getStackForm());
+        // large chisel workbench
+        ModHandler.addShapedRecipe("large_chisel_workbench", TJAMetaTileEntities.LARGE_CHISEL_WORKBENCH.getStackForm(),
+                "GCG", "RSB", "GCG",
+                'G', new UnificationEntry(OrePrefix.gear, Materials.BlueSteel),
+                'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[5]),
+                'R', robotArms[5].getStackForm(),
+                'B', conveyors[5].getStackForm(),
+                'S', TJAMetaTileEntities.CHISEL_WORKBENCHES.get(5).getStackForm());
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);

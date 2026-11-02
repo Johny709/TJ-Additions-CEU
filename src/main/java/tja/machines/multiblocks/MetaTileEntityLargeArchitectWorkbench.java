@@ -62,7 +62,7 @@ public class MetaTileEntityLargeArchitectWorkbench extends ExtendableMultiblockC
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(I18n.format("tja.multiblock.parallel_tier", TJAConfig.largeArchitectWorkbench.stack));
+        tooltip.add(I18n.format("tja.multiblock.parallel_tier", this.getMaxParallel()));
         tooltip.add(I18n.format("tja.multiblock.large_architect_workbench.description"));
     }
 
@@ -102,6 +102,12 @@ public class MetaTileEntityLargeArchitectWorkbench extends ExtendableMultiblockC
         this.tier = TJAUtility.getTierByVoltage(this.maxVoltage);
         this.parallel = TJAConfig.largeArchitectWorkbench.stack * tier;
         this.workableHandler.initialize(this.getAbilities(MultiblockAbility.IMPORT_ITEMS).size());
+    }
+
+    @Override
+    public void invalidateStructure() {
+        super.invalidateStructure();
+        this.workableHandler.invalidate();
     }
 
     @Override
@@ -145,6 +151,11 @@ public class MetaTileEntityLargeArchitectWorkbench extends ExtendableMultiblockC
     @Override
     public int getParallel() {
         return this.parallel;
+    }
+
+    @Override
+    public int getMaxParallel() {
+        return TJAConfig.largeArchitectWorkbench.maximumSlices;
     }
 
     @Override

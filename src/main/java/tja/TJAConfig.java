@@ -23,6 +23,9 @@ public final class TJAConfig {
     @Config.Comment("Large Architect's Workbench")
     public static LargeArchitectWorkbench largeArchitectWorkbench = new LargeArchitectWorkbench();
 
+    @Config.Comment("Large Chisel Workbench")
+    public static LargeChiselWorkbench largeChiselWorkbench = new LargeChiselWorkbench();
+
     public static class LargeArchitectWorkbench {
 
         @Config.Name("EU/t Percentage")
@@ -43,6 +46,30 @@ public final class TJAConfig {
 
         @Config.Name("Slice Limit")
         @Config.Comment("Adjust the maximum number of slices the Large Architect Workbench can have")
+        @Config.RequiresMcRestart
+        public int maximumSlices = 64;
+    }
+
+    public static class LargeChiselWorkbench {
+
+        @Config.Name("EU/t Percentage")
+        @Config.RequiresMcRestart
+        public int eutPercentage = 90;
+
+        @Config.Name("Duration Percentage")
+        @Config.RequiresMcRestart
+        public int durationPercentage = 80;
+
+        @Config.Name("Chance Percentage")
+        @Config.RequiresMcRestart
+        public int chancePercentage = 100;
+
+        @Config.Name("Stack Size")
+        @Config.RequiresMcRestart
+        public int stack = 16;
+
+        @Config.Name("Slice Limit")
+        @Config.Comment("Adjust the maximum number of slices the Large Chisel Workbench can have")
         @Config.RequiresMcRestart
         public int maximumSlices = 64;
     }
