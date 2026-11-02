@@ -63,9 +63,9 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
 
     @Override
     protected boolean completeRecipe() {
+        final boolean voidingMode = this.handler.getVoidingModeInt() == 1 || this.handler.getVoidingModeInt() == 3;
         for (int i = this.outputIndex; i < this.itemOutputs.size(); i++) {
             final ItemStack stack = this.itemOutputs.get(i);
-            final boolean voidingMode = this.handler.getVoidingModeInt() == 1 || this.handler.getVoidingModeInt() == 3;
             if (voidingMode || TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, true).isEmpty()) {
                 TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, false);
                 this.outputIndex++;

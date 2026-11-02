@@ -22,9 +22,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import tja.blocks.BlockTieredGlass;
+import tja.blocks.TJAMetaBlocks;
 import tja.capability.handler.IMachineHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -183,5 +186,20 @@ public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayB
                     holder.getMetaTileEntity().onPlacement();
                     return new BlockInfo(tileEntity.getBlock().getDefaultState(), holder);
                 }).toArray(BlockInfo[]::new));
+    }
+
+    public static TraceabilityPredicate glassPredicate() {
+        return new TraceabilityPredicate(blockWorldState -> {
+            if (blockWorldState.getBlockState().getBlock() instanceof BlockTieredGlass) {
+                final BlockTieredGlass.CasingType casingType = TJAMetaBlocks.TIERED_GLASS.getState(blockWorldState.getBlockState());
+                final List<BlockTieredGlass.CasingType> casingTypeList = blockWorldState.getMatchContext().getOrCreate("tiered_glass", ArrayList::new);
+                casingTypeList.add(casingType);
+                return casingTypeList.get(0).getName().equals(casingType.getName());
+            }
+            return false;
+        }, () -> Arrays.stream(BlockTieredGlass.CasingType.values())
+                .map(TJAMetaBlocks.TIERED_GLASS::getState)
+                .map(BlockInfo::new)
+                .toArray(BlockInfo[]::new));
     }
 }

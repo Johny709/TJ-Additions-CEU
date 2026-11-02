@@ -112,6 +112,26 @@ public class GTRecipes {
                 'R', robotArms[5].getStackForm(),
                 'B', conveyors[5].getStackForm(),
                 'S', TJAMetaTileEntities.CHISEL_WORKBENCHES.get(5).getStackForm());
+        // large enchanter
+        RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                .input(MetaTileEntities.HULL[8])
+                .input(OrePrefix.plate, Materials.Diamond, 50)
+                .input(OrePrefix.plate, Materials.Lapis, 60)
+                .input(OrePrefix.circuit, circuitTiers[9], 10)
+                .input(OrePrefix.screw, Materials.Tritanium, 64)
+                .input(OrePrefix.gear, Materials.Dubnium, 10)
+                .input(OrePrefix.cableGtSingle, Materials.NaquadahAlloy, 16)
+                .input(MetaItems.ELECTRIC_PUMP_UV, 8)
+                .input(MetaItems.ELECTRIC_MOTOR_UV, 4)
+                .input(MetaItems.EMITTER_UV, 4)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(4608), Materials.Naquadria.getFluid(61140),
+                        Materials.Lubricant.getFluid(16000))
+                .output(TJAMetaTileEntities.LARGE_ENCHANTER)
+                .stationResearch(stationRecipeBuilder -> stationRecipeBuilder.EUt(GTValues.VAOC[9])
+                        .CWUt(128, 512000)
+                        .researchStack(TJAMetaTileEntities.ENCHANTERS.get(8).getStackForm()))
+                .EUt(GTValues.VAOC[8]).duration(600)
+                .buildAndRegister();
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);

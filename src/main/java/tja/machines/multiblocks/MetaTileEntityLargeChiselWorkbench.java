@@ -61,7 +61,7 @@ public class MetaTileEntityLargeChiselWorkbench extends ExtendableMultiblockCont
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(I18n.format("tja.multiblock.parallel_tier", this.getMaxParallel()));
+        tooltip.add(I18n.format("tja.multiblock.parallel_tier", TJAConfig.largeChiselWorkbench.stack));
         tooltip.add(I18n.format("tja.multiblock.large_chisel_workbench.description"));
     }
 
