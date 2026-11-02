@@ -25,8 +25,10 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.mui.widget.GhostCircuitSlotWidget;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -126,6 +128,11 @@ public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEnti
         TJATextures.CHISEL.renderSided(this.frontFacing.getOpposite(), renderState, translation, pipeline);
         TJATextures.CHISEL.renderSided(EnumFacingHelper.getLeftFacingFrom(this.frontFacing), renderState, translation, pipeline);
         TJATextures.CHISEL.renderSided(EnumFacingHelper.getRightFacingFrom(this.frontFacing), renderState, translation, pipeline);
+        Textures.PIPE_OUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputItems())
+            Textures.ITEM_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputFluids())
+            Textures.FLUID_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
     }
 
     @Override
@@ -155,5 +162,26 @@ public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEnti
     @Override
     public int getParallel() {
         return this.parallel;
+    }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return this.workableHandler.isWorkingEnabled();
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {
+        this.workableHandler.setWorkingEnabled(b);
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.workableHandler.isActive();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public SoundEvent getSound() {
+        return GTSoundEvents.CUT;
     }
 }

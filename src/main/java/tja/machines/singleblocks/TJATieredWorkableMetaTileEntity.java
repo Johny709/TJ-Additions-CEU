@@ -28,7 +28,10 @@ import java.util.List;
 /**
  * Serves as a basis to implement your own recipe or workable handler for single blocks.
  */
-public abstract class TJATieredWorkableMetaTileEntity extends TJATieredMetaTileEntity implements IActiveOutputSide, IMachineHandler, IJEIRecipeUID {
+public abstract class TJATieredWorkableMetaTileEntity extends TJATieredMetaTileEntity implements IActiveOutputSide,
+        IMachineHandler,
+        IJEIRecipeUID,
+        IControllable {
 
     protected final ItemStackHandler chargerInventory;
     private EnumFacing outputFacing = this.getInitialFacing();
@@ -59,7 +62,8 @@ public abstract class TJATieredWorkableMetaTileEntity extends TJATieredMetaTileE
     public void update() {
         super.update();
         if (!this.getWorld().isRemote) {
-            final IElectricItem chargerContainer = this.chargerInventory.getStackInSlot(0).getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
+            final IElectricItem chargerContainer = this.chargerInventory.getStackInSlot(0)
+                    .getCapability(GregtechCapabilities.CAPABILITY_ELECTRIC_ITEM, null);
             if (chargerContainer != null && this.energyContainer.getEnergyStored() >= this.getMaxVoltage()) {
                 this.energyContainer.removeEnergy(chargerContainer.charge(this.getMaxVoltage(), 1, true, false));
             }

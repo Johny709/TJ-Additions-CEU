@@ -24,7 +24,9 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -117,6 +119,11 @@ public class MetaTileEntityNamingMachine extends TJATieredWorkableMetaTileEntity
                 this.workableHandler.isWorkingEnabled());
         TJATextures.NAME_TAG.renderSided(EnumFacingHelper.getLeftFacingFrom(this.getFrontFacing()), renderState, translation, pipeline);
         TJATextures.NAME_TAG.renderSided(EnumFacingHelper.getRightFacingFrom(this.getFrontFacing()), renderState, translation, pipeline);
+        Textures.PIPE_OUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputItems())
+            Textures.ITEM_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputFluids())
+            Textures.FLUID_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
     }
 
     public void setName(@Nonnull String name) {
@@ -133,5 +140,26 @@ public class MetaTileEntityNamingMachine extends TJATieredWorkableMetaTileEntity
     @Override
     public int getParallel() {
         return this.parallel;
+    }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return this.workableHandler.isWorkingEnabled();
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {
+        this.workableHandler.setWorkingEnabled(b);
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.workableHandler.isActive();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public SoundEvent getSound() {
+        return GTSoundEvents.ASSEMBLER;
     }
 }

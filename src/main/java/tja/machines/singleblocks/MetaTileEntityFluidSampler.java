@@ -20,7 +20,10 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.MetaTileEntityGuiData;
+import gregtech.client.renderer.texture.Textures;
+import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -61,13 +64,6 @@ public class MetaTileEntityFluidSampler extends TJATieredWorkableMetaTileEntity 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
-        super.renderMetaTileEntity(renderState, translation, pipeline);
-        TJATextures.PRINTER_OVERLAY.render(renderState, translation, pipeline, this.frontFacing, this.workableHandler.isActive());
-    }
-
-    @Override
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("progress", new DoubleSyncValue(() -> this.workableHandler.getProgress() == 0 ? 0 :
                 1.0 * this.workableHandler.getProgress() / this.workableHandler.getMaxProgress()));
@@ -101,7 +97,35 @@ public class MetaTileEntityFluidSampler extends TJATieredWorkableMetaTileEntity 
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
+        super.renderMetaTileEntity(renderState, translation, pipeline);
+        TJATextures.PRINTER_OVERLAY.render(renderState, translation, pipeline, this.frontFacing, this.workableHandler.isActive());
+        Textures.PIPE_OUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputItems())
+            Textures.ITEM_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+        if (this.isAutoOutputFluids())
+            Textures.FLUID_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
+    }
+
+    @Override
+    public boolean isWorkingEnabled() {
+        return this.workableHandler.isWorkingEnabled();
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean b) {
+        this.workableHandler.setWorkingEnabled(b);
+    }
+
+    @Override
     public boolean isActive() {
         return this.workableHandler.isActive();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public SoundEvent getSound() {
+        return GTSoundEvents.DRILL_TOOL;
     }
 }
