@@ -22,6 +22,7 @@ public class ChiselWorkbenchWorkableHandler extends AbstractWorkableHandler<IMac
 
     private final List<ItemStack> itemInputs = new ArrayList<>();
     private final List<ItemStack> itemOutputs = new ArrayList<>();
+    private int parallelsPerformed;
     private int circuitNumber;
     private int outputIndex;
     private boolean foundRecipe;
@@ -58,7 +59,7 @@ public class ChiselWorkbenchWorkableHandler extends AbstractWorkableHandler<IMac
             this.findAndConsumeInputs(itemInputs, false);
             this.maxProgress = this.calculateOverclock(30, 200, 2);
             if (!this.handler.hasFreeParallels())
-                this.energyPerTick *= this.handler.getParallel();
+                this.energyPerTick *= this.parallelsPerformed;
             return true;
         } else return false;
     }
@@ -95,7 +96,9 @@ public class ChiselWorkbenchWorkableHandler extends AbstractWorkableHandler<IMac
     }
 
     private boolean findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
+        this.parallelsPerformed = 0;
         int availableParallels = this.handler.getParallel();
+        final int maxParallels = availableParallels;
         for (int i = 0; i < itemInputs.getSlots() && availableParallels > 0; i++) {
             final ItemStack stack = itemInputs.getStackInSlot(i);
             if (stack.isEmpty() || this.isCircuitStack(stack.getTagCompound())) continue;
@@ -113,11 +116,12 @@ public class ChiselWorkbenchWorkableHandler extends AbstractWorkableHandler<IMac
                         output.setCount(inputCount);
                         this.itemInputs.add(input);
                         this.itemOutputs.add(output);
+                        this.parallelsPerformed += inputCount;
                     }
                 }
             }
         }
-        return availableParallels != this.handler.getParallel();
+        return availableParallels != maxParallels;
     }
 
     private boolean isCircuitStack(NBTTagCompound compound) {

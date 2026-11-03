@@ -21,6 +21,7 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
     private final List<ItemStack> itemOutputs = new ArrayList<>();
     @Nonnull
     private ItemStack catalyst = ItemStack.EMPTY;
+    private int parallelsPeformed;
     private int catalystIndex;
     private int outputIndex;
     private boolean voiding;
@@ -58,7 +59,7 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
             this.findAndConsumeInputs(itemInputs, false);
             this.setMaxProgress(this.calculateOverclock(30L, 50, 2.8F));
             if (!this.handler.hasFreeParallels())
-                this.energyPerTick *= this.handler.getParallel();
+                this.energyPerTick *= this.parallelsPeformed;
             return true;
         } else return false;
     }
@@ -95,7 +96,9 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
     }
 
     private boolean findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
+        this.parallelsPeformed = 0;
         int availableParallels = this.handler.getParallel();
+        final int maxParallels = availableParallels;
         for (int i = 0; i < itemInputs.getSlots() && availableParallels > 0; i++) {
             if (i == this.catalystIndex) continue;
             final ItemStack stack = itemInputs.extractItem(i, availableParallels, simulate);
@@ -106,9 +109,10 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
                 this.itemInputs.add(output);
                 output.setStackDisplayName(this.catalyst.isEmpty() ? this.handler.getName() : this.catalyst.getDisplayName());
                 this.itemOutputs.add(output);
+                this.parallelsPeformed += stack.getCount();
             }
         }
-        return availableParallels != this.handler.getParallel();
+        return availableParallels != maxParallels;
     }
 
     @Nonnull

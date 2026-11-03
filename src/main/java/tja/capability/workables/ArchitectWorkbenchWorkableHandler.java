@@ -23,6 +23,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
 
     @Nonnull
     private ItemStack catalyst = ItemStack.EMPTY;
+    private int parallelsPerformed;
     private int outputIndex;
     private boolean foundRecipe;
 
@@ -58,7 +59,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
             this.findAndConsumeInputs(itemInputs, false);
             this.maxProgress = this.calculateOverclock(30, 200, 2);
             if (!this.handler.hasFreeParallels())
-                this.energyPerTick *= this.handler.getParallel();
+                this.energyPerTick *= this.parallelsPerformed;
             return true;
         } else return false;
     }
@@ -93,7 +94,9 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
     }
 
     private boolean findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
+        this.parallelsPerformed = 0;
         int availableParallels = this.handler.getParallel();
+        final int maxParallels = availableParallels;
         for (int i = 0; i < itemInputs.getSlots() && availableParallels > 0; i++) {
             final ItemStack stack = itemInputs.getStackInSlot(i);
             if (stack.isEmpty() || this.isArchitectureStack(stack.getTagCompound())) continue;
@@ -108,9 +111,10 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
                 output.setTagCompound(compound);
                 this.itemInputs.add(input);
                 this.itemOutputs.add(output);
+                this.parallelsPerformed += inputCount;
             }
         }
-        return availableParallels != this.handler.getParallel();
+        return availableParallels != maxParallels;
     }
 
     private boolean isArchitectureStack(NBTTagCompound tagCompound) {

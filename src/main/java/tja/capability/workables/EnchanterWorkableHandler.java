@@ -24,6 +24,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
     private final List<ItemStack> itemOutputs = new ArrayList<>();
     private final List<FluidStack> fluidInputs = new ArrayList<>();
     private ItemStack catalyst;
+    private int parallelsPerformed;
     private int catalystIndex;
     private int outputIndex;
     private int experience;
@@ -64,7 +65,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
                 this.handler.getImportFluidTank().drain(fluid, true);
                 this.maxProgress = this.calculateOverclock(30, 2000, 2);
                 if (!this.handler.hasFreeParallels())
-                    this.energyPerTick *= this.handler.getParallel();
+                    this.energyPerTick *= this.parallelsPerformed;
                 return true;
             } else return false;
         } else return false;
@@ -104,6 +105,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
 
     private boolean findAndConsumeInputs(IItemHandlerModifiable itemInputs, boolean simulate) {
         int applied = 0;
+        final int maxParallel = this.handler.getParallel();
         for (int i = 0; i < itemInputs.getSlots(); i++) {
             final ItemStack stack = itemInputs.getStackInSlot(i);
             ItemStack catalystStack = null;
@@ -114,6 +116,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
                     this.itemInputs.add(stack.copy());
                     this.itemInputs.add(catalystStack.copy());
                     this.catalyst.shrink(1);
+                    this.parallelsPerformed++;
                 }
                 applied += this.applyEnchantments(catalystStack, i, simulate);
             }
@@ -121,6 +124,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
                 catalystStack = this.setBookOrEnchantedBook(catalystStack);
                 this.itemOutputs.add(catalystStack);
             }
+            if (this.parallelsPerformed >= maxParallel) break;
         }
         this.experience = applied * 1000;
         return this.experience > 0;
