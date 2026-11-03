@@ -3,7 +3,8 @@ package tja.machines.multiblocks;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
+import gregicality.multiblocks.api.capability.IParallelHatch;
+import gregicality.multiblocks.api.metatileentity.GCYMMultiblockAbility;
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -20,6 +21,7 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -40,7 +42,6 @@ import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static gregtech.api.util.RelativeDirection.*;
@@ -48,7 +49,6 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
 
     private final EnchanterWorkableHandler workableHandler = new EnchanterWorkableHandler(this);
-    private int parallel;
 
     public MetaTileEntityLargeEnchanter(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -64,7 +64,9 @@ public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
     public void addInformation(ItemStack stack, @Nullable World player, @Nonnull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("tja.multiblock.large_enchanter.level.max", TJAValues.thousandFormat.format(this.getTier())));
-        tooltip.add(I18n.format("tja.multiblock.parallel_tier", TJAConfig.largeEnchanter.stack));
+        if (TJAValues.isModLoaded(TJAValues.GCYM_MOD_ID)) {
+            tooltip.add(I18n.format("tja.multiblock.parallel_hatch.eut"));
+        } else tooltip.add(I18n.format("tja.multiblock.parallel_tier", TJAConfig.largeEnchanter.stack));
     }
 
     @Override
@@ -91,7 +93,8 @@ public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
                 .where('X', states(this.getCasingState()).setMinGlobalLimited(64)
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS))
                         .or(abilities(MultiblockAbility.INPUT_ENERGY, MultiblockAbility.INPUT_LASER).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.MAINTENANCE_HATCH).setExactLimit(1)))
+                        .or(abilities(MultiblockAbility.MAINTENANCE_HATCH).setExactLimit(1))
+                        .or(parallelHatchPredicate()))
                 .where('G', glassPredicate())
                 .where('V', tieredHatchPredicate())
                 .where('O', blocks(Blocks.OBSIDIAN))
@@ -104,13 +107,12 @@ public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        final int tier = context.getOrDefault("tiered_hatches", new ArrayList<MetaTileEntityTieredHatch>()).get(0).getTier();
+        final int tier = context.getOrDefault("hatch_tier", new IntArrayList()).getInt(0);
         if (tier >= GTValues.MAX) {
             this.maxVoltage = this.inputEnergyContainer.getInputVoltage();
             this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
         } else this.maxVoltage = 8L << tier * 2;
         this.tier = TJAUtility.getTierByVoltage(this.maxVoltage);
-        this.parallel = TJAConfig.largeArchitectWorkbench.stack * tier;
         this.workableHandler.initialize(this.getAbilities(MultiblockAbility.IMPORT_ITEMS).size());
     }
 
@@ -136,6 +138,7 @@ public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addEnergyUsageLine(this.inputEnergyContainer)
                 .addEnergyTierLine(this.tier)
+                .addParallelsLine(this.getParallel())
                 .addCustom((key, syncer) -> {
                     if (!this.isStructureFormed()) return;
                     final long energyPerTick = syncer.syncLong(this.workableHandler.getEnergyPerTick());
@@ -161,7 +164,15 @@ public class MetaTileEntityLargeEnchanter extends TJAMultiblockControllerBase {
 
     @Override
     public int getParallel() {
-        return this.parallel;
+        if (TJAValues.isModLoaded(TJAValues.GCYM_MOD_ID)) {
+            final List<IParallelHatch> parallelHatches = this.getAbilities(GCYMMultiblockAbility.PARALLEL_HATCH);
+            return parallelHatches != null && !parallelHatches.isEmpty() ? parallelHatches.get(0).getCurrentParallel() : 1;
+        } else return TJAConfig.largeArchitectWorkbench.stack * tier;
+    }
+
+    @Override
+    public boolean hasFreeParallels() {
+        return false;
     }
 
     @Override

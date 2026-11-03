@@ -57,6 +57,10 @@ public interface IMachineHandler {
         return 0;
     }
 
+    default boolean hasFreeParallels() {
+        return true;
+    }
+
     default int getNumMaintenanceProblems() {
         return 0;
     }

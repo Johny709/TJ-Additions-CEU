@@ -17,11 +17,15 @@ import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.util.BlockInfo;
+import gregtech.common.metatileentities.MetaTileEntities;
+import gregtech.common.metatileentities.electric.MetaTileEntityHull;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import tja.TJAValues;
 import tja.blocks.BlockTieredGlass;
 import tja.blocks.TJAMetaBlocks;
 import tja.capability.handler.IMachineHandler;
@@ -170,22 +174,35 @@ public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayB
         return new TraceabilityPredicate(blockWorldState -> {
             if (blockWorldState.getTileEntity() instanceof MetaTileEntityHolder) {
                 final MetaTileEntityHolder holder = (MetaTileEntityHolder) blockWorldState.getTileEntity();
-                final MetaTileEntity tileEntity = holder.getMetaTileEntity();
-                if (tileEntity instanceof MetaTileEntityTieredHatch) {
-                    final MetaTileEntityTieredHatch tieredHatch = (MetaTileEntityTieredHatch) tileEntity;
-                    final List<MetaTileEntityTieredHatch> tieredHatches = blockWorldState.getMatchContext().getOrCreate("tiered_hatches", ArrayList::new);
-                    tieredHatches.add(tieredHatch);
-                    return tieredHatches.get(0).getTier() == tieredHatch.getTier();
+                final MetaTileEntity metaTileEntity = holder.getMetaTileEntity();
+                if (TJAValues.isModLoaded(TJAValues.GCYM_MOD_ID)) {
+                    if (metaTileEntity instanceof MetaTileEntityTieredHatch) {
+                        final MetaTileEntityTieredHatch tieredHatch = (MetaTileEntityTieredHatch) metaTileEntity;
+                        final IntArrayList tieredHatches = blockWorldState.getMatchContext().getOrCreate("hatch_tier", IntArrayList::new);
+                        tieredHatches.add(tieredHatch.getTier());
+                        return tieredHatches.getInt(0) == tieredHatch.getTier();
+                    }
+                } else if (metaTileEntity instanceof MetaTileEntityHull) {
+                    final MetaTileEntityHull hull = (MetaTileEntityHull) metaTileEntity;
+                    final IntArrayList tieredHatches = blockWorldState.getMatchContext().getOrCreate("hatch_tier", IntArrayList::new);
+                    tieredHatches.add(hull.getTier());
+                    return tieredHatches.getInt(0) == hull.getTier();
                 }
             }
             return false;
-        }, () -> MultiblockAbility.REGISTRY.get(GCYMMultiblockAbility.TIERED_HATCH).stream()
-                .map(tileEntity -> {
-                    final MetaTileEntityHolder holder = new MetaTileEntityHolder();
-                    holder.setMetaTileEntity(tileEntity);
-                    holder.getMetaTileEntity().onPlacement();
-                    return new BlockInfo(tileEntity.getBlock().getDefaultState(), holder);
-                }).toArray(BlockInfo[]::new));
+        }, TJAValues.isModLoaded(TJAValues.GCYM_MOD_ID) ?
+                () -> MultiblockAbility.REGISTRY.get(GCYMMultiblockAbility.TIERED_HATCH).stream()
+                .map(TJAMultiblockControllerBase::mapMTEToBlockInfo).toArray(BlockInfo[]::new) :
+                () -> Arrays.stream(MetaTileEntities.HULL)
+                        .map(TJAMultiblockControllerBase::mapMTEToBlockInfo)
+                        .toArray(BlockInfo[]::new));
+    }
+
+    private static BlockInfo mapMTEToBlockInfo(MetaTileEntity metaTileEntity) {
+        final MetaTileEntityHolder holder = new MetaTileEntityHolder();
+        holder.setMetaTileEntity(metaTileEntity);
+        holder.getMetaTileEntity().onPlacement();
+        return new BlockInfo(metaTileEntity.getBlock().getDefaultState(), holder);
     }
 
     public static TraceabilityPredicate glassPredicate() {
@@ -201,5 +218,9 @@ public abstract class TJAMultiblockControllerBase extends MultiblockWithDisplayB
                 .map(TJAMetaBlocks.TIERED_GLASS::getState)
                 .map(BlockInfo::new)
                 .toArray(BlockInfo[]::new));
+    }
+
+    public static TraceabilityPredicate parallelHatchPredicate() {
+        return TJAValues.isModLoaded(TJAValues.GCYM_MOD_ID) ? abilities(GCYMMultiblockAbility.PARALLEL_HATCH).setMaxGlobalLimited(1) : abilities();
     }
 }

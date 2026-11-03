@@ -23,6 +23,7 @@ import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.core.sound.GTSoundEvents;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -97,7 +98,7 @@ public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase imp
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        final int tier = context.getOrDefault("tiered_hatches", new ArrayList<MetaTileEntityTieredHatch>()).get(0).getTier();
+        final int tier = context.getOrDefault("hatch_tier", new IntArrayList()).getInt(0);
         if (tier >= GTValues.MAX) {
             this.maxVoltage = this.inputEnergyContainer.getInputVoltage();
             this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;

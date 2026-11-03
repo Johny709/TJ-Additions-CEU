@@ -32,6 +32,9 @@ public final class TJAConfig {
     @Config.Comment("Large Naming Machine")
     public static LargeNamingMachine largeNamingMachine = new LargeNamingMachine();
 
+    @Config.Comment("Large Naming Machine")
+    public static LargeNSuperFisher largeSuperFisher = new LargeNSuperFisher();
+
     public static class LargeArchitectWorkbench {
 
         @Config.Name("EU/t Percentage")
@@ -100,6 +103,24 @@ public final class TJAConfig {
     }
 
     public static class LargeNamingMachine {
+        @Config.Name("EU/t Percentage")
+        @Config.RequiresMcRestart
+        public int eutPercentage = 90;
+
+        @Config.Name("Duration Percentage")
+        @Config.RequiresMcRestart
+        public int durationPercentage = 80;
+
+        @Config.Name("Chance Percentage")
+        @Config.RequiresMcRestart
+        public int chancePercentage = 100;
+
+        @Config.Name("Stack Size")
+        @Config.RequiresMcRestart
+        public int stack = 16;
+    }
+
+    public static class LargeNSuperFisher {
         @Config.Name("EU/t Percentage")
         @Config.RequiresMcRestart
         public int eutPercentage = 90;

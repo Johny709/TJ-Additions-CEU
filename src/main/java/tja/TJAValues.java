@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class TJAValues {
 
     public static final String GREGTECH_MOD_ID = "gregtech";
+    public static final String GCYM_MOD_ID = "gcym";
     public static final String AE2_MOD_ID = "appliedenergistics2";
     public static final String GCYL_MOD_ID = "gcyl";
     public static final String THEONEPROBE_MOD_ID = "theoneprobe";

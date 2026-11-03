@@ -57,6 +57,8 @@ public class ChiselWorkbenchWorkableHandler extends AbstractWorkableHandler<IMac
         if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
             this.findAndConsumeInputs(itemInputs, false);
             this.maxProgress = this.calculateOverclock(30, 200, 2);
+            if (!this.handler.hasFreeParallels())
+                this.energyPerTick *= this.handler.getParallel();
             return true;
         } else return false;
     }

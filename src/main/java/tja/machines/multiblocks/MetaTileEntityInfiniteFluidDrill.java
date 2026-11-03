@@ -5,7 +5,6 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import gregicality.multiblocks.common.metatileentities.multiblockpart.MetaTileEntityTieredHatch;
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -25,6 +24,7 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +42,6 @@ import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -92,7 +91,7 @@ public class MetaTileEntityInfiniteFluidDrill extends TJAMultiblockControllerBas
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        final int tier = context.getOrDefault("tiered_hatches", new ArrayList<MetaTileEntityTieredHatch>()).get(0).getTier();
+        final int tier = context.getOrDefault("hatch_tier", new IntArrayList()).getInt(0);
         if (tier >= GTValues.MAX) {
             this.maxVoltage = this.inputEnergyContainer.getInputVoltage();
             this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
