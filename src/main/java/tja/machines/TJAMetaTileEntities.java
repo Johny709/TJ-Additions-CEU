@@ -36,6 +36,7 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity LARGE_ENCHANTER = MetaTileEntities.registerMetaTileEntity(14, new MetaTileEntityLargeEnchanter(resource("large_enchanter")));
     public static final MetaTileEntity LARGE_NAMING_MACHINE = MetaTileEntities.registerMetaTileEntity(15, new MetaTileEntityLargeNamingMachine(resource("large_naming_machine")));
     public static final MetaTileEntity LARGE_SUPER_FISHER = MetaTileEntities.registerMetaTileEntity(16, new MetaTileEntityLargeSuperFisher(resource("large_super_fisher")));
+    public static final MetaTileEntity LARGE_CRAFTER = MetaTileEntities.registerMetaTileEntity(17, new MetaTileEntityLargeCrafter(resource("large_crafter")));
 
     public static final MetaTileEntity COMPRESSED_CHEST = MetaTileEntities.registerMetaTileEntity(2000, new MetaTileEntityCompressedChest(resource("compressed_chest"), false));
     public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));

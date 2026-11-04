@@ -97,4 +97,9 @@ public abstract class TJATieredMetaTileEntity extends TieredMetaTileEntity imple
     public long getMaxVoltage() {
         return GTValues.VOC[this.getTier()];
     }
+
+    @Override
+    public int getTier() {
+        return super.getTier();
+    }
 }

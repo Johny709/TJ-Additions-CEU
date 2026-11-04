@@ -32,8 +32,11 @@ public final class TJAConfig {
     @Config.Comment("Large Naming Machine")
     public static LargeNamingMachine largeNamingMachine = new LargeNamingMachine();
 
-    @Config.Comment("Large Naming Machine")
-    public static LargeNSuperFisher largeSuperFisher = new LargeNSuperFisher();
+    @Config.Comment("Large Super Fisher")
+    public static LargeSuperFisher largeSuperFisher = new LargeSuperFisher();
+
+    @Config.Comment("Large Crafter")
+    public static LargeCrafter largeCrafter = new LargeCrafter();
 
     public static class LargeArchitectWorkbench {
 
@@ -120,7 +123,25 @@ public final class TJAConfig {
         public int stack = 16;
     }
 
-    public static class LargeNSuperFisher {
+    public static class LargeSuperFisher {
+        @Config.Name("EU/t Percentage")
+        @Config.RequiresMcRestart
+        public int eutPercentage = 90;
+
+        @Config.Name("Duration Percentage")
+        @Config.RequiresMcRestart
+        public int durationPercentage = 80;
+
+        @Config.Name("Chance Percentage")
+        @Config.RequiresMcRestart
+        public int chancePercentage = 100;
+
+        @Config.Name("Stack Size")
+        @Config.RequiresMcRestart
+        public int stack = 16;
+    }
+
+    public static class LargeCrafter {
         @Config.Name("EU/t Percentage")
         @Config.RequiresMcRestart
         public int eutPercentage = 90;

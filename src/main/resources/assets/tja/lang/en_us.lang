@@ -145,6 +145,7 @@ tja.machine.large_chisel_workbench.name=Large Chisel Workbench (LCW)
 tja.machine.large_enchanter.name=Large Enchanter (LE)
 tja.machine.large_naming_machine.name=Large Naming Machine (LNM)
 tja.machine.large_super_fisher.name=Large Super Fisher (LSF)
+tja.machine.large_crafter.name=Large Crafter (LC)
 
 tja.machine.fluid_sampler.yield=Yield: %,d
 
@@ -293,6 +294,7 @@ tile.solid_casing.adamantium.name=Adamantium Casing
 tile.solid_casing.neutronium.name=Neutronium Casing
 tile.solid_casing.chaosalloy.name=Chaos Alloy Casing
 tile.solid_casing.assembler.name=Assembler Casing
+tile.solid_casing.assembling_casing.name=Large Assembler Casing
 tile.cell_battery.lv.name=LV Power Cell
 tile.cell_battery.mv.name=MV Power Cell
 tile.cell_battery.hv.name=HV Power Cell

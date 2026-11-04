@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all"
+  },
+  "variants": {
+    "variant": {
+      "assembling_casing": {
+        "textures": {
+          "all": "tja:blocks/casings/solid/assembling_casing"
+        }
+      }
+    }
+  }
+}

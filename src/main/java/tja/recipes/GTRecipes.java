@@ -149,6 +149,30 @@ public class GTRecipes {
                 'H', TJAMetaTileEntities.SUPER_FISHERS.get(6).getStackForm(),
                 'M', motors[6].getStackForm(),
                 'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[6]));
+        // large crafter
+        RecipeMaps.ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                .input(OrePrefix.screw, Materials.Naquadah, 64)
+                .input(OrePrefix.screw, Materials.HSSS, 64)
+                .input(OrePrefix.plate, Materials.RhodiumPlatedPalladium, 48)
+                .input(OrePrefix.plate, Materials.Osmiridium, 48)
+                .input(OrePrefix.circuit, circuitTiers[8], 24)
+                .input(OrePrefix.gear, Materials.HSSE, 16)
+                .input(OrePrefix.gear, Materials.HSSG, 16)
+                .input(TJAMetaTileEntities.CRAFTERS.get(7), 16)
+                .inputs(new ItemStack(Blocks.CRAFTING_TABLE, 64))
+                .input(MetaItems.ELECTRIC_PISTON_ZPM, 8)
+                .input(MetaItems.CONVEYOR_MODULE_ZPM, 8)
+                .input(MetaItems.ROBOT_ARM_ZPM, 8)
+                .input(MetaItems.SENSOR_ZPM, 8)
+                .input(MetaItems.EMITTER_ZPM, 8)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(4608))
+                .fluidInputs(Materials.Lubricant.getFluid(16000))
+                .output(TJAMetaTileEntities.LARGE_CRAFTER)
+                .stationResearch(stationRecipeBuilder -> stationRecipeBuilder.EUt(GTValues.VAOC[7])
+                        .CWUt(32, 1024000)
+                        .researchStack(TJAMetaTileEntities.CRAFTERS.get(7)))
+                .EUt(GTValues.VAOC[7]).duration(2000)
+                .buildAndRegister();
         // mega boilers
         for (int i = 0; i <TJAMetaTileEntities.MEGA_BOILERS.size(); i++) {
             MetaTileEntity largeBoiler = TJAMetaTileEntities.LARGE_BOILERS.get(i);

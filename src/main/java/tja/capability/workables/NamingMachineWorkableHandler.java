@@ -24,7 +24,6 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
     private int parallelsPeformed;
     private int catalystIndex;
     private int outputIndex;
-    private boolean voiding;
     private boolean foundRecipe;
 
     public NamingMachineWorkableHandler(MetaTileEntity metaTileEntity) {
@@ -127,7 +126,6 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
         compound.setTag("itemInputs", itemInputList);
         compound.setTag("itemOutputs", itemOutputList);
         compound.setInteger("outputIndex", this.outputIndex);
-        compound.setBoolean("voiding", this.voiding);
         return compound;
     }
 
@@ -140,7 +138,6 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
         for (int i = 0; i < itemOutputList.tagCount(); i++)
             this.itemOutputs.add(new ItemStack(itemOutputList.getCompoundTagAt(i)));
         this.outputIndex = compound.getInteger("outputIndex");
-        this.voiding = compound.getBoolean("voiding");
     }
 
     @Override
@@ -158,14 +155,5 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
     @Override
     public List<ItemStack> getItemOutputs() {
         return this.itemOutputs;
-    }
-
-    public void setVoiding(boolean voiding) {
-        this.voiding = voiding;
-        this.metaTileEntity.markDirty();
-    }
-
-    public boolean isVoiding() {
-        return this.voiding;
     }
 }

@@ -36,7 +36,6 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
     private ItemStack[] lastItemInputs;
     private Triple<IRecipe, NonNullList<CountableIngredient>, NonNullList<ItemStack>> currentRecipe;
     private boolean recipeRecheck;
-    private boolean voidOutputs;
     private int outputIndex;
 
     public CrafterRecipeLogic(MetaTileEntity metaTileEntity) {
@@ -81,7 +80,8 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
             itemInputs = this.handler.getImportItemInventory();
             this.currentRecipe = this.trySearchForRecipe(itemInputs);
         }
-        if (this.currentRecipe != null && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
+        System.out.println("Found Recipe: " + (this.currentRecipe != null));
+        if (this.currentRecipe != null && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VAOC[this.handler.getTier()]) {
             final int parallels = this.handler.getParallel();
             int parallelsPerformed = parallels;
             for (CountableIngredient ingredient : this.currentRecipe.getMiddle()) { // calculate and simulate parallels
@@ -106,9 +106,10 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
 
     @Override
     protected boolean completeRecipe() {
+        final boolean voidingMode = this.handler.getVoidingModeInt() == 1 || this.handler.getVoidingModeInt() == 3;
         for (int i = this.outputIndex; i < this.itemOutputs.size(); i++) {
             final ItemStack stack = this.itemOutputs.get(i);
-            if (this.voidOutputs || TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, true).isEmpty()) {
+            if (voidingMode || TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, true).isEmpty()) {
                 TJAItemUtils.insertIntoItemHandler(this.handler.getExportItemInventory(), stack, false);
                 this.outputIndex++;
             } else return false;
@@ -181,7 +182,6 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
         data.setInteger("outputIndex", this.outputIndex);
         data.setTag("inputList", inputList);
         data.setTag("outputList", outputList);
-        data.setBoolean("voidOutputs", this.voidOutputs);
         return data;
     }
 
@@ -193,7 +193,6 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
             this.itemInputs.add(new ItemStack(inputList.getCompoundTagAt(i)));
         for (int i = 0; i < outputList.tagCount(); i++)
             this.itemOutputs.add(new ItemStack(outputList.getCompoundTagAt(i)));
-        this.voidOutputs = data.getBoolean("voidOutputs");
         this.outputIndex = data.getInteger("outputIndex");
     }
 
@@ -220,14 +219,5 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
     @Override
     public List<ItemStack> getItemOutputs() {
         return this.itemOutputs;
-    }
-
-    public void setVoidOutputs(boolean voidOutputs) {
-        this.voidOutputs = voidOutputs;
-        this.metaTileEntity.markDirty();
-    }
-
-    public boolean isVoidOutputs() {
-        return this.voidOutputs;
     }
 }
