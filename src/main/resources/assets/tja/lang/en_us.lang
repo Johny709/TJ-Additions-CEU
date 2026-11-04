@@ -108,6 +108,22 @@ tja.machine.compressed_chest.name=Compressed Chest
 tja.machine.compressed_crate.name=Compressed Crate
 tja.machine.infinity_chest.name=Infinity Chest
 tja.machine.infinity_crate.name=Infinity Crate
+tja.machine.crafter_hatch.ulv.name=Primitive Crafter Hatch
+tja.machine.crafter_hatch.lv.name=Basic Crafter Hatch
+tja.machine.crafter_hatch.mv.name=Advanced Crafter
+tja.machine.crafter_hatch.hv.name=Advanced Crafter II
+tja.machine.crafter_hatch.ev.name=Advanced Crafter III
+tja.machine.crafter_hatch.iv.name=Elite Crafter Hatch
+tja.machine.crafter_hatch.luv.name=Elite Crafter Hatch II
+tja.machine.crafter_hatch.zpm.name=Elite Crafter Hatch III
+tja.machine.crafter_hatch.uv.name=Ultimate Crafter Hatch
+tja.machine.crafter_hatch.uhv.name=Epic Crafter Hatch
+tja.machine.crafter_hatch.uev.name=Epic Crafter Hatch II
+tja.machine.crafter_hatch.uiv.name=Epic Crafter Hatch III
+tja.machine.crafter_hatch.uxv.name=Epic Crafter Hatch IV
+tja.machine.crafter_hatch.opv.name=Legendary Crafter Hatch
+tja.machine.crafter_hatch.max.name=Max Crafter Hatch
+tja.machine.crafter_hatch.description=To be used in §5Large Crafter Multiblock.
 
 tja.machine.creative_item_bus.name=Creative Item Bus
 tja.machine.creative_fluid_hatch.name=Creative Fluid Hatch
@@ -137,6 +153,8 @@ tja.machine.water_reservoir_hatch.description=Provides up to §b2,147,483,647L/t
 tja.machine.compressed_chest.description=Keeps the items stored inside when broken.
 tja.machine.compressed_chest.slot=Slot: §6%s,§7 Item: §5%s,§7 Count: §6%s
 tja.machine.compressed_chest.slot_filled=Slots Filled: §9%s / %s
+
+tja.machine.crafter.tooltip=§fClick§7 on recipe output slot to §aadd§7 to recipe list on the right. §fLeft-Click§7 on recipe list slot to display ingredients on crafting grid. §fRight-Click§7 to §cremove§7 recipe.
 
 tja.multiblock.mega_bronze_boiler.description=Mega version of §5Large Bronze Boiler.
 tja.multiblock.mega_steel_boiler.description=Mega version of §5Large Steel Boiler.

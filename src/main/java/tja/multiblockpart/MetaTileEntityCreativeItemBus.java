@@ -1,4 +1,4 @@
-package tja.machines.singleblocks;
+package tja.multiblockpart;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;

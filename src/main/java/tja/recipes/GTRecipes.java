@@ -265,6 +265,14 @@ public class GTRecipes {
                     'E', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
                     'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]));
         }
+        // crafter hatch
+        for (int i = 0; i < TJAMetaTileEntities.CRAFTER_HATCHES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("crafter_hatch." + GTValues.VN[i], TJAMetaTileEntities.CRAFTER_HATCHES.get(i).getStackForm(),
+                    "CCC", "CHC", "CCC",
+                    'C', new ItemStack(Blocks.CRAFTING_TABLE),
+                    'H', TJAMetaTileEntities.CRAFTERS.get(i).getStackForm());
+        }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
                 'A', Ingredient.fromStacks(OreDictUnifier.get(OrePrefix.plate, Materials.Iron), OreDictUnifier.get(OrePrefix.plate, Materials.Nickel)),
