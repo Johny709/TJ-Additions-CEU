@@ -69,7 +69,7 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockNotif
 
     @Override
     protected IItemHandlerModifiable createImportItemHandler() {
-        return new GTLargeItemStackHandler(this, this.getController(), false, 16, Integer.MAX_VALUE) {
+        return new GTLargeItemStackHandler(this, 16, Integer.MAX_VALUE,  this.getController(), false) {
             @Nonnull
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {

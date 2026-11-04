@@ -20,6 +20,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -296,6 +297,22 @@ public class GTRecipes {
                     "CCC", "CHC", "CCC",
                     'C', new ItemStack(Blocks.CRAFTING_TABLE),
                     'H', TJAMetaTileEntities.CRAFTERS.get(i).getStackForm());
+        }
+        // farming station
+        for (int i = 0; i < TJAMetaTileEntities.FARMING_STATION.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .circuitMeta(0)
+                    .input(OrePrefix.gear, materials[i], i >= GTValues.ZPM ? 16 : i >= GTValues.EV ? 8 : 4)
+                    .input(OrePrefix.circuit, circuitTiers[i], 4)
+                    .input(Items.DIAMOND_AXE)
+                    .input(Items.DIAMOND_HOE)
+                    .input(Items.SHEARS)
+                    .input(robotArms[i], i >= GTValues.ZPM ? 4 : i >= GTValues.EV ? 2 : 1)
+                    .input(MetaTileEntities.HULL[i])
+                    .output(TJAMetaTileEntities.FARMING_STATION.get(i))
+                    .EUt(GTValues.VA[i]).duration(400)
+                    .buildAndRegister();
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",

@@ -12,7 +12,7 @@ public class GTLargeItemStackHandler extends LargeItemStackHandler implements IN
     private final MetaTileEntity metaTileEntity;
     private final boolean isExport;
 
-    public GTLargeItemStackHandler(MetaTileEntity metaTileEntity, MetaTileEntity entityToNotify, boolean isExport, int slots, int capacity) {
+    public GTLargeItemStackHandler(MetaTileEntity metaTileEntity, int slots, int capacity, MetaTileEntity entityToNotify, boolean isExport) {
         super(slots, capacity);
         this.metaTileEntity = metaTileEntity;
         this.isExport = isExport;
