@@ -23,7 +23,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
 import supercritical.api.unification.material.SCMaterials;
@@ -253,6 +252,18 @@ public class GTRecipes {
                     'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
                     'P', new UnificationEntry(OrePrefix.plate, materials[i]),
                     'H', MetaTileEntities.HULL[i].getStackForm());
+        }
+        // crafter
+        for (int i = 0; i < TJAMetaTileEntities.CRAFTERS.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("crafter." + GTValues.VN[i], TJAMetaTileEntities.CRAFTERS.get(i).getStackForm(),
+                    "CTC", "RSR", "EWE",
+                    'C', conveyors[i].getStackForm(),
+                    'T', new ItemStack(Blocks.CRAFTING_TABLE),
+                    'R', robotArms[i].getStackForm(),
+                    'S', MetaTileEntities.HULL[i].getStackForm(),
+                    'E', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]));
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",

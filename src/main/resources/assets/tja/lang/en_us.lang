@@ -88,6 +88,21 @@ tja.machine.super_fisher.uiv.name=Epic Super Fisher III
 tja.machine.super_fisher.uxv.name=Epic Super Fisher IV
 tja.machine.super_fisher.opv.name=Legendary Super Fisher
 tja.machine.super_fisher.max.name=Max Super Fisher
+tja.machine.crafter.ulv.name=Primitive Crafter
+tja.machine.crafter.lv.name=Basic Crafter
+tja.machine.crafter.mv.name=Advanced Crafter
+tja.machine.crafter.hv.name=Advanced Crafter II
+tja.machine.crafter.ev.name=Advanced Crafter III
+tja.machine.crafter.iv.name=Elite Crafter
+tja.machine.crafter.luv.name=Elite Crafter II
+tja.machine.crafter.zpm.name=Elite Crafter III
+tja.machine.crafter.uv.name=Ultimate Crafter
+tja.machine.crafter.uhv.name=Epic Crafter
+tja.machine.crafter.uev.name=Epic Crafter II
+tja.machine.crafter.uiv.name=Epic Crafter III
+tja.machine.crafter.uxv.name=Epic Crafter IV
+tja.machine.crafter.opv.name=Legendary Crafter
+tja.machine.crafter.max.name=Max Crafter
 
 tja.machine.compressed_chest.name=Compressed Chest
 tja.machine.compressed_crate.name=Compressed Crate
@@ -145,6 +160,11 @@ tja.multiblock.bars.fluid=§7Fluid: (§b%s§7) §b%s / %s L §7(§b%s%%§7)
 tja.multiblock.parallel=Parallel: §5%s
 tja.multiblock.parallel_tier=Parallel per tier: §5%s
 tja.multiblock.parallel_hatch.eut=EU/t Usage: §eParallel Amount * Recipe EU/t
+
+tja.multiblock.large_crafter.description=Automates crafting table recipes.
+tja.multiblock.large_crafter.description.1=Add §5Crafter Hatches§7 to encode recipes.
+tja.multiblock.large_crafter.warning=WARNING: non-consumables in crafting table recipes will get consumed here for now. Some recipes may not work.
+tja.multiblock.large_crafter.slots=Amount of slots for encoding recipes: §b%d
 
 tja.top.progress=Progress:
 tja.top.progress.heat=Heat:

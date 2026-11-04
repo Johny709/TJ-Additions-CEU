@@ -10,6 +10,9 @@ import tja.TJA;
 import tja.TJAValues;
 import tja.machines.multiblocks.*;
 import tja.machines.singleblocks.*;
+import tja.multiblockpart.MetaTileEntityCreativeEnergyHatch;
+import tja.multiblockpart.MetaTileEntityCreativeFluidHatch;
+import tja.multiblockpart.MetaTileEntityCreativeItemBus;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +62,8 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> NAMING_MACHINES = mteList(1060, i -> new MetaTileEntityNamingMachine(resource("naming_machine." + GTValues.VN[i]), i));
     /** occupies id range 1075 - 1089 */
     public static final List<MetaTileEntity> SUPER_FISHERS = mteList(1075, i -> new MetaTileEntitySuperFisher(resource("super_fisher." + GTValues.VN[i]), i));
+    /** occupies id range 1090 - 1104 */
+    public static final List<MetaTileEntity> CRAFTERS = mteList(1090, i -> new MetaTileEntityCrafter(resource("crafter." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization

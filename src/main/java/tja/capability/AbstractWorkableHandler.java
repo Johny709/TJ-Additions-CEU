@@ -27,7 +27,6 @@ public abstract class AbstractWorkableHandler<H extends IMachineHandler> extends
     protected boolean wasActiveAndNeedsUpdate;
     protected boolean isDistinct;
     protected boolean hasProblem;
-    protected boolean isOutputsFull;
     protected long energyPerTick;
     protected int progress;
     protected int maxProgress;

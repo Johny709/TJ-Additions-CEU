@@ -44,6 +44,7 @@ public final class TJATextures {
     public static final TJASimpleOverlayRenderer ENCHANTING_TABLE = new TJASimpleOverlayRenderer("minecraft", "blocks/enchanting_table_top");
     public static final TJASimpleOverlayRenderer NAME_TAG = new TJASimpleOverlayRenderer("minecraft", "items/name_tag");
     public static final TJASimpleOverlayRenderer FISHING_ROD = new TJASimpleOverlayRenderer("minecraft", "items/fishing_rod_uncast");
+    public static final TJASimpleOverlayRenderer CRAFTER = new TJASimpleOverlayRenderer(TJA.MOD_ID, "blocks/overlay/crafter_overlay");
     public static final TJAOrientedOverlayRenderer PRINTER_OVERLAY = new TJAOrientedOverlayRenderer(TJA.MOD_ID, "overlay/printer", TJAOverlayFace.FRONT);
 
     @SideOnly(Side.CLIENT)
