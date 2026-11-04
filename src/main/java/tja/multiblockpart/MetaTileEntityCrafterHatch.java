@@ -11,6 +11,7 @@ import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
+import gregtech.api.capability.INotifiableHandler;
 import gregtech.api.capability.impl.NotifiableItemStackHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -223,13 +224,25 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
     public void addToMultiBlock(MultiblockControllerBase controllerBase) {
         super.addToMultiBlock(controllerBase);
         if (controllerBase instanceof IRecipeMapProvider)
-            this.clearRecipeCache = ((IRecipeMapProvider) currentRecipe)::clearRecipeCache;
+            this.clearRecipeCache = ((IRecipeMapProvider) controllerBase)::clearRecipeCache;
+        if (this.craftingInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.craftingInventory).addNotifiableMetaTileEntity(controllerBase);
+        if (this.resultInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.resultInventory).addNotifiableMetaTileEntity(controllerBase);
+        if (this.encodingInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.encodingInventory).addNotifiableMetaTileEntity(controllerBase);
     }
 
     @Override
     public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
         super.removeFromMultiBlock(controllerBase);
         this.clearRecipeCache = null;
+        if (this.craftingInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.craftingInventory).removeNotifiableMetaTileEntity(controllerBase);
+        if (this.resultInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.resultInventory).removeNotifiableMetaTileEntity(controllerBase);
+        if (this.encodingInventory instanceof INotifiableHandler)
+            ((INotifiableHandler) this.encodingInventory).removeNotifiableMetaTileEntity(controllerBase);
     }
 
     @Override
@@ -244,6 +257,6 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
 
     @Override
     public Int2ObjectMap<Triple<IRecipe, NonNullList<CountableIngredient>, NonNullList<ItemStack>>> getCrafterRecipeMap() {
-        return null;
+        return this.recipeMap;
     }
 }

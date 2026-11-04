@@ -40,6 +40,7 @@ import tja.capability.handler.IRecipeMapProvider;
 import tja.capability.workables.CrafterRecipeLogic;
 import tja.machines.controllers.TJAMultiblockControllerBase;
 import tja.mui.MUIUtils;
+import tja.multiblockpart.TJAMultiblockAbility;
 import tja.recipes.CountableIngredient;
 import tja.textures.TJATextures;
 import tja.util.Color;
@@ -92,9 +93,10 @@ public class MetaTileEntityLargeCrafter extends TJAMultiblockControllerBase impl
                 .where('S', this.selfPredicate())
                 .where('C', states(this.getCasingState()))
                 .where('X', states(this.getCasingState()).setMinGlobalLimited(25)
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS))
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS, TJAMultiblockAbility.CRAFTER_HATCH))
                         .or(abilities(MultiblockAbility.INPUT_ENERGY, MultiblockAbility.INPUT_LASER).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.MAINTENANCE_HATCH).setExactLimit(1)))
+                        .or(abilities(MultiblockAbility.MAINTENANCE_HATCH).setExactLimit(1))
+                        .or(parallelHatchPredicate()))
                 .where('V', tieredHatchPredicate())
                 .where('F', frames(Materials.Osmiridium))
                 .where('G', glassPredicate())
