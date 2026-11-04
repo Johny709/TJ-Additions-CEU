@@ -80,7 +80,6 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
             itemInputs = this.handler.getImportItemInventory();
             this.currentRecipe = this.trySearchForRecipe(itemInputs);
         }
-        System.out.println("Found Recipe: " + (this.currentRecipe != null));
         if (this.currentRecipe != null && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VAOC[this.handler.getTier()]) {
             final int parallels = this.handler.getParallel();
             int parallelsPerformed = parallels;
