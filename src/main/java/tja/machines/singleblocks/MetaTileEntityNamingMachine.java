@@ -88,7 +88,8 @@ public class MetaTileEntityNamingMachine extends TJATieredWorkableMetaTileEntity
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("progress", new DoubleSyncValue(() -> this.workableHandler.getProgress() == 0 ? 0 :
                 1.0 * this.workableHandler.getProgress() / this.workableHandler.getMaxProgress()));
-        syncManager.syncValue("item_input", new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput));
+        final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
+        syncManager.syncValue("item_auto_output", itemAutoOutput);
         syncManager.registerSlotGroup(new SlotGroup("item_input", 2, 1, true));
 
         return ModularPanel.defaultPanel("architect_workbench.gui", 176, 166)
@@ -113,8 +114,10 @@ public class MetaTileEntityNamingMachine extends TJATieredWorkableMetaTileEntity
                         .value(new StringSyncValue(this::getName, this::setName)))
                 .child(new ToggleButton()
                         .pos(7, 62)
-                        .background(GTGuiTextures.BUTTON_ITEM_OUTPUT)
-                        .syncHandler("item_input"))
+                        .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                        .syncHandler("item_auto_output"))
                 .child(new ProgressWidget()
                         .leftRel(0.5f)
                         .topRelAnchor(0.25f, 0.5f)

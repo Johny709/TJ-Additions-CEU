@@ -6,10 +6,12 @@ import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
@@ -118,6 +120,8 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
         syncManager.syncValue("progress", new DoubleSyncValue(() -> this.recipeLogic.getProgress() == 0 ? 0 :
                 1.0 * this.recipeLogic.getProgress() / this.recipeLogic.getMaxProgress()));
+        final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
+        syncManager.syncValue("item_auto_output", itemAutoOutput);
         syncManager.registerSlotGroup(new SlotGroup("item_input", 9, 1, true));
 
         return ModularPanel.defaultPanel("crafter.gui", 176, 216)
@@ -165,6 +169,12 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                         .pos(72, 28)
                         .syncHandler(new SlotDisplayWidgetSH(this.resultInventory, 0)
                                 .onPressedConsumer((button, slot, stack) -> this.addRecipe(this.currentRecipe))))
+                .child(new ToggleButton()
+                        .pos(7, 112)
+                        .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                        .syncHandler("item_auto_output"))
                 .child(new ProgressWidget()
                         .pos(37, 111)
                         .size(22)
