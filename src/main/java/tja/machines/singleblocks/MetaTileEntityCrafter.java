@@ -8,8 +8,10 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -122,6 +124,11 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                 1.0 * this.recipeLogic.getProgress() / this.recipeLogic.getMaxProgress()));
         final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
         syncManager.syncValue("item_auto_output", itemAutoOutput);
+        syncManager.syncValue("clear_recipe", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> {
+                    this.clearCraftingResult();
+                    this.setCraftingResult(0, ItemStack.EMPTY);
+                }));
         syncManager.registerSlotGroup(new SlotGroup("item_input", 9, 1, true));
 
         return ModularPanel.defaultPanel("crafter.gui", 176, 216)
@@ -175,6 +182,12 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
                                 "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
                         .syncHandler("item_auto_output"))
+                .child(new ButtonWidget<>()
+                        .pos(62, 14)
+                        .size(8)
+                        .background(GTGuiTextures.BUTTON_CLEAR_GRID)
+                        .addTooltipLine(IKey.lang("tja.multiblock.large_crafter.clear_recipe"))
+                        .syncHandler("clear_recipe"))
                 .child(new ProgressWidget()
                         .pos(37, 111)
                         .size(22)

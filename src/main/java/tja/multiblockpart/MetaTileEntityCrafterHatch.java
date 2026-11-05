@@ -6,8 +6,10 @@ import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
+import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
+import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
@@ -19,6 +21,7 @@ import gregtech.api.metatileentity.multiblock.AbilityInstances;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.IMetaTileEntityGuiHolder;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.util.DummyContainer;
@@ -88,6 +91,12 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
 
     @Override
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
+        syncManager.syncValue("clear_recipe", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> {
+                    this.clearCraftingResult();
+                    this.setCraftingResult(0, ItemStack.EMPTY);
+                }));
+
         return ModularPanel.defaultPanel("crafter_hatch.gui", 176, 156)
                 .child(IKey.lang(this.getMetaFullName()).asWidget()
                         .pos(7, 5))
@@ -124,6 +133,12 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
                         .pos(72, 28)
                         .syncHandler(new SlotDisplayWidgetSH(this.resultInventory, 0)
                                 .onPressedConsumer((button, slot, stack) -> this.addRecipe(this.currentRecipe))))
+                .child(new ButtonWidget<>()
+                        .pos(62, 14)
+                        .size(8)
+                        .background(GTGuiTextures.BUTTON_CLEAR_GRID)
+                        .addTooltipLine(IKey.lang("tja.multiblock.large_crafter.clear_recipe"))
+                        .syncHandler("clear_recipe"))
                 .bindPlayerInventory();
     }
 
