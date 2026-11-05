@@ -32,7 +32,7 @@ public class TJARecipeInfoProvider extends CapabilityInfoProvider<IRecipeInfo> {
         final List<ItemStack> itemOutputs = recipeInfo.getItemOutputs();
         final List<FluidStack> fluidInputs = recipeInfo.getFluidInputs();
         final List<FluidStack> fluidOutputs = recipeInfo.getFluidOutputs();
-        if (recipeInfo.getEnergyPerTick() > 0)
+        if (recipeInfo.isActive() && recipeInfo.getEnergyPerTick() > 0)
             probeInfo.vertical(probeInfo.defaultLayoutStyle()).element(new ElementTJAText(String.format("{*tja.machine.universal.eut[*%s;%s*]*}",
                     recipeInfo.getEnergyPerTick(),
                     GTValues.VOCNF[TJAUtility.getTierByVoltage(recipeInfo.getEnergyPerTick())])));

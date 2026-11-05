@@ -128,7 +128,7 @@ public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase imp
                     }
                     final long heat = syncer.syncLong(this.workableHandler.heat());
                     final long maxHeat = syncer.syncLong(this.workableHandler.maxHeat());
-                    key.add(KeyUtil.lang(TextFormatting.GRAY, "tj.machine.universal.temperature", TJAValues.thousandFormat.format(heat),
+                    key.add(KeyUtil.lang(TextFormatting.GRAY, "tja.machine.universal.temperature", TJAValues.thousandFormat.format(heat),
                             TJAValues.thousandFormat.format(maxHeat)));
                 })
                 .addProgressLine(this.workableHandler.getProgress(), this.workableHandler.getMaxProgress())

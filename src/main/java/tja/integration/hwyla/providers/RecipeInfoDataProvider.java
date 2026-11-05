@@ -72,12 +72,13 @@ public class RecipeInfoDataProvider extends CapabilityInfoDataProvider<IRecipeIn
     public List<String> getWailaBody(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config, IRecipeInfo recipeInfo) {
         final NBTTagCompound compound = accessor.getNBTData().getCompoundTag(this.getConfigName());
         final long energyPerTick = compound.getLong("energyPerTick");
-        if (energyPerTick > 0)
+        final boolean active = compound.getBoolean("active");
+        if (active && energyPerTick > 0)
             tooltip.add(I18n.format("tja.machine.universal.eut", TJAValues.thousandFormat.format(energyPerTick),
                     GTValues.VOCNF[TJAUtility.getTierByVoltage(energyPerTick)]));
         if (compound.getBoolean("problem")) {
             tooltip.add(I18n.format("tja.machine.universal.has_problems"));
-        } else if (compound.getBoolean("active")) {
+        } else if (active) {
             tooltip.add(I18n.format("tja.machine.universal.running"));
         }
         final NBTTagList itemInputs = compound.getTagList("itemInputs", 10);
