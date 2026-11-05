@@ -45,7 +45,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import tja.capability.handler.IRecipeMapProvider;
+import tja.mui.sync.GTCraftingRecipeTransferSH;
 import tja.mui.sync.SlotDisplayWidgetSH;
+import tja.mui.widget.GTCraftingRecipeTransferWidget;
 import tja.mui.widget.SlotDisplayWidget;
 import tja.recipes.CountableIngredient;
 import tja.recipes.RecipeUtils;
@@ -96,6 +98,7 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
                     this.clearCraftingResult();
                     this.setCraftingResult(0, ItemStack.EMPTY);
                 }));
+        syncManager.syncValue("recipe_transfer", new GTCraftingRecipeTransferSH(this::setCraftingResult));
 
         return ModularPanel.defaultPanel("crafter_hatch.gui", 176, 156)
                 .child(IKey.lang(this.getMetaFullName()).asWidget()
@@ -139,6 +142,8 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
                         .background(GTGuiTextures.BUTTON_CLEAR_GRID)
                         .addTooltipLine(IKey.lang("tja.multiblock.large_crafter.clear_recipe"))
                         .syncHandler("clear_recipe"))
+                .child(new GTCraftingRecipeTransferWidget()
+                        .syncHandler("recipe_transfer"))
                 .bindPlayerInventory();
     }
 

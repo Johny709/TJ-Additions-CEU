@@ -50,7 +50,9 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import tja.capability.handler.IRecipeMapProvider;
 import tja.capability.workables.CrafterRecipeLogic;
+import tja.mui.sync.GTCraftingRecipeTransferSH;
 import tja.mui.sync.SlotDisplayWidgetSH;
+import tja.mui.widget.GTCraftingRecipeTransferWidget;
 import tja.mui.widget.SlotDisplayWidget;
 import tja.recipes.CountableIngredient;
 import tja.recipes.RecipeUtils;
@@ -129,6 +131,7 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                     this.clearCraftingResult();
                     this.setCraftingResult(0, ItemStack.EMPTY);
                 }));
+        syncManager.syncValue("recipe_transfer", new GTCraftingRecipeTransferSH(this::setCraftingResult));
         syncManager.registerSlotGroup(new SlotGroup("item_input", 9, 1, true));
 
         return ModularPanel.defaultPanel("crafter.gui", 176, 216)
@@ -193,6 +196,8 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                         .size(22)
                         .texture(GTGuiTextures.PROGRESS_BAR_ARROW, 22)
                         .syncHandler("progress"))
+                .child(new GTCraftingRecipeTransferWidget()
+                        .syncHandler("recipe_transfer"))
                 .bindPlayerInventory();
     }
 
