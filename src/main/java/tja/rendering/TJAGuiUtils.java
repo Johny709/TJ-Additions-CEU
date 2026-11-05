@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJAValues;
@@ -141,6 +142,16 @@ public final class TJAGuiUtils {
         bufferbuilder.pos(x + width, y, 0.0D).tex(imageU + drawnWidth, imageV).endVertex();
         bufferbuilder.pos(x, y, 0.0D).tex(imageU, imageV).endVertex();
         tessellator.draw();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawSelectionOverlay(int x, int y, int width, int height) {
+        GlStateManager.disableDepth();
+        GlStateManager.colorMask(true, true, true, false);
+        GuiUtils.drawGradientRect(0, x, y, width, height, -2130706433, -2130706433);
+        GlStateManager.colorMask(true, true, true, true);
+        GlStateManager.enableDepth();
+        GlStateManager.enableBlend();
     }
 
     @SideOnly(Side.CLIENT)
