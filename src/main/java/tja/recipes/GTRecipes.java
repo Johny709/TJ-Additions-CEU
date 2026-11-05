@@ -68,6 +68,8 @@ public class GTRecipes {
                 MetaItems.ELECTRIC_PUMP_ZPM, MetaItems.ELECTRIC_PUMP_UV};
         MetaItem<?>.MetaValueItem[] robotArms = {MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_MV, MetaItems.ROBOT_ARM_HV,
                 MetaItems.ROBOT_ARM_EV, MetaItems.ROBOT_ARM_IV, MetaItems.ROBOT_ARM_LuV, MetaItems.ROBOT_ARM_ZPM, MetaItems.ROBOT_ARM_UV};
+        MetaItem<?>.MetaValueItem[] sensors = {MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_LV, MetaItems.ROBOT_ARM_MV, MetaItems.ROBOT_ARM_HV,
+                MetaItems.ROBOT_ARM_EV, MetaItems.ROBOT_ARM_IV, MetaItems.ROBOT_ARM_LuV, MetaItems.ROBOT_ARM_ZPM, MetaItems.ROBOT_ARM_UV};
         final Material[] circuitTiers = new Material[]{MarkerMaterials.Tier.ULV, MarkerMaterials.Tier.LV, MarkerMaterials.Tier.MV, MarkerMaterials.Tier.HV,
                 MarkerMaterials.Tier.EV, MarkerMaterials.Tier.IV, MarkerMaterials.Tier.LuV, MarkerMaterials.Tier.ZPM, MarkerMaterials.Tier.UV,
                 MarkerMaterials.Tier.UHV, MarkerMaterials.Tier.UEV, MarkerMaterials.Tier.UIV, MarkerMaterials.Tier.UXV, MarkerMaterials.Tier.OpV,
@@ -86,6 +88,8 @@ public class GTRecipes {
             pumps = ArrayUtils.addAll(pumps, MetaItems.ELECTRIC_PUMP_UHV, MetaItems.ELECTRIC_PUMP_UEV, MetaItems.ELECTRIC_PUMP_UIV,
                     MetaItems.ELECTRIC_PUMP_UXV, MetaItems.ELECTRIC_PUMP_OpV, GCYLCoreItems.ELECTRIC_PUMP_MAX);
             robotArms = ArrayUtils.addAll(robotArms, MetaItems.ROBOT_ARM_UHV, MetaItems.ROBOT_ARM_UEV, MetaItems.ROBOT_ARM_UIV, MetaItems.ROBOT_ARM_UXV,
+                    MetaItems.ROBOT_ARM_OpV, GCYLCoreItems.ROBOT_ARM_MAX);
+            sensors = ArrayUtils.addAll(sensors, MetaItems.ROBOT_ARM_UHV, MetaItems.ROBOT_ARM_UEV, MetaItems.ROBOT_ARM_UIV, MetaItems.ROBOT_ARM_UXV,
                     MetaItems.ROBOT_ARM_OpV, GCYLCoreItems.ROBOT_ARM_MAX);
         }
         // mega coke oven
@@ -313,6 +317,17 @@ public class GTRecipes {
                     .output(TJAMetaTileEntities.FARMING_STATION.get(i))
                     .EUt(GTValues.VA[i]).duration(400)
                     .buildAndRegister();
+        }
+        // advanced chunk miner
+        for (int i = 0; i < TJAMetaTileEntities.ADVANCED_CHUNK_MINERS.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("advanced_chunk_miner." + GTValues.VN[i], TJAMetaTileEntities.ADVANCED_CHUNK_MINERS.get(i).getStackForm(),
+                    "SCS", "RHR", "BCB",
+                    'B', i > 4 ? MetaItems.COMPONENT_GRINDER_TUNGSTEN.getStackForm() : MetaItems.COMPONENT_GRINDER_DIAMOND.getStackForm(),
+                    'C', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
+                    'S', sensors[i].getStackForm(),
+                    'R', pistons[i].getStackForm(),
+                    'H', MetaTileEntities.HULL[i].getStackForm());
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",

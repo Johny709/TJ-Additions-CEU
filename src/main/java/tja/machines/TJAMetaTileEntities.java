@@ -68,8 +68,10 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> SUPER_FISHERS = mteList(1075, i -> new MetaTileEntitySuperFisher(resource("super_fisher." + GTValues.VN[i]), i));
     /** occupies id range 1090 - 1104 */
     public static final List<MetaTileEntity> CRAFTERS = mteList(1090, i -> new MetaTileEntityCrafter(resource("crafter." + GTValues.VN[i]), i));
-    /** occupies id range 1105 - 1114 */
+    /** occupies id range 1105 - 1119 */
     public static final List<MetaTileEntity> FARMING_STATION = mteList(1105, i -> new MetaTileEntityFarmingStation(resource("farming_station." + GTValues.VN[i]), i));
+    /** occupies id range 1120 - 1134 */
+    public static final List<MetaTileEntity> ADVANCED_CHUNK_MINERS = mteList(1120, i -> new MetaTileEntityAdvancedChunkMiner(resource("advanced_chunk_miner." + GTValues.VN[i]), i));
 
     public static void init() {
         // call on initialization
