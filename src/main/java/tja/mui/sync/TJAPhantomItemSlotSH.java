@@ -26,15 +26,15 @@ public class TJAPhantomItemSlotSH extends SyncHandler {
     @Nonnull
     private ItemStack itemStack = ItemStack.EMPTY;
 
-    public TJAPhantomItemSlotSH(int slotIndex, IItemHandler itemHandler) {
-        this(slotIndex, itemHandler, null, null);
+    public TJAPhantomItemSlotSH(IItemHandler itemHandler, int slotIndex) {
+        this(itemHandler, slotIndex, null, null);
     }
 
-    public TJAPhantomItemSlotSH(int slotIndex, IItemHandler itemHandler, Consumer<ItemStack> onItemUpdate) {
-        this(slotIndex, itemHandler, onItemUpdate, null);
+    public TJAPhantomItemSlotSH(IItemHandler itemHandler, int slotIndex, Consumer<ItemStack> onItemUpdate) {
+        this(itemHandler, slotIndex, onItemUpdate, null);
     }
 
-    public TJAPhantomItemSlotSH(int slotIndex, IItemHandler itemHandler, Consumer<ItemStack> onItemUpdate, Consumer<ItemStack> onExtracted) {
+    public TJAPhantomItemSlotSH(IItemHandler itemHandler, int slotIndex, Consumer<ItemStack> onItemUpdate, Consumer<ItemStack> onExtracted) {
         this.slotIndex = slotIndex;
         this.itemHandler = itemHandler;
         this.onItemUpdate = onItemUpdate;

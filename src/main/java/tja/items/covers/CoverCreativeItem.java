@@ -95,7 +95,7 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                         .pos(61, 25)
                         .size(54)
                         .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new TJAPhantomItemSlotWidget()
-                                .syncHandler(new TJAPhantomItemSlotSH(i, this.itemFilter)))
+                                .syncHandler(new TJAPhantomItemSlotSH(this.itemFilter, i)))
                         .syncHandler("selection"))
                 .child(new TextFieldWidget()
                         .pos(26, 5)
