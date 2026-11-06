@@ -114,7 +114,7 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
                         .row("CCCCCCCCC")
                         .row("SSSSSSSSS")
                         .key('C', i -> new FluidSlot()
-                                .background(TJAGuiTextures.SLOW_DOWN)
+                                .background(TJAGuiTextures.SLOT_DOWN)
                                 .syncHandler(new FluidSlotSyncHandler((IMultiFluidTankHandler) superFluidInterface.getDualityFluidInterface().getConfig(), i)
                                         .phantom(true)))
                         .key('S', i -> new FluidSlot()

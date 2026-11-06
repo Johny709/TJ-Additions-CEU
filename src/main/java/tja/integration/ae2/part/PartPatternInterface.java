@@ -38,20 +38,25 @@ import javax.annotation.Nonnull;
 
 public class PartPatternInterface extends PartInterface implements IGuiHolder<SidedPosGuiData>, ISuperInterface {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_base");
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.pattern_interface_base");
 
     @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_off"));
+    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.pattern_interface_off"));
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_on"));
+    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.pattern_interface_on"));
 
     @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.pattern_interface_has_channel"));
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.pattern_interface_has_channel"));
 
     public PartPatternInterface(ItemStack is) {
         super(is);
-        ObfuscationReflectionHelper.setPrivateValue(PartInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 40, 36, 288), "duality");
+        ObfuscationReflectionHelper.setPrivateValue(PartInterface.class, this,
+                new DualitySuperInterface(this.getProxy(), this, 40, 36, 288), "duality");
     }
 
     @Override
@@ -133,17 +138,18 @@ public class PartPatternInterface extends PartInterface implements IGuiHolder<Si
     @Override
     @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
-        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
+        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ?
+                IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.getTile().markDirty();
     }
 
     @Override
-    public void setStackSize(String size, String id) {
+    public void setItemCount(String size, int index) {
         // No config slots
     }
 
     @Override
-    public String getStackSize(int index) {
+    public String getItemCount(int index) {
         return null; // No config slots
     }
 

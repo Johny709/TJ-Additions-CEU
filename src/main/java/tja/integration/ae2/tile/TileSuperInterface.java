@@ -29,7 +29,8 @@ import tja.integration.ae2.helpers.DualitySuperInterface;
 public class TileSuperInterface extends TileInterface implements IGuiHolder<PosGuiData>, ISuperInterface {
 
     public TileSuperInterface() {
-        ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
+        ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this,
+                new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
     }
 
     @Override
@@ -90,25 +91,26 @@ public class TileSuperInterface extends TileInterface implements IGuiHolder<PosG
     @Override
     @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
-        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
+        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ?
+                IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.markDirty();
     }
 
     @Override
-    public void setStackSize(String text, String id) {
-        final int slot = Integer.parseInt(id);
+    public void setItemCount(String text, int index) {
         final int maxSize = this.getInterfaceDuality().getConfig().getSlotLimit(0);
         final int stackSize = (int) Math.max(1, Math.min(Long.parseLong(text), maxSize));
-        final ItemStack itemStack = this.getInterfaceDuality().getConfig().extractItem(slot, Integer.MAX_VALUE, false);
+        final ItemStack itemStack = this.getInterfaceDuality().getConfig().extractItem(index, Integer.MAX_VALUE, false);
         if (itemStack.isEmpty()) return;
         itemStack.setCount(stackSize);
-        ((AppEngInternalAEInventory) this.getInterfaceDuality().getConfig()).setStackInSlot(slot, itemStack);
+        ((AppEngInternalAEInventory) this.getInterfaceDuality().getConfig()).setStackInSlot(index, itemStack);
         this.markDirty();
     }
 
     @Override
-    public String getStackSize(int index) {
-        return String.valueOf(this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount());
+    public String getItemCount(int index) {
+        return String.valueOf(index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
+                this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0);
     }
 
     @Override

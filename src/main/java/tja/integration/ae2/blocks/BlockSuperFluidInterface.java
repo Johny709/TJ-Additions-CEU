@@ -45,7 +45,6 @@ import tja.mui.slot.TJAModularSlot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.List;
 
 
@@ -111,7 +110,7 @@ public class BlockSuperFluidInterface extends BlockFluidInterface {
                         .row("CCCCCCCCC")
                         .row("TTTTTTTTT")
                         .key('C', i -> new FluidSlot()
-                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.SLOW_DOWN)
+                                .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.SLOT_DOWN)
                                 .syncHandler(new FluidSlotSyncHandler((IMultiFluidTankHandler) superFluidInterface.getDualityFluidInterface().getConfig(), i)
                                         .phantom(true)))
                         .key('T', i -> new FluidSlot()

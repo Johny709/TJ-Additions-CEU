@@ -49,7 +49,8 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     private final DualitySuperFluidInterface dualityFluid = new DualitySuperFluidInterface(this.getProxy(), this, 18);
 
     public TileSuperDualInterface() {
-        ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this, new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
+        ObfuscationReflectionHelper.setPrivateValue(TileInterface.class, this,
+                new DualitySuperInterface(this.getProxy(), this, 10, 18, 72), "duality");
     }
 
     @Override
@@ -88,13 +89,15 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     @Nonnull
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
-        return TickRateModulation.values()[Math.max(super.tickingRequest(node, ticksSinceLastCall).ordinal(), this.dualityFluid.tickingRequest(node, ticksSinceLastCall).ordinal())];
+        return TickRateModulation.values()[Math.max(super.tickingRequest(node, ticksSinceLastCall).ordinal(),
+                this.dualityFluid.tickingRequest(node, ticksSinceLastCall).ordinal())];
     }
 
     @Nonnull
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.dualityFluid.getTickingRequest(node).isSleeping, true);
+        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping &&
+                this.dualityFluid.getTickingRequest(node).isSleeping, true);
     }
 
     @Override
@@ -171,25 +174,26 @@ public class TileSuperDualInterface extends TileInterface implements IGuiHolder<
     @Override
     @Optional.Method(modid = TJAValues.RANDOM_COMPLEMENT_MOD_ID)
     public void setIntelligentBlocking(boolean intelligentBlocking) {
-        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ? IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
+        ((RCIConfigurableObject) this.getInterfaceDuality()).r$getConfigManager().putSetting(RCSettings.IntelligentBlocking, intelligentBlocking ?
+                IntelligentBlocking.OPEN : IntelligentBlocking.CLOSE);
         this.markDirty();
     }
 
     @Override
-    public void setStackSize(String text, String id) {
-        final int slot = Integer.parseInt(id);
+    public void setItemCount(String text, int index) {
         final int maxSize = this.getInterfaceDuality().getConfig().getSlotLimit(0);
         final int stackSize = (int) Math.max(1, Math.min(Long.parseLong(text), maxSize));
-        final ItemStack itemStack = this.getInterfaceDuality().getConfig().extractItem(slot, Integer.MAX_VALUE, false);
+        final ItemStack itemStack = this.getInterfaceDuality().getConfig().extractItem(index, Integer.MAX_VALUE, false);
         if (itemStack.isEmpty()) return;
         itemStack.setCount(stackSize);
-        ((AppEngInternalAEInventory) this.getInterfaceDuality().getConfig()).setStackInSlot(slot, itemStack);
+        ((AppEngInternalAEInventory) this.getInterfaceDuality().getConfig()).setStackInSlot(index, itemStack);
         this.markDirty();
     }
 
     @Override
-    public String getStackSize(int index) {
-        return String.valueOf(this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount());
+    public String getItemCount(int index) {
+        return String.valueOf(index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
+                this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public final class TJAGuiTextures {
 
-    public static final UITexture SLOW_DOWN = UITexture.fullImage(resource("textures/gui/widgets/slot_down"));
+    public static final UITexture SLOT_DOWN = UITexture.fullImage(resource("textures/gui/widgets/slot_down"));
     public static final UITexture SELECTION_BOX = UITexture.builder().location(resource("textures/gui/base/select_box"))
             .imageSize(16, 16).adaptable(1).build();
 

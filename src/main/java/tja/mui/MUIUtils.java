@@ -43,10 +43,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.integration.ae2.IPrioritySetter;
+import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.ITIckSetter;
 import tja.items.TJAAE2Items;
 import tja.items.handlers.FilteredItemStackHandler;
 import tja.mui.slot.TJAModularSlot;
+import tja.mui.sync.SelectionWidgetGroupSH;
 import tja.util.Counter;
 import tja.util.TJAItemUtils;
 import tja.util.TJAUtility;
@@ -166,26 +168,26 @@ public final class MUIUtils {
         return IKey.comp(name, KeyUtil.string(TextFormatting.WHITE, " x "), amount, IKey.SPACE, rate);
     }
 
-    public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, IPrioritySetter superInterface) {
+    public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, IPrioritySetter iface) {
         syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 1))));
         syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 10))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 10))));
         syncManager.syncValue("priority_add_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 100))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 100))));
         syncManager.syncValue("priority_add_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() + 1000))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 1000))));
         syncManager.syncValue("priority_sub_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1))));
         syncManager.syncValue("priority_sub_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 10))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 10))));
         syncManager.syncValue("priority_sub_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 100))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 100))));
         syncManager.syncValue("priority_sub_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setPriority(String.valueOf((long) superInterface.getPriority() - 1000))));
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1000))));
 
         return ModularPanel.defaultPanel("me.interface.priority.panel", 162, 100)
-                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Priority"))
+                .child(IKey.lang("gui.appliedenergistics2.Priority").asWidget()
                         .pos(7, 7))
                 .child(new TextFieldWidget()
                         .pos(7, 46)
@@ -194,13 +196,11 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getPriority()), superInterface::setPriority)))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), iface::setPriority)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
                         .overlay(GuiTextures.CLOSE)
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .onMousePressed(mouseButton -> {
                             panelHandler.closePanel();
                             return true;
@@ -209,80 +209,64 @@ public final class MUIUtils {
                         .pos(7, 20)
                         .size(25, 20)
                         .overlay(IKey.str("+1"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_add_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 20)
                         .size(30, 20)
                         .overlay(IKey.str("+10"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_add_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 20)
                         .size(35, 20)
                         .overlay(IKey.str("+100"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_add_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 20)
                         .size(40, 20)
                         .overlay(IKey.str("+1000"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_add_1000"))
                 .child(new ButtonWidget<>()
                         .pos(7, 70)
                         .size(25, 20)
                         .overlay(IKey.str("-1"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_sub_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 70)
                         .size(30, 20)
                         .overlay(IKey.str("-10"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_sub_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 70)
                         .size(35, 20)
                         .overlay(IKey.str("-100"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_sub_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 70)
                         .size(40, 20)
                         .overlay(IKey.str("-1000"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("priority_sub_1000"));
     }
 
-    public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ITIckSetter superInterface) {
+    public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ITIckSetter iface) {
         syncManager.syncValue("tick_add_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 1))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 1))));
         syncManager.syncValue("tick_add_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 10))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 10))));
         syncManager.syncValue("tick_add_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 100))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 100))));
         syncManager.syncValue("tick_add_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() + 1000))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 1000))));
         syncManager.syncValue("tick_sub_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() - 1))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 1))));
         syncManager.syncValue("tick_sub_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() - 10))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 10))));
         syncManager.syncValue("tick_sub_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() - 100))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 100))));
         syncManager.syncValue("tick_sub_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> superInterface.setTickTime(String.valueOf((long) superInterface.getTickTime() - 1000))));
+                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 1000))));
 
         return ModularPanel.defaultPanel("me.interface.tick.panel", 162, 100)
-                .child(new TextWidget<>(IKey.lang("tja.machine.universal.ticks.operation"))
+                .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
                         .pos(7, 7))
                 .child(new TextFieldWidget()
                         .pos(7, 46)
@@ -291,13 +275,11 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(superInterface.getTickTime()), superInterface::setTickTime)))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getTickTime()), iface::setTickTime)))
                 .child(new ButtonWidget<>()
                         .pos(140, 4)
                         .size(12)
                         .overlay(GuiTextures.CLOSE)
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .onMousePressed(mouseButton -> {
                             panelHandler.closePanel();
                             return true;
@@ -306,58 +288,142 @@ public final class MUIUtils {
                         .pos(7, 20)
                         .size(25, 20)
                         .overlay(IKey.str("+1"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_add_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 20)
                         .size(30, 20)
                         .overlay(IKey.str("+10"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_add_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 20)
                         .size(35, 20)
                         .overlay(IKey.str("+100"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_add_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 20)
                         .size(40, 20)
                         .overlay(IKey.str("+1000"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_add_1000"))
                 .child(new ButtonWidget<>()
                         .pos(7, 70)
                         .size(25, 20)
                         .overlay(IKey.str("-1"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_sub_1"))
                 .child(new ButtonWidget<>()
                         .pos(37, 70)
                         .size(30, 20)
                         .overlay(IKey.str("-10"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_sub_10"))
                 .child(new ButtonWidget<>()
                         .pos(72, 70)
                         .size(35, 20)
                         .overlay(IKey.str("-100"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_sub_100"))
                 .child(new ButtonWidget<>()
                         .pos(112, 70)
                         .size(40, 20)
                         .overlay(IKey.str("-1000"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("tick_sub_1000"));
+    }
+
+    public static ModularPanel createItemConfigPanel(PanelSyncManager syncManager,
+                                                     IPanelHandler panelHandler,
+                                                     ISuperInterface iface,
+                                                     SelectionWidgetGroupSH selectionWidgetGroupSH) {
+        syncManager.syncValue("item_add_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_add_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 10),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_add_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 100),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_add_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 10),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 100),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+
+        return ModularPanel.defaultPanel("me.interface.item_config.panel", 162, 100)
+                .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
+                        .pos(7, 7))
+                .child(new TextFieldWidget()
+                        .pos(7, 46)
+                        .size(148, 18)
+                        .setMaxLength(10)
+                        .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
+                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
+                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
+                        .value(new StringSyncValue(() -> iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex()),
+                                string -> iface.setItemCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
+                .child(new ButtonWidget<>()
+                        .pos(140, 4)
+                        .size(12)
+                        .overlay(GuiTextures.CLOSE)
+                        .onMousePressed(mouseButton -> {
+                            panelHandler.closePanel();
+                            return true;
+                        }))
+                .child(new ButtonWidget<>()
+                        .pos(7, 20)
+                        .size(25, 20)
+                        .overlay(IKey.str("+1"))
+                        .syncHandler("item_add_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 20)
+                        .size(30, 20)
+                        .overlay(IKey.str("+10"))
+                        .syncHandler("item_add_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 20)
+                        .size(35, 20)
+                        .overlay(IKey.str("+100"))
+                        .syncHandler("item_add_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 20)
+                        .size(40, 20)
+                        .overlay(IKey.str("+1000"))
+                        .syncHandler("item_add_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(7, 70)
+                        .size(25, 20)
+                        .overlay(IKey.str("-1"))
+                        .syncHandler("item_sub_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 70)
+                        .size(30, 20)
+                        .overlay(IKey.str("-10"))
+                        .syncHandler("item_sub_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 70)
+                        .size(35, 20)
+                        .overlay(IKey.str("-100"))
+                        .syncHandler("item_sub_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 70)
+                        .size(40, 20)
+                        .overlay(IKey.str("-1000"))
+                        .syncHandler("item_sub_1000"));
     }
 
     public static Widget<?> createPatternMultiToolWidget(PanelSyncManager syncManager, UISettings settings, ItemStack patternMultiTool) {

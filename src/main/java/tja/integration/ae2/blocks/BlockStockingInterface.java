@@ -15,6 +15,7 @@ import com.cleanroommc.modularui.value.sync.PhantomItemSlotSH;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
@@ -41,6 +42,10 @@ import tja.integration.ae2.tile.TileStockingInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
 import tja.mui.slot.TJAModularSlot;
+import tja.mui.sync.SelectionWidgetGroupSH;
+import tja.mui.sync.TJAPhantomItemSlotSH;
+import tja.mui.widget.SelectionWidgetGroup;
+import tja.mui.widget.TJAPhantomItemSlotWidget;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +62,10 @@ public class BlockStockingInterface extends BlockInterface {
     }
 
     @Override
-    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityLiving.SpawnPlacementType type) {
+    public boolean canCreatureSpawn(@Nonnull IBlockState state,
+                                    @Nonnull IBlockAccess world,
+                                    @Nonnull BlockPos pos,
+                                    @Nonnull EntityLiving.SpawnPlacementType type) {
         return false;
     }
 
@@ -71,7 +79,15 @@ public class BlockStockingInterface extends BlockInterface {
     }
 
     @Override
-    public boolean onActivated(final World world, final BlockPos pos, final EntityPlayer player, final EnumHand hand, final @Nullable ItemStack heldItem, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+    public boolean onActivated(final World world,
+                               final BlockPos pos,
+                               final EntityPlayer player,
+                               final EnumHand hand,
+                               final @Nullable ItemStack heldItem,
+                               final EnumFacing side,
+                               final float hitX,
+                               final float hitY,
+                               final float hitZ) {
         if (player.isSneaking())
             return false;
         if (!world.isRemote)
@@ -79,13 +95,17 @@ public class BlockStockingInterface extends BlockInterface {
         return true;
     }
 
-    public static ModularPanel createInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperInterface superInterface) {
-        final StringSyncValue interfaceName = new StringSyncValue(superInterface::getCustomInventoryName);
+    public static ModularPanel createInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperInterface iface) {
+        final StringSyncValue interfaceName = new StringSyncValue(iface::getCustomInventoryName);
         syncManager.syncValue("interface_name", interfaceName);
-        final BooleanSyncValue autoPullValue = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK).ordinal() == 0, superInterface::setItemAutoPull);
+        final BooleanSyncValue autoPullValue = new BooleanSyncValue(() -> iface.getInterfaceDuality().getConfigManager()
+                .getSetting(Settings.BLOCK).ordinal() == 0, iface::setItemAutoPull);
         syncManager.syncValue("auto_pull", autoPullValue);
-        final BooleanSyncValue autoPushValue = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal() == 0, superInterface::setItemAutoPush);
+        final BooleanSyncValue autoPushValue = new BooleanSyncValue(() -> iface.getInterfaceDuality().getConfigManager()
+                .getSetting(Settings.STICKY_MODE).ordinal() == 0, iface::setItemAutoPush);
         syncManager.syncValue("auto_push", autoPushValue);
+        final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
+        syncManager.syncValue("selection", selectionWidgetGroupSH);
 
         syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 1, true));
         syncManager.registerSlotGroup(new SlotGroup("storage_inventory", 9, 2, true));
@@ -95,35 +115,41 @@ public class BlockStockingInterface extends BlockInterface {
         final Flow buttonArea = Flow.col();
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
-        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, superInterface));
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true,
+                (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, iface));
+        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true,
+                (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, iface));
+        final IPanelHandler itemConfig = syncManager.syncedPanel("me.super_interface.item_config", true,
+                (panelBuilder, subPanel) -> MUIUtils.createItemConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH));
+        selectionWidgetGroupSH.setIndexListener(i -> {
+            if (!itemConfig.isPanelOpen())
+                itemConfig.openPanel();
+        });
         return ModularPanel.defaultPanel("me.stocking_interface.gui", 176, 292)
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(interfaceName.getStringValue())))
-                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Config"))
+                .child(IKey.lang("gui.appliedenergistics2.Config").asWidget()
                         .pos(7, 23))
-                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.StoredItems"))
-                        .pos(7, 181))
-                .child(SlotGroupWidget.builder()
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .key('C', i -> new PhantomItemSlot()
-                                .background(TJAGuiTextures.SLOW_DOWN)
-                                .syncHandler(new PhantomItemSlotSH(new TJAModularSlot(superInterface.getInterfaceDuality().getConfig(), i)
-                                        .ignoreMaxStackSize(true))))
-                        .key('S', i -> new ItemSlot()
-                                .slot(new TJAModularSlot(superInterface.getInterfaceDuality().getStorage(), i)
-                                        .slotGroup("storage_inventory")))
-                        .build().pos(7, 34))
+                .child(IKey.lang("gui.appliedenergistics2.StoredItems").asWidget()
+                        .pos(7, 109))
+                .child(IKey.lang("container.inventory").asWidget()
+                        .pos(7, 198))
+                .child(new SelectionWidgetGroup()
+                        .pos(7, 34)
+                        .size(162, iface.getInterfaceDuality().getConfig().getSlots() * 18 / 9)
+                        .gridOfSizeWidth(iface.getInterfaceDuality().getConfig().getSlots(), 9, (x, y, i) -> new TJAPhantomItemSlotWidget()
+                                .background(TJAGuiTextures.SLOT_DOWN)
+                                .syncHandler(new TJAPhantomItemSlotSH(iface.getInterfaceDuality().getConfig(), i)))
+                        .syncHandler("selection"))
+                .child(new Grid()
+                        .pos(7,121)
+                        .size(162, iface.getInterfaceDuality().getStorage().getSlots() * 18 / 9)
+                        .gridOfSizeWidth(iface.getInterfaceDuality().getStorage().getSlots(), 9, (x, y, i) -> new ItemSlot()
+                                .slot(new TJAModularSlot(iface.getInterfaceDuality().getStorage(), i)
+                                        .slotGroup("storage_inventory"))))
                 .child(upgradeArea
                         .left(179)
                         .size(32, 194)
@@ -131,7 +157,7 @@ public class BlockStockingInterface extends BlockInterface {
                         .children(10, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot(new TJAModularSlot(superInterface.getInterfaceDuality().getInventoryByName("upgrades"), i)
+                                .slot(new TJAModularSlot(iface.getInterfaceDuality().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
                 .child(buttonArea
                         .pos(-18, 8)

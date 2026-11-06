@@ -21,9 +21,9 @@ public interface ISuperInterface extends ICustomNameObject, IPrioritySetter, IIn
 
     void setIntelligentBlocking(boolean intelligentBlocking);
 
-    void setStackSize(String size, String id);
+    void setItemCount(String size, int index);
 
-    String getStackSize(int index);
+    String getItemCount(int index);
 
     default void setItemAutoPull(boolean autoPull) {}
 
