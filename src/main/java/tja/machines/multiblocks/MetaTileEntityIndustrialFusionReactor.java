@@ -494,12 +494,6 @@ public class MetaTileEntityIndustrialFusionReactor extends TJAExtendableRecipeMa
         public int getParallelLimit() {
             return getSlices();
         }
-
-        @Override
-        public <T> T getCapability(Capability<T> capability) {
-            System.out.println("getting capability");
-            return super.getCapability(capability);
-        }
     }
 
     @SideOnly(Side.CLIENT)
