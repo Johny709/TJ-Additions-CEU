@@ -15,11 +15,11 @@ import java.util.function.Predicate;
 
 public class TJAPhantomItemSlotSH extends SyncHandler {
 
-    private Predicate<ItemStack> putItemsPredicate;
-    private Predicate<ItemStack> takeItemsPredicate;
     private final Consumer<ItemStack> onExtracted;
     private final Consumer<ItemStack> onItemUpdate;
     private final IItemHandler itemHandler;
+    private Predicate<ItemStack> putItemsPredicate;
+    private Predicate<ItemStack> takeItemsPredicate;
     private boolean specialExtractingMode;
     private final int slotIndex;
 
@@ -112,11 +112,14 @@ public class TJAPhantomItemSlotSH extends SyncHandler {
     @Override
     public void detectAndSendChanges(boolean init) {
         final ItemStack stack = this.itemHandler.getStackInSlot(this.slotIndex);
-        if (!this.itemStack.isItemEqual(stack) || this.itemStack.getMetadata() != stack.getMetadata() ||
-            !ItemStack.areItemStackTagsEqual(this.itemStack, stack)) {
+        if (!stack.isEmpty()) {
             this.itemStack = stack;
             this.syncToClient(1, buffer -> buffer.writeItemStack(this.itemStack));
         }
+    }
+
+    public void setItemStack(@Nonnull ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     @Nonnull

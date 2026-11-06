@@ -15,8 +15,6 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IWorkable;
 import gregtech.api.cover.CoverBase;
@@ -31,15 +29,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import tja.items.handlers.LargeItemStackHandler;
+import tja.mui.sync.TJAPhantomItemSlotSH;
+import tja.mui.widget.TJAPhantomItemSlotWidget;
 import tja.textures.TJATextures;
 import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
+
+import static net.minecraft.util.text.TextFormatting.WHITE;
 
 public class CoverCreativeItem extends CoverBase implements ITickable, CoverWithUI, IWorkable {
 
@@ -79,14 +80,13 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                 .child(new Grid()
                         .pos(61, 25)
                         .size(54)
-                        .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new PhantomItemSlot()
-                                .syncHandler(new PhantomItemSlotSH(new ModularSlot(this.itemFilter, i)
-                                        .ignoreMaxStackSize(true)))))
+                        .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new TJAPhantomItemSlotWidget()
+                                .syncHandler(new TJAPhantomItemSlotSH(i, this.itemFilter))))
                 .child(new RichTextWidget()
                         .size(54, 18)
                         .pos(63, 80)
                         .autoUpdate(true)
-                        .textBuilder(richText -> richText.addLine(KeyUtil.lang(TextFormatting.WHITE, "tja.machine.universal.ticks", this.speed)))
+                        .textBuilder(richText -> richText.addLine(KeyUtil.lang(WHITE, "tja.machine.universal.ticks", this.speed)))
                         .background(GTGuiTextures.DISPLAY))
                 .child(new ButtonWidget<>()
                         .size(18)
@@ -113,7 +113,11 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
     }
 
     @Override
-    public void renderCover(@Nonnull CCRenderState ccRenderState, @Nonnull Matrix4 matrix4, @Nonnull IVertexOperation[] iVertexOperations, @Nonnull Cuboid6 cuboid6, @Nonnull BlockRenderLayer blockRenderLayer) {
+    public void renderCover(@Nonnull CCRenderState ccRenderState,
+                            @Nonnull Matrix4 matrix4,
+                            @Nonnull IVertexOperation[] iVertexOperations,
+                            @Nonnull Cuboid6 cuboid6,
+                            @Nonnull BlockRenderLayer blockRenderLayer) {
         TJATextures.CREATIVE_FLUID_COVER_OVERLAY.renderSided(this.getAttachedSide(), ccRenderState, matrix4, iVertexOperations);
     }
 

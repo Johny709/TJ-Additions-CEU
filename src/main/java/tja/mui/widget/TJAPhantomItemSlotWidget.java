@@ -76,6 +76,7 @@ public class TJAPhantomItemSlotWidget extends Widget<TJAPhantomItemSlotWidget> i
                 }
             } else if (mouseButton == 1) { // Right-Click
                 this.getSyncHandler().syncToServer(2, buffer -> {});
+                this.getSyncHandler().setItemStack(ItemStack.EMPTY);
                 return Result.SUCCESS;
             }
         }
@@ -90,7 +91,6 @@ public class TJAPhantomItemSlotWidget extends Widget<TJAPhantomItemSlotWidget> i
     @Override
     public void setGhostIngredient(@Nonnull ItemStack ingredient) {
         this.getSyncHandler().syncToServer(1, buffer -> buffer.writeItemStack(ingredient.copy()));
-        this.getSyncHandler().syncToClient(1, buffer -> buffer.writeItemStack(ingredient.copy()));
     }
 
     @Override
