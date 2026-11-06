@@ -218,6 +218,10 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
         final FluidStack fluidStack = this.importFluids.getTankAt(index).getFluid();
         if (fluidStack == null) return;
         fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        final FluidStack testStack = fluidStack.copy();
+        testStack.amount = 0;
+        // to notify MTEs that inventory contents have changed
+        this.importFluids.getTankAt(index).fill(testStack, true);
         this.markDirty();
     }
 

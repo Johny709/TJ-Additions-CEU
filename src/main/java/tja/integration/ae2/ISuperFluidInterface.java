@@ -9,4 +9,8 @@ public interface ISuperFluidInterface extends ICustomNameObject, IPrioritySetter
     default void setFluidAutoPull(boolean autoPull) {}
 
     default void setFluidAutoPush(boolean autoPush) {}
+
+    void setFluidCount(String amount, int index);
+
+    String getFluidCount(int index);
 }

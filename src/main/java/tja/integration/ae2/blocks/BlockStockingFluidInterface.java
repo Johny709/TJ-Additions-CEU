@@ -13,6 +13,7 @@ import com.cleanroommc.modularui.utils.IMultiFluidTankHandler;
 import com.cleanroommc.modularui.value.sync.*;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.FluidSlot;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
@@ -39,6 +40,10 @@ import tja.integration.ae2.tile.TileStockingFluidInterface;
 import tja.mui.MUIUtils;
 import tja.mui.TJAGuiTextures;
 import tja.mui.slot.TJAModularSlot;
+import tja.mui.sync.SelectionWidgetGroupSH;
+import tja.mui.sync.TJAPhantomFluidSlotSH;
+import tja.mui.widget.SelectionWidgetGroup;
+import tja.mui.widget.TJAPhantomFluidSlotWidget;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +52,8 @@ import java.util.List;
 
 public class BlockStockingFluidInterface extends BlockFluidInterface {
 
-    public static final DualitySuperFluidInterface FLUID_DUALITY_INSTANCE = (DualitySuperFluidInterface) new TileStockingFluidInterface().getDualityFluidInterface();
+    public static final DualitySuperFluidInterface FLUID_DUALITY_INSTANCE =
+            (DualitySuperFluidInterface) new TileStockingFluidInterface().getDualityFluidInterface();
 
     public BlockStockingFluidInterface() {
         this.setTileEntity(TileStockingFluidInterface.class);
@@ -64,12 +70,23 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
     }
 
     @Override
-    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityLiving.SpawnPlacementType type) {
+    public boolean canCreatureSpawn(@Nonnull IBlockState state,
+                                    @Nonnull IBlockAccess world,
+                                    @Nonnull BlockPos pos,
+                                    @Nonnull EntityLiving.SpawnPlacementType type) {
         return false;
     }
 
     @Override
-    public boolean onActivated(final World world, final BlockPos pos, final EntityPlayer player, final EnumHand hand, final @Nullable ItemStack heldItem, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+    public boolean onActivated(final World world,
+                               final BlockPos pos,
+                               final EntityPlayer player,
+                               final EnumHand hand,
+                               final @Nullable ItemStack heldItem,
+                               final EnumFacing side,
+                               final float hitX,
+                               final float hitY,
+                               final float hitZ) {
         if (player.isSneaking())
             return false;
         if (!world.isRemote)
@@ -77,13 +94,17 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
         return true;
     }
 
-    public static ModularPanel createFluidInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperFluidInterface superFluidInterface) {
-        final StringSyncValue interfaceName = new StringSyncValue(superFluidInterface::getCustomInventoryName);
+    public static ModularPanel createFluidInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperFluidInterface iface) {
+        final StringSyncValue interfaceName = new StringSyncValue(iface::getCustomInventoryName);
         syncManager.syncValue("interface_name", interfaceName);
-        final BooleanSyncValue autoPullValue = new BooleanSyncValue(() -> superFluidInterface.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK).ordinal() == 0, superFluidInterface::setFluidAutoPull);
+        final BooleanSyncValue autoPullValue = new BooleanSyncValue(() -> iface.getDualityFluidInterface().getConfigManager()
+                .getSetting(Settings.BLOCK).ordinal() == 0, iface::setFluidAutoPull);
         syncManager.syncValue("auto_pull", autoPullValue);
-        final BooleanSyncValue autoPushValue = new BooleanSyncValue(() -> superFluidInterface.getDualityFluidInterface().getConfigManager().getSetting(Settings.STICKY_MODE).ordinal() == 0, superFluidInterface::setFluidAutoPush);
+        final BooleanSyncValue autoPushValue = new BooleanSyncValue(() -> iface.getDualityFluidInterface().getConfigManager()
+                .getSetting(Settings.STICKY_MODE).ordinal() == 0, iface::setFluidAutoPush);
         syncManager.syncValue("auto_push", autoPushValue);
+        final SelectionWidgetGroupSH selectionWidgetGroupSH2 = new SelectionWidgetGroupSH();
+        syncManager.syncValue("selection_2", selectionWidgetGroupSH2);
 
         syncManager.registerSlotGroup(new SlotGroup("upgrade_inventory", 1, 1, true));
 
@@ -92,35 +113,41 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
         final Flow buttonArea = Flow.col();
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superFluidInterface));
-        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true, (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, superFluidInterface));
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true,
+                (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, iface));
+        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true,
+                (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, iface));
+        final IPanelHandler fluidConfig = syncManager.syncedPanel("me.super_interface.fluid_config", true,
+                (panelBuilder, subPanel) -> MUIUtils.createFluidConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH2));
+        selectionWidgetGroupSH2.setIndexListener(i -> {
+            if (!fluidConfig.isPanelOpen())
+                fluidConfig.openPanel();
+        });
         return ModularPanel.defaultPanel("me.stocking_fluid_interface.gui", 176, 292)
                 .child(new RichTextWidget()
                         .pos(7, 2)
                         .size(162, 18)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(interfaceName.getStringValue())))
-                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Config"))
+                .child(IKey.lang("gui.appliedenergistics2.Config").asWidget()
                         .pos(7, 23))
-                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.StoredFluids"))
-                        .pos(7, 181))
-                .child(SlotGroupWidget.builder()
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .row("CCCCCCCCC")
-                        .row("SSSSSSSSS")
-                        .key('C', i -> new FluidSlot()
+                .child(IKey.lang("gui.appliedenergistics2.StoredFluids").asWidget()
+                        .pos(7, 109))
+                .child(IKey.lang("container.inventory").asWidget()
+                        .pos(7, 198))
+                .child(new SelectionWidgetGroup()
+                        .pos(7, 34)
+                        .size(162, iface.getDualityFluidInterface().getConfig().getSlots() * 18 / 9)
+                        .gridOfSizeWidth(iface.getDualityFluidInterface().getConfig().getSlots(), 9, (x, y, i) -> new TJAPhantomFluidSlotWidget()
                                 .background(TJAGuiTextures.SLOT_DOWN)
-                                .syncHandler(new FluidSlotSyncHandler((IMultiFluidTankHandler) superFluidInterface.getDualityFluidInterface().getConfig(), i)
-                                        .phantom(true)))
-                        .key('S', i -> new FluidSlot()
+                                .syncHandler(new TJAPhantomFluidSlotSH((IMultiFluidTankHandler) iface.getDualityFluidInterface().getConfig(), i)))
+                        .syncHandler("selection_2"))
+                .child(new Grid()
+                        .pos(7,121)
+                        .size(162, iface.getDualityFluidInterface().getTanks().getSlots() * 18 / 9)
+                        .gridOfSizeWidth(iface.getDualityFluidInterface().getTanks().getSlots(), 9, (x, y, i) -> new FluidSlot()
                                 .background(GuiTextures.SLOT_ITEM)
-                                .syncHandler((IMultiFluidTankHandler) superFluidInterface.getDualityFluidInterface().getTanks(), i))
-                        .build().pos(7, 34))
+                                .syncHandler((IMultiFluidTankHandler) iface.getDualityFluidInterface().getTanks(), i)))
                 .child(upgradeArea
                         .left(179)
                         .size(32, 86)
@@ -128,7 +155,7 @@ public class BlockStockingFluidInterface extends BlockFluidInterface {
                         .children(4, i -> new ItemSlot()
                                 .pos(7, 7 + (18 * i))
                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
-                                .slot(new TJAModularSlot(superFluidInterface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
+                                .slot(new TJAModularSlot(iface.getDualityFluidInterface().getInventoryByName("upgrades"), i)
                                         .slotGroup("upgrade_inventory"))))
                 .child(buttonArea
                         .pos(-18, 8)

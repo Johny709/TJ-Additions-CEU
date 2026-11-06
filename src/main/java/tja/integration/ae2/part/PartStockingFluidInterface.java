@@ -9,6 +9,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.channels.IFluidStorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.core.settings.TickRates;
@@ -52,23 +53,28 @@ import javax.annotation.Nonnull;
 
 public class PartStockingFluidInterface extends PartFluidInterface implements IGuiHolder<SidedPosGuiData>, ISuperFluidInterface {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_fluid_interface_base");
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.stocking_fluid_interface_base");
 
     @PartModels
-    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_fluid_interface_off"));
+    public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.stocking_fluid_interface_off"));
 
     @PartModels
-    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_fluid_interface_on"));
+    public static final PartModel MODELS_ON = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.stocking_fluid_interface_on"));
 
     @PartModels
-    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID, "part/me.part.stocking_fluid_interface_has_channel"));
+    public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, new ResourceLocation(TJA.MOD_ID,
+            "part/me.part.stocking_fluid_interface_has_channel"));
 
     private final BlockPos.MutableBlockPos interfacePos = new BlockPos.MutableBlockPos();
     private int tickTime = 100;
 
     public PartStockingFluidInterface(ItemStack is) {
         super(is);
-        ObfuscationReflectionHelper.setPrivateValue(PartFluidInterface.class, this, new DualitySuperFluidInterface(this.getProxy(), this, 36), "duality");
+        ObfuscationReflectionHelper.setPrivateValue(PartFluidInterface.class, this,
+                new DualitySuperFluidInterface(this.getProxy(), this, 36), "duality");
         this.getDualityFluidInterface().getConfigManager().registerSetting(Settings.STICKY_MODE, YesNo.NO);
     }
 
@@ -116,7 +122,8 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
             try {
                 int index = 0;
                 final int stackSize = (int) Math.min(Integer.MAX_VALUE, 64000L << this.getInstalledUpgrades(Upgrades.CAPACITY) * 2);
-                final IItemList<?> iItemList = this.getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class)).getStorageList();
+                final IItemList<?> iItemList = this.getProxy().getStorage().getInventory(AEApi.instance().storage()
+                        .getStorageChannel(IFluidStorageChannel.class)).getStorageList();
                 for (IAEStack<?> fluids : iItemList) {
                     if (index < this.getDualityFluidInterface().getConfig().getSlots()) {
                         if (fluids.isItem()) continue;
@@ -150,13 +157,16 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
                 }
             }
         }
-        return TickRateModulation.values()[Math.max(tickRateModulation.ordinal(), this.tickTime > ticksSinceLastCall ? TickRateModulation.SLOWER.ordinal() : this.tickTime < ticksSinceLastCall ? TickRateModulation.FASTER.ordinal() : TickRateModulation.SAME.ordinal())];
+        return TickRateModulation.values()[Math.max(tickRateModulation.ordinal(), this.tickTime > ticksSinceLastCall ?
+                TickRateModulation.SLOWER.ordinal() : this.tickTime < ticksSinceLastCall ?
+                TickRateModulation.FASTER.ordinal() : TickRateModulation.SAME.ordinal())];
     }
 
     @Nonnull
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping && this.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
+        return new TickingRequest(TickRates.Interface.getMin(), TickRates.Interface.getMax(), super.getTickingRequest(node).isSleeping &&
+                this.getDualityFluidInterface().getConfigManager().getSetting(Settings.BLOCK) == YesNo.NO, false);
     }
 
     @Override
@@ -186,6 +196,24 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
     public void setFluidAutoPush(boolean autoPush) {
         this.getDualityFluidInterface().getConfigManager().putSetting(Settings.STICKY_MODE, autoPush ? YesNo.YES : YesNo.NO);
         this.getTile().markDirty();
+    }
+
+    @Override
+    public void setFluidCount(String text, int index) {
+        if (index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots()) return;
+        final IAEFluidStack aeFluidStack = this.getDualityFluidInterface().getConfig().getFluidInSlot(index);
+        if (aeFluidStack == null) return;
+        final FluidStack fluidStack = aeFluidStack.getFluidStack();
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        this.getDualityFluidInterface().getConfig().setFluidInSlot(index, AEFluidStack.fromFluidStack(fluidStack));
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public String getFluidCount(int index) {
+        return String.valueOf(index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
+                this.getDualityFluidInterface().getConfig().getFluidInSlot(index) == null ? 0 :
+                        this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize());
     }
 
     @Override

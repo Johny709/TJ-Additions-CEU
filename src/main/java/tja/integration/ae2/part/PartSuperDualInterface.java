@@ -5,8 +5,10 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartModel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.core.settings.TickRates;
 import appeng.fluids.helper.DualityFluidInterface;
+import appeng.fluids.util.AEFluidStack;
 import appeng.helpers.DualityInterface;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
@@ -32,6 +34,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.Optional;
@@ -233,6 +236,24 @@ public class PartSuperDualInterface extends PartInterface implements IGuiHolder<
     public String getItemCount(int index) {
         return String.valueOf(index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
                 this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0);
+    }
+
+    @Override
+    public void setFluidCount(String text, int index) {
+        if (index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots()) return;
+        final IAEFluidStack aeFluidStack = this.getDualityFluidInterface().getConfig().getFluidInSlot(index);
+        if (aeFluidStack == null) return;
+        final FluidStack fluidStack = aeFluidStack.getFluidStack();
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        this.getDualityFluidInterface().getConfig().setFluidInSlot(index, AEFluidStack.fromFluidStack(fluidStack));
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public String getFluidCount(int index) {
+        return String.valueOf(index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
+                this.getDualityFluidInterface().getConfig().getFluidInSlot(index) == null ? 0 :
+                        this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize());
     }
 
     @Override

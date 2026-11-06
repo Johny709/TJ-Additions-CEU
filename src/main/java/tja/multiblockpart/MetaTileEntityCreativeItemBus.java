@@ -197,6 +197,8 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockNotif
         final ItemStack stack = this.importItems.getStackInSlot(index);
         if (stack.isEmpty()) return;
         stack.setCount((int) Math.min(Integer.MAX_VALUE, Long.parseLong(text)));
+        // to notify MTEs that inventory contents have changed
+        this.importItems.setStackInSlot(index, stack);
         this.markDirty();
     }
 

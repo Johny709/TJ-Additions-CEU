@@ -41,8 +41,10 @@ import tja.mui.TJAGuiTextures;
 import tja.mui.slot.TJAModularSlot;
 import tja.mui.sync.PagedWidgetSyncHandler;
 import tja.mui.sync.SelectionWidgetGroupSH;
+import tja.mui.sync.TJAPhantomFluidSlotSH;
 import tja.mui.sync.TJAPhantomItemSlotSH;
 import tja.mui.widget.SelectionWidgetGroup;
+import tja.mui.widget.TJAPhantomFluidSlotWidget;
 import tja.mui.widget.TJAPhantomItemSlotWidget;
 
 import javax.annotation.Nonnull;
@@ -121,6 +123,8 @@ public class BlockStockingDualInterface extends BlockInterface {
         syncManager.syncValue("controller", new PagedWidgetSyncHandler(controller));
         final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
         syncManager.syncValue("selection", selectionWidgetGroupSH);
+        final SelectionWidgetGroupSH selectionWidgetGroupSH2 = new SelectionWidgetGroupSH();
+        syncManager.syncValue("selection_2", selectionWidgetGroupSH2);
 
         syncManager.registerSlotGroup(new SlotGroup("item_upgrade_inventory", 1, 1, true));
         syncManager.registerSlotGroup(new SlotGroup("fluid_upgrade_inventory", 1, 1, true));
@@ -142,6 +146,12 @@ public class BlockStockingDualInterface extends BlockInterface {
         selectionWidgetGroupSH.setIndexListener(i -> {
             if (!itemConfig.isPanelOpen())
                 itemConfig.openPanel();
+        });
+        final IPanelHandler fluidConfig = syncManager.syncedPanel("me.super_interface.fluid_config", true,
+                (panelBuilder, subPanel) -> MUIUtils.createFluidConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH2));
+        selectionWidgetGroupSH2.setIndexListener(i -> {
+            if (!fluidConfig.isPanelOpen())
+                fluidConfig.openPanel();
         });
         return ModularPanel.defaultPanel("me.stocking_dual_interface.gui", 176, 292)
                 .child(new RichTextWidget()
@@ -236,29 +246,29 @@ public class BlockStockingDualInterface extends BlockInterface {
                                                     .style(TextFormatting.GRAY));
                                         })))
                         .addPage(Flow.row()
-                                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.Config"))
+                                .child(IKey.lang("gui.appliedenergistics2.Config").asWidget()
                                         .pos(7, 23)
                                         .size(162, 8))
-                                .child(new TextWidget<>(IKey.lang("gui.appliedenergistics2.StoredFluids"))
-                                        .pos(7, 181)
+                                .child(IKey.lang("gui.appliedenergistics2.StoredFluids").asWidget()
+                                        .pos(7, 109)
                                         .size(162, 8))
-                                .child(SlotGroupWidget.builder()
-                                        .row("CCCCCCCCC")
-                                        .row("SSSSSSSSS")
-                                        .row("CCCCCCCCC")
-                                        .row("SSSSSSSSS")
-                                        .row("CCCCCCCCC")
-                                        .row("SSSSSSSSS")
-                                        .row("CCCCCCCCC")
-                                        .row("SSSSSSSSS")
-                                        .key('C', i -> new FluidSlot()
+                                .child(IKey.lang("container.inventory").asWidget()
+                                        .pos(7, 198)
+                                        .size(162, 8))
+                                .child(new SelectionWidgetGroup()
+                                        .pos(7, 34)
+                                        .size(162, iface.getDualityFluidInterface().getConfig().getSlots() * 18 / 9)
+                                        .gridOfSizeWidth(iface.getDualityFluidInterface().getConfig().getSlots(), 9, (x, y, i) -> new TJAPhantomFluidSlotWidget()
                                                 .background(TJAGuiTextures.SLOT_DOWN)
-                                                .syncHandler(new FluidSlotSyncHandler((IMultiFluidTankHandler) iface.getDualityFluidInterface().getConfig(), i)
-                                                        .phantom(true)))
-                                        .key('S', i -> new FluidSlot()
+                                                .syncHandler(new TJAPhantomFluidSlotSH((IMultiFluidTankHandler) iface.getDualityFluidInterface().getConfig(), i)))
+                                        .syncHandler("selection_2"))
+                                .child(new Grid()
+                                        .pos(7,85)
+                                        .size(162, iface.getDualityFluidInterface().getTanks().getSlots() * 54 / 9)
+                                        .gridOfSizeWidth(iface.getDualityFluidInterface().getTanks().getSlots(), 9, (x, y, i) -> new FluidSlot()
+                                                .size(18, 54)
                                                 .background(GuiTextures.SLOT_ITEM)
-                                                .syncHandler((IMultiFluidTankHandler) iface.getDualityFluidInterface().getTanks(), i))
-                                        .build().pos(7, 34))
+                                                .syncHandler((IMultiFluidTankHandler) iface.getDualityFluidInterface().getTanks(), i)))
                                 .child(fluidUpgradeArea
                                         .left(179)
                                         .size(32, 86)

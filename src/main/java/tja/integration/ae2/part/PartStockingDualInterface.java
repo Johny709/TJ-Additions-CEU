@@ -8,6 +8,7 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.core.settings.TickRates;
@@ -354,6 +355,24 @@ public class PartStockingDualInterface extends PartInterface implements IGuiHold
     public String getItemCount(int index) {
         return String.valueOf(index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
                 this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0);
+    }
+
+    @Override
+    public void setFluidCount(String text, int index) {
+        if (index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots()) return;
+        final IAEFluidStack aeFluidStack = this.getDualityFluidInterface().getConfig().getFluidInSlot(index);
+        if (aeFluidStack == null) return;
+        final FluidStack fluidStack = aeFluidStack.getFluidStack();
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        this.getDualityFluidInterface().getConfig().setFluidInSlot(index, AEFluidStack.fromFluidStack(fluidStack));
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public String getFluidCount(int index) {
+        return String.valueOf(index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
+                this.getDualityFluidInterface().getConfig().getFluidInSlot(index) == null ? 0 :
+                        this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize());
     }
 
     @Override

@@ -43,6 +43,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import tja.TJAValues;
 import tja.capability.IRecipeInfo;
 import tja.integration.ae2.IPrioritySetter;
+import tja.integration.ae2.ISuperFluidInterface;
 import tja.integration.ae2.ISuperInterface;
 import tja.integration.ae2.ITIckSetter;
 import tja.items.TJAAE2Items;
@@ -350,15 +351,15 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
                                 selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+        syncManager.syncValue("item_sub_10", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 10),
                                 selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+        syncManager.syncValue("item_sub_100", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 100),
                                 selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
+        syncManager.syncValue("item_sub_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
@@ -424,6 +425,106 @@ public final class MUIUtils {
                         .size(40, 20)
                         .overlay(IKey.str("-1000"))
                         .syncHandler("item_sub_1000"));
+    }
+
+    public static ModularPanel createFluidConfigPanel(PanelSyncManager syncManager,
+                                                     IPanelHandler panelHandler,
+                                                     ISuperFluidInterface iface,
+                                                     SelectionWidgetGroupSH selectionWidgetGroupSH) {
+        syncManager.syncValue("fluid_add_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_add_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 10),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_add_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 100),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_add_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_sub_1", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_sub_10", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 10),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_sub_100", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 100),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_sub_1000", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+
+        return ModularPanel.defaultPanel("me.interface.fluid_config.panel", 162, 100)
+                .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
+                        .pos(7, 7))
+                .child(new TextFieldWidget()
+                        .pos(7, 46)
+                        .size(148, 18)
+                        .setMaxLength(10)
+                        .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
+                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
+                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
+                        .value(new StringSyncValue(() -> iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()),
+                                string -> iface.setFluidCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
+                .child(new ButtonWidget<>()
+                        .pos(140, 4)
+                        .size(12)
+                        .overlay(GuiTextures.CLOSE)
+                        .onMousePressed(mouseButton -> {
+                            panelHandler.closePanel();
+                            return true;
+                        }))
+                .child(new ButtonWidget<>()
+                        .pos(7, 20)
+                        .size(25, 20)
+                        .overlay(IKey.str("+1"))
+                        .syncHandler("fluid_add_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 20)
+                        .size(30, 20)
+                        .overlay(IKey.str("+10"))
+                        .syncHandler("fluid_add_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 20)
+                        .size(35, 20)
+                        .overlay(IKey.str("+100"))
+                        .syncHandler("fluid_add_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 20)
+                        .size(40, 20)
+                        .overlay(IKey.str("+1000"))
+                        .syncHandler("fluid_add_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(7, 70)
+                        .size(25, 20)
+                        .overlay(IKey.str("-1"))
+                        .syncHandler("fluid_sub_1"))
+                .child(new ButtonWidget<>()
+                        .pos(37, 70)
+                        .size(30, 20)
+                        .overlay(IKey.str("-10"))
+                        .syncHandler("fluid_sub_10"))
+                .child(new ButtonWidget<>()
+                        .pos(72, 70)
+                        .size(35, 20)
+                        .overlay(IKey.str("-100"))
+                        .syncHandler("fluid_sub_100"))
+                .child(new ButtonWidget<>()
+                        .pos(112, 70)
+                        .size(40, 20)
+                        .overlay(IKey.str("-1000"))
+                        .syncHandler("fluid_sub_1000"));
     }
 
     public static Widget<?> createPatternMultiToolWidget(PanelSyncManager syncManager, UISettings settings, ItemStack patternMultiTool) {

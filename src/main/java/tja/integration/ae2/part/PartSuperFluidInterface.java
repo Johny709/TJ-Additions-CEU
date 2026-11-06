@@ -1,7 +1,9 @@
 package tja.integration.ae2.part;
 
 import appeng.api.parts.IPartModel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.fluids.parts.PartFluidInterface;
+import appeng.fluids.util.AEFluidStack;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
 import appeng.tile.networking.TileCableBus;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,6 +85,24 @@ public class PartSuperFluidInterface extends PartFluidInterface implements IGuiH
         } else {
             return MODELS_OFF;
         }
+    }
+
+    @Override
+    public void setFluidCount(String text, int index) {
+        if (index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots()) return;
+        final IAEFluidStack aeFluidStack = this.getDualityFluidInterface().getConfig().getFluidInSlot(index);
+        if (aeFluidStack == null) return;
+        final FluidStack fluidStack = aeFluidStack.getFluidStack();
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        this.getDualityFluidInterface().getConfig().setFluidInSlot(index, AEFluidStack.fromFluidStack(fluidStack));
+        this.getTile().markDirty();
+    }
+
+    @Override
+    public String getFluidCount(int index) {
+        return String.valueOf(index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
+                this.getDualityFluidInterface().getConfig().getFluidInSlot(index) == null ? 0 :
+                        this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize());
     }
 
     @Override
