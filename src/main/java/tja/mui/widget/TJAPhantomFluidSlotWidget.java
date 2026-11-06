@@ -44,8 +44,15 @@ public class TJAPhantomFluidSlotWidget extends Widget<TJAPhantomFluidSlotWidget>
     }
 
     @Override
+    public void onInit() {
+        super.onInit();
+        this.getContext().getRecipeViewerSettings().addGhostIngredientSlot(this);
+    }
+
+    @Override
     public void drawForeground(ModularGuiContext context) {
         super.drawForeground(context);
+        if (!this.isBelowMouse()) return;
         final FluidStack fluidStack = this.getSyncHandler().getFluidStack();
         final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         final int screenWidth = Minecraft.getMinecraft().displayWidth;
@@ -65,7 +72,7 @@ public class TJAPhantomFluidSlotWidget extends Widget<TJAPhantomFluidSlotWidget>
         final FluidStack fluidStack = this.getSyncHandler().getFluidStack();
         if (fluidStack != null) {
             final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-            TJAGuiUtils.drawFluidForGui(fluidStack, fluidStack.amount, fluidStack.amount, 1, 1, area.width - 1, area.height - 1);
+            TJAGuiUtils.drawFluidForGui(fluidStack, fluidStack.amount, fluidStack.amount, 1, 1, area.width - 1, area.height - 2);
             GlStateManager.pushMatrix();
             GlStateManager.disableBlend();
             GlStateManager.scale(0.5, 0.5, 1);
@@ -76,7 +83,7 @@ public class TJAPhantomFluidSlotWidget extends Widget<TJAPhantomFluidSlotWidget>
             GlStateManager.color(1.0f, 1.0f, 1.0f);
         }
         if (this.isBelowMouse())
-            TJAGuiUtils.drawSelectionOverlay(1, 1, area.width - 2, area.height - 2);
+            TJAGuiUtils.drawSelectionOverlay(1, 1, area.width - 1, area.height - 1);
     }
 
     @Nonnull
@@ -118,7 +125,7 @@ public class TJAPhantomFluidSlotWidget extends Widget<TJAPhantomFluidSlotWidget>
     @Nullable
     @Override
     public Object getIngredient() {
-        return this.getSyncHandler();
+        return this.getSyncHandler().getFluidStack();
     }
 
     @Override

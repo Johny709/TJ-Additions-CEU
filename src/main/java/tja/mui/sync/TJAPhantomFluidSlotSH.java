@@ -27,19 +27,27 @@ public class TJAPhantomFluidSlotSH extends SyncHandler {
     private Predicate<FluidStack> putFluidsPredicate;
     private Predicate<FluidStack> takeFluidsPredicate;
 
-    public TJAPhantomFluidSlotSH(int slotIndex, IMultipleTankHandler tanks, Consumer<FluidStack> onUpdate) {
-        this(slotIndex, new GTMultipleTankHandlerWrapper(tanks), onUpdate);
+    public TJAPhantomFluidSlotSH(IMultipleTankHandler tanks, int slotIndex) {
+        this(tanks, slotIndex, null);
     }
 
-    public TJAPhantomFluidSlotSH(int slotIndex, IMultiFluidTankHandler tanks, Consumer<FluidStack> onUpdate) {
-        this(slotIndex, tanks, onUpdate, null);
+    public TJAPhantomFluidSlotSH(IMultiFluidTankHandler tanks, int slotIndex) {
+        this(tanks, slotIndex, null);
     }
 
-    public TJAPhantomFluidSlotSH(int slotIndex, IMultipleTankHandler tanks, Consumer<FluidStack> onUpdate, Consumer<FluidStack> onExtracted) {
-        this(slotIndex, new GTMultipleTankHandlerWrapper(tanks), onUpdate, onExtracted);
+    public TJAPhantomFluidSlotSH(IMultipleTankHandler tanks, int slotIndex, Consumer<FluidStack> onUpdate) {
+        this(new GTMultipleTankHandlerWrapper(tanks), slotIndex, onUpdate);
     }
 
-    public TJAPhantomFluidSlotSH(int slotIndex, IMultiFluidTankHandler tanks, Consumer<FluidStack> onUpdate, Consumer<FluidStack> onExtracted) {
+    public TJAPhantomFluidSlotSH(IMultiFluidTankHandler tanks, int slotIndex, Consumer<FluidStack> onUpdate) {
+        this(tanks, slotIndex, onUpdate, null);
+    }
+
+    public TJAPhantomFluidSlotSH(IMultipleTankHandler tanks, int slotIndex, Consumer<FluidStack> onUpdate, Consumer<FluidStack> onExtracted) {
+        this(new GTMultipleTankHandlerWrapper(tanks), slotIndex, onUpdate, onExtracted);
+    }
+
+    public TJAPhantomFluidSlotSH(IMultiFluidTankHandler tanks, int slotIndex, Consumer<FluidStack> onUpdate, Consumer<FluidStack> onExtracted) {
         this.tanks = tanks;
         this.slotIndex = slotIndex;
         this.onUpdate = onUpdate;
