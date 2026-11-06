@@ -5,7 +5,6 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
-import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.drawable.Icon;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -14,7 +13,7 @@ import com.cleanroommc.modularui.value.sync.*;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
-import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IWorkable;
 import gregtech.api.cover.CoverBase;
@@ -33,12 +32,17 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import tja.items.handlers.LargeItemStackHandler;
+import tja.mui.MUIUtils;
+import tja.mui.sync.SelectionWidgetGroupSH;
 import tja.mui.sync.TJAPhantomItemSlotSH;
+import tja.mui.widget.SelectionWidgetGroup;
 import tja.mui.widget.TJAPhantomItemSlotWidget;
 import tja.textures.TJATextures;
 import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
+
+import java.util.regex.Pattern;
 
 import static net.minecraft.util.text.TextFormatting.WHITE;
 
@@ -68,20 +72,51 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
     }
 
     @Override
-    public ModularPanel buildUI(SidedPosGuiData guiData, PanelSyncManager guiSyncManager, UISettings settings) {
-        guiSyncManager.syncValue("is_working", new BooleanSyncValue(() -> this.isWorking, this::setWorking));
-        guiSyncManager.syncValue("speed_multiply", new InteractionSyncHandler()
+    public ModularPanel buildUI(SidedPosGuiData guiData, PanelSyncManager syncManager, UISettings settings) {
+        syncManager.syncValue("is_working", new BooleanSyncValue(() -> this.isWorking, this::setWorking));
+        syncManager.syncValue("speed_multiply", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed * 2L)));
-        guiSyncManager.syncValue("speed_divide", new InteractionSyncHandler()
+        syncManager.syncValue("speed_divide", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed / 2)));
+        final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
+        syncManager.syncValue("selection", selectionWidgetGroupSH);
+        syncManager.syncValue("count_multiply", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        this.setItemCount(String.valueOf(Long.parseLong(this.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("count_divide", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        this.setItemCount(String.valueOf(Long.parseLong(this.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
         return ModularPanel.defaultPanel("creative_item_cover_gui", 176, 187)
-                .child(new Grid()
+                .child(new SelectionWidgetGroup()
                         .pos(61, 25)
                         .size(54)
                         .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new TJAPhantomItemSlotWidget()
-                                .syncHandler(new TJAPhantomItemSlotSH(i, this.itemFilter))))
+                                .syncHandler(new TJAPhantomItemSlotSH(i, this.itemFilter)))
+                        .syncHandler("selection"))
+                .child(new TextFieldWidget()
+                        .pos(26, 5)
+                        .size(124, 18)
+                        .setMaxLength(10)
+                        .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
+                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
+                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
+                        .value(new StringSyncValue(() -> this.getItemCount(selectionWidgetGroupSH.getSelectedIndex()),
+                                string -> this.setItemCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
+                .child(new ButtonWidget<>()
+                        .pos(7, 5)
+                        .overlay(KeyUtil.string("*2"))
+                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
+                        .syncHandler("count_multiply"))
+                .child(new ButtonWidget<>()
+                        .pos(151, 5)
+                        .overlay(KeyUtil.string("/2"))
+                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
+                        .syncHandler("count_divide"))
                 .child(new RichTextWidget()
                         .size(54, 18)
                         .pos(63, 80)
@@ -89,21 +124,14 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                         .textBuilder(richText -> richText.addLine(KeyUtil.lang(WHITE, "tja.machine.universal.ticks", this.speed)))
                         .background(GTGuiTextures.DISPLAY))
                 .child(new ButtonWidget<>()
-                        .size(18)
                         .pos(43, 80)
-                        .overlay(KeyUtil.string("-"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
-                        .syncHandler("speed_divide"))
-                .child(new ButtonWidget<>()
-                        .size(18)
-                        .pos(116, 80)
                         .overlay(KeyUtil.string("+"))
-                        .background(GuiTextures.MC_BUTTON)
-                        .hoverBackground(GuiTextures.MC_BUTTON_HOVERED)
                         .syncHandler("speed_multiply"))
+                .child(new ButtonWidget<>()
+                        .pos(116, 80)
+                        .overlay(KeyUtil.string("-"))
+                        .syncHandler("speed_divide"))
                 .child(new ToggleButton()
-                        .size(18)
                         .pos(152, 80)
                         .disableHoverBackground()
                         .overlay(true, detail, GTGuiTextures.BUTTON_POWER[1])
@@ -164,6 +192,18 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
         if (capability == GregtechTileCapabilities.CAPABILITY_WORKABLE)
             return GregtechTileCapabilities.CAPABILITY_WORKABLE.cast(this);
         return null;
+    }
+
+    private void setItemCount(String text, int index) {
+        if (index < 0 || index >= this.itemFilter.getSlots()) return;
+        final ItemStack stack = this.itemFilter.getStackInSlot(index);
+        if (stack.isEmpty()) return;
+        stack.setCount((int) Math.min(Integer.MAX_VALUE, Long.parseLong(text)));
+        this.markAsDirty();
+    }
+
+    private String getItemCount(int index) {
+        return String.valueOf(index >= 0 && index < this.itemFilter.getSlots() ? this.itemFilter.getStackInSlot(index).getCount() : 0);
     }
 
     private void setWorking(boolean isWorking) {
