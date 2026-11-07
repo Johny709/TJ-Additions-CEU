@@ -29,6 +29,7 @@ public final class TJAGuiTextures {
     public static final UITexture BAR_YELLOW = UITexture.builder().location(resource("textures/gui/bar/bar_yellow"))
             .imageSize(16, 16).adaptable(1).build();
 
+    public static final UITexture TOGGLE_RESET_BUTTON = UITexture.fullImage(resource("textures/gui/widgets/reset_button_toggle"));
     public static final UITexture TOGGLE_BLOCKING_MODE = UITexture.fullImage(resource("textures/gui/widgets/block_mode_toggle"));
     public static final UITexture TOGGLE_INTERFACE_TERMINAL = UITexture.fullImage(resource("textures/gui/widgets/interface_terminal_toggle"));
     public static final UITexture TOGGLE_SEND_FLUID = UITexture.fullImage(resource( "textures/gui/widgets/send_fluid_toggle"));

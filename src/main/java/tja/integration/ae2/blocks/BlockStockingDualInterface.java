@@ -263,10 +263,9 @@ public class BlockStockingDualInterface extends BlockInterface {
                                                 .syncHandler(new TJAPhantomFluidSlotSH((IMultiFluidTankHandler) iface.getDualityFluidInterface().getConfig(), i)))
                                         .syncHandler("selection_2"))
                                 .child(new Grid()
-                                        .pos(7,85)
-                                        .size(162, iface.getDualityFluidInterface().getTanks().getSlots() * 54 / 9)
+                                        .pos(7,121)
+                                        .size(162, iface.getDualityFluidInterface().getTanks().getSlots() * 18 / 9)
                                         .gridOfSizeWidth(iface.getDualityFluidInterface().getTanks().getSlots(), 9, (x, y, i) -> new FluidSlot()
-                                                .size(18, 54)
                                                 .background(GuiTextures.SLOT_ITEM)
                                                 .syncHandler((IMultiFluidTankHandler) iface.getDualityFluidInterface().getTanks(), i)))
                                 .child(fluidUpgradeArea
