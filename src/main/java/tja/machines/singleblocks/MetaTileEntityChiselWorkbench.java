@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -124,7 +125,9 @@ public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEnti
                         .pos(7, 62)
                         .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
-                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled"))
+                                .addLine(IKey.lang("tja.machine.universal.auto_output")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("item_auto_output"))
                 .child(new ProgressWidget()
                         .leftRel(0.5f)

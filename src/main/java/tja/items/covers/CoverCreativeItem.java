@@ -5,6 +5,7 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.Icon;
 import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
@@ -28,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -73,7 +75,8 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
 
     @Override
     public ModularPanel buildUI(SidedPosGuiData guiData, PanelSyncManager syncManager, UISettings settings) {
-        syncManager.syncValue("is_working", new BooleanSyncValue(() -> this.isWorking, this::setWorking));
+        final BooleanSyncValue isWorking = new BooleanSyncValue(() -> this.isWorking, this::setWorking);
+        syncManager.syncValue("is_working", isWorking);
         syncManager.syncValue("speed_multiply", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> this.setSpeed(this.speed * 2L)));
         syncManager.syncValue("speed_divide", new InteractionSyncHandler()
@@ -136,6 +139,10 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                         .disableHoverBackground()
                         .overlay(true, detail, GTGuiTextures.BUTTON_POWER[1])
                         .overlay(false, detail, GTGuiTextures.BUTTON_POWER[0])
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(isWorking.getBoolValue() ?
+                                "tja.machine.universal.power_on" : "tja.machine.universal.power_off"))
+                                .addLine(IKey.lang("tja.machine.universal.power_toggle")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("is_working"))
                 .bindPlayerInventory();
     }

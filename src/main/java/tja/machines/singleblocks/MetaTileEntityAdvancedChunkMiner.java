@@ -138,12 +138,15 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         final StringSyncValue fluidName = new StringSyncValue(() -> this.importFluids.getTankAt(0).getFluid() != null ?
                 this.importFluids.getTankAt(0).getFluid().getLocalizedName() : "");
         syncManager.syncValue("fluid_name", fluidName);
-        syncManager.syncValue("render_box", new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
-                bool -> this.addPlayerToSeeBoundingBox(data.getPlayer().getUniqueID())));
-        syncManager.syncValue("silktouch", new BooleanSyncValue(this.workableHandler::isSilkTouch, this.workableHandler::setSilkTouch));
+        final BooleanSyncValue renderBox = new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
+                bool -> this.addPlayerToSeeBoundingBox(data.getPlayer().getUniqueID()));
+        syncManager.syncValue("render_box", renderBox);
+        final BooleanSyncValue silktouch = new BooleanSyncValue(this.workableHandler::isSilkTouch, this.workableHandler::setSilkTouch);
+        syncManager.syncValue("silktouch", silktouch);
         final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
         syncManager.syncValue("item_auto_output", itemAutoOutput);
-        syncManager.syncValue("is_working", new BooleanSyncValue(this.workableHandler::isWorkingEnabled, this::setWorkingEnabled));
+        final BooleanSyncValue isWorking = new BooleanSyncValue(this.workableHandler::isWorkingEnabled, this::setWorkingEnabled);
+        syncManager.syncValue("is_working", isWorking);
         syncManager.registerSlotGroup(new SlotGroup("item_input", 1, 1, true));
 
         final IPanelHandler oreDictPanel = syncManager.syncedPanel("ore_dict.panel", true,
@@ -203,6 +206,8 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                 .child(new ToggleButton()
                         .pos(7, 82)
                         .stateBackground(TJAGuiTextures.TOGGLE_BOX)
+                        .addTooltipLine(IKey.lang("tja.multiblock.advanced_large_miner.mining_area_bounding_box")
+                                .style(TextFormatting.GRAY))
                         .syncHandler("render_box"))
                 .child(new ToggleButton()
                         .pos(25, 82)
@@ -219,18 +224,28 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                 .child(new ToggleButton()
                         .pos(79, 82)
                         .overlay(new ItemDrawable(Blocks.WEB))
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(silktouch.getBoolValue() ?
+                                "tja.multiblock.advanced_large_miner.silktouch_true" : "tja.multiblock.advanced_large_miner.silktouch_false"))
+                                .addLine(IKey.lang("tja.multiblock.advanced_large_miner.silktouch")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("silktouch"))
                 .child(new ToggleButton()
                         .pos(133, 82)
                         .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
-                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled"))
+                                .addLine(IKey.lang("tja.machine.universal.auto_output")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("item_auto_output"))
                 .child(new ToggleButton()
                         .pos(151, 82)
                         .disableHoverBackground()
                         .overlay(true, detail, GTGuiTextures.BUTTON_POWER[1])
                         .overlay(false, detail, GTGuiTextures.BUTTON_POWER[0])
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(isWorking.getBoolValue() ?
+                                "tja.machine.universal.power_on" : "tja.machine.universal.power_off"))
+                                .addLine(IKey.lang("tja.machine.universal.power_toggle")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("is_working"))
                 .bindPlayerInventory();
     }

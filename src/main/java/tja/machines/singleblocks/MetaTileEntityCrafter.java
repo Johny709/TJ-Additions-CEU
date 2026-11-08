@@ -41,6 +41,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -183,7 +184,9 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
                         .pos(7, 112)
                         .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
-                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled"))
+                                .addLine(IKey.lang("tja.machine.universal.auto_output")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("item_auto_output"))
                 .child(new ButtonWidget<>()
                         .pos(62, 14)

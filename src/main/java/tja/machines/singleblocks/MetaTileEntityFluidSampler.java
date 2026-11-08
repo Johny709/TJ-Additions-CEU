@@ -24,6 +24,7 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -94,7 +95,9 @@ public class MetaTileEntityFluidSampler extends TJATieredWorkableMetaTileEntity 
                         .pos(7, 62)
                         .overlay(GTGuiTextures.BUTTON_ITEM_OUTPUT)
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(itemAutoOutput.getBoolValue() ?
-                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled")))
+                                "gregtech.gui.item_auto_input.tooltip.enabled" : "gregtech.gui.item_auto_input.tooltip.disabled"))
+                                .addLine(IKey.lang("tja.machine.universal.auto_output")
+                                        .style(TextFormatting.GRAY)))
                         .syncHandler("item_auto_output"))
                 .bindPlayerInventory();
     }
