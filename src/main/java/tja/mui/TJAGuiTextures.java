@@ -35,6 +35,7 @@ public final class TJAGuiTextures {
     public static final UITexture TOGGLE_SEND_FLUID = UITexture.fullImage(resource( "textures/gui/widgets/send_fluid_toggle"));
     public static final UITexture TOGGLE_SPLITTING_ITEMS_FLUIDS = UITexture.fullImage(resource("textures/gui/widgets/splitting_items_fluids_toggle"));
     public static final UITexture TOGGLE_AUTO_PULL = UITexture.fullImage(resource("textures/gui/widgets/auto_pull_toggle"));
+    public static final UITexture TOGGLE_BOX = UITexture.fullImage(resource("textures/gui/widgets/toggle_box"));
     public static final UITexture CYCLE_LOCK_CRAFTING = UITexture.fullImage(resource("textures/gui/widgets/lock_crafting_cycle"));
     public static final UITexture CYCLE_BLOCKING_MODE_EX = UITexture.fullImage(resource("textures/gui/widgets/blocking_mode_ex_cycle"));
     public static final UITexture AE2_MULTIPLY2_BUTTON = UITexture.fullImage(resource("textures/gui/widgets/ae2_multiply2_button"));

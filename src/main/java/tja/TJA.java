@@ -1,10 +1,12 @@
 package tja;
 
 import codechicken.lib.texture.TextureUtils;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tja.blocks.TJAAE2Blocks;
 import tja.capability.TJASimpleCapabilityManager;
+import tja.event.RenderEventHandler;
 import tja.integration.theoneprobe.TheOneProbeModule;
 import tja.items.TJACoverBehaviors;
 import net.minecraftforge.fml.common.Mod;
@@ -44,6 +46,8 @@ public class TJA {
             if (event.getSide() == Side.CLIENT)
                 TextureUtils.addIconRegister(TJATextures::register);
         }
+        if (event.getSide() == Side.CLIENT)
+            MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
     }
 
     @Mod.EventHandler

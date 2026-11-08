@@ -34,30 +34,45 @@ import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.mui.widget.GTFluidSlot;
 import gregtech.core.sound.GTSoundEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.lwjgl.opengl.GL11;
+import tja.capability.TJADataCodes;
 import tja.capability.handler.IMinerHandler;
 import tja.capability.workables.MinerWorkableHandler;
+import tja.event.RenderEventHandler;
 import tja.items.handlers.GTLargeItemStackHandler;
 import tja.mui.TJAGuiTextures;
 import tja.mui.sync.TJAPhantomItemSlotSH;
 import tja.mui.widget.TJAPhantomItemSlotWidget;
+import tja.rendering.TJARenderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileEntity implements IMinerHandler {
 
@@ -65,6 +80,7 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
     private final GTLargeItemStackHandler filterInventory =
             new GTLargeItemStackHandler(this, 27, 1, this, false);
     private final FluidStack drillingFluid;
+    private final Set<UUID> playersSeeBoundingBox = new HashSet<>();
 
     public MetaTileEntityAdvancedChunkMiner(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
@@ -122,6 +138,8 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         final StringSyncValue fluidName = new StringSyncValue(() -> this.importFluids.getTankAt(0).getFluid() != null ?
                 this.importFluids.getTankAt(0).getFluid().getLocalizedName() : "");
         syncManager.syncValue("fluid_name", fluidName);
+        syncManager.syncValue("render_box", new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
+                bool -> this.addPlayerToSeeBoundingBox(data.getPlayer().getUniqueID())));
         syncManager.syncValue("silktouch", new BooleanSyncValue(this.workableHandler::isSilkTouch, this.workableHandler::setSilkTouch));
         final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
         syncManager.syncValue("item_auto_output", itemAutoOutput);
@@ -182,6 +200,10 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                         .gridOfSizeWidth(this.exportItems.getSlots(), 3, (x, y, i) -> new ItemSlot()
                                 .slot(new ModularSlot(this.exportItems, i)
                                         .canPut(false))))
+                .child(new ToggleButton()
+                        .pos(7, 82)
+                        .stateBackground(TJAGuiTextures.TOGGLE_BOX)
+                        .syncHandler("render_box"))
                 .child(new ToggleButton()
                         .pos(25, 82)
                         .stateBackground(TJAGuiTextures.TOGGLE_RESET_BUTTON)
@@ -256,6 +278,135 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         this.filterInventory.deserializeNBT(data.getCompoundTag("filterInventory"));
+    }
+
+    private void addPlayerToSeeBoundingBox(UUID uuid) {
+        if (this.playersSeeBoundingBox.contains(uuid)) {
+            this.playersSeeBoundingBox.remove(uuid);
+        } else this.playersSeeBoundingBox.add(uuid);
+        this.writeCustomData(TJADataCodes.RENDER_BOX, buffer -> buffer.writeUniqueId(uuid));
+    }
+
+    @Override
+    public void receiveCustomData(int dataId, @Nonnull PacketBuffer buf) {
+        super.receiveCustomData(dataId, buf);
+        if (dataId == TJADataCodes.RENDER_BOX) {
+            final UUID uuid = buf.readUniqueId();
+            if (this.playersSeeBoundingBox.contains(uuid)) {
+                this.playersSeeBoundingBox.remove(uuid);
+            } else this.playersSeeBoundingBox.add(uuid);
+        }
+    }
+
+    @Override
+    public void onPlacement(@Nullable EntityLivingBase placer) {
+        super.onPlacement(placer);
+        if (this.getWorld().isRemote)
+            this.initializeMiningAreaBoundingBox();
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (this.getWorld().isRemote)
+            this.removeMiningAreaBoundingBox();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void initializeMiningAreaBoundingBox() {
+        final String key = this.getMetaFullName() + "." + this.getPos() + "." + this.getWorld().provider.getDimension();
+        RenderEventHandler.addToRenderWorldLastEvent(key, event -> {
+            final EntityPlayer player = Minecraft.getMinecraft().player;
+            if (player == null) return;
+            if (!this.playersSeeBoundingBox.contains(player.getUniqueID())) return;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.disableCull();
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableLighting();
+            GlStateManager.enableBlend();
+
+            final Chunk chunk = this.getWorld().getChunk(this.getPos());
+            final float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+            final double playerX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+            final double playerY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+            final double playerZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+            // offset rendering position relative to player camera position
+            GlStateManager.translate(-playerX + chunk.x * 16, -playerY, -playerZ + chunk.z * 16);
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 0.3f);
+
+            TJARenderUtil.drawCube(2, 0, 256);
+
+            GlStateManager.disableBlend();
+            GlStateManager.glLineWidth(4);
+            GlStateManager.scale(16f, 16f, 16f);
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            final Tessellator tessellator = Tessellator.getInstance();
+            final BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+
+            final int diameter = this.getDiameter();
+            final int reminder = diameter % 2;
+            final int start = diameter / 2;
+            final int end = start + reminder;
+            for (int i = -start; i < end; i++) {
+                for (int j = -start; j < end; j++) {
+                    final int x = j % diameter;
+                    final int z = j / diameter + i;
+                    buffer.pos(x, 0, z).endVertex();
+                    buffer.pos(x + 1, 0, z).endVertex();
+
+                    buffer.pos(x + 1, 0, z).endVertex();
+                    buffer.pos(x + 1, 0, z + 1).endVertex();
+
+                    buffer.pos(x + 1, 0, z + 1).endVertex();
+                    buffer.pos(x, 0, z + 1).endVertex();
+
+                    buffer.pos(x, 0, z + 1).endVertex();
+                    buffer.pos(x, 0, z).endVertex();
+
+                    buffer.pos(x, 0, z).endVertex();
+                    buffer.pos(x, 16, z).endVertex();
+
+                    buffer.pos(x + 1, 0, z).endVertex();
+                    buffer.pos(x + 1, 16, z).endVertex();
+
+                    buffer.pos(x + 1, 0, z + 1).endVertex();
+                    buffer.pos(x + 1, 16, z + 1).endVertex();
+
+                    buffer.pos(x, 0, z + 1).endVertex();
+                    buffer.pos(x, 16, z + 1).endVertex();
+
+                    buffer.pos(x, 16, z).endVertex();
+                    buffer.pos(x + 1, 16, z).endVertex();
+
+                    buffer.pos(x + 1, 16, z).endVertex();
+                    buffer.pos(x + 1, 16, z + 1).endVertex();
+
+                    buffer.pos(x + 1, 16, z + 1).endVertex();
+                    buffer.pos(x, 16, z + 1).endVertex();
+
+                    buffer.pos(x, 16, z + 1).endVertex();
+                    buffer.pos(x, 16, z).endVertex();
+                }
+            }
+            tessellator.draw();
+            GlStateManager.popMatrix();
+        });
+    }
+
+    @Override
+    public IItemHandlerModifiable getExportItemInventory() {
+        final TileEntity tileEntity = this.getWorld().getTileEntity(this.getPos().offset(this.getOutputFacing()));
+        final IItemHandler itemHandler = tileEntity != null ?
+                tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.getOutputFacing()) : null;
+        return itemHandler instanceof IItemHandlerModifiable ? (IItemHandlerModifiable) itemHandler : super.getExportItemInventory();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void removeMiningAreaBoundingBox() {
+        final String key = this.getMetaFullName() + "." + this.getPos() + "." + this.getWorld().provider.getDimension();
+        RenderEventHandler.removeFromRenderWorldLastEvent(key);
     }
 
     private String getDoneText() {
