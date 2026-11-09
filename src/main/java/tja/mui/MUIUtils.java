@@ -16,6 +16,7 @@ import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widget.scroll.HorizontalScrollData;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
@@ -331,6 +332,8 @@ public final class MUIUtils {
                                                      IPanelHandler panelHandler,
                                                      ISuperInterface iface,
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
+        final StringSyncValue itemCount = new StringSyncValue(() -> iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex()));
+        syncManager.syncValue("item_count", itemCount);
         syncManager.syncValue("item_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
@@ -365,8 +368,12 @@ public final class MUIUtils {
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
         return ModularPanel.defaultPanel("me.interface.item_config.panel", 162, 100)
-                .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
-                        .pos(7, 7))
+                .child(new RichTextWidget()
+                        .pos(7, 7)
+                        .size(162, 8)
+                        .autoUpdate(true)
+                        .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.item",
+                                itemCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
                         .pos(7, 46)
                         .size(148, 18)
@@ -431,6 +438,8 @@ public final class MUIUtils {
                                                      IPanelHandler panelHandler,
                                                      ISuperFluidInterface iface,
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
+        final StringSyncValue fluidCount = new StringSyncValue(() -> iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()));
+        syncManager.syncValue("fluid_count", fluidCount);
         syncManager.syncValue("fluid_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
@@ -465,8 +474,12 @@ public final class MUIUtils {
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
         return ModularPanel.defaultPanel("me.interface.fluid_config.panel", 162, 100)
-                .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
-                        .pos(7, 7))
+                .child(new RichTextWidget()
+                        .pos(7, 7)
+                        .size(162, 8)
+                        .autoUpdate(true)
+                        .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.fluid",
+                                fluidCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
                         .pos(7, 46)
                         .size(148, 18)

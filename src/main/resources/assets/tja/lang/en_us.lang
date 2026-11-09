@@ -267,6 +267,8 @@ tja.machine.universal.power_on=§a[ON]
 tja.machine.universal.power_toggle=Click to toggle on or off
 tja.machine.universal.auto_output=Click to toggle for the machine to auto output to adjacent inventories automatically
 tja.machine.universal.reset=Reset
+tja.machine.universal.slot_amount.item=Stack size %s in slot %s
+tja.machine.universal.slot_amount.fluid=Fluid amount %s L in slot %s
 
 gregtech.multiblock.large_chemical_reactor.coil_bonus=Every coil after §6Cupronickel§7 reduces energy usage by §f5%%§7.
 
