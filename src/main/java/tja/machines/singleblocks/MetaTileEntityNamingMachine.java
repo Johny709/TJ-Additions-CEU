@@ -52,7 +52,7 @@ public class MetaTileEntityNamingMachine extends TJATieredWorkableMetaTileEntity
 
     public MetaTileEntityNamingMachine(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
-        this.parallel = this.getTier();
+        this.parallel = Math.max(1, this.getTier());
     }
 
     @Override

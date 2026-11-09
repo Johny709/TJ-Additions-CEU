@@ -57,7 +57,7 @@ public class ArchitectWorkbenchWorkableHandler extends AbstractWorkableHandler<I
         }
         if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
             this.findAndConsumeInputs(itemInputs, false);
-            this.maxProgress = this.calculateOverclock(30, 200, 2);
+            this.maxProgress = this.calculateOverclock(7, 400, 2);
             if (!this.handler.hasFreeParallels())
                 this.energyPerTick *= this.parallelsPerformed;
             return true;

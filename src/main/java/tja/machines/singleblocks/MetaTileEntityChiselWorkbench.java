@@ -55,7 +55,7 @@ public class MetaTileEntityChiselWorkbench extends TJATieredWorkableMetaTileEnti
 
     public MetaTileEntityChiselWorkbench(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
-        this.parallel = this.getTier();
+        this.parallel = Math.max(1, this.getTier());
         this.combinedInventory = new ItemHandlerList(Arrays.asList(this.circuitSlot, this.circuitSlot1, this.importItems));
     }
 

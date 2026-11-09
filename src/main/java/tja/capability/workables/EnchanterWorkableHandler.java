@@ -63,7 +63,7 @@ public class EnchanterWorkableHandler extends AbstractWorkableHandler<IMachineHa
             if (this.hasEnoughFluid(fluid, this.experience)) {
                 this.findAndConsumeInputs(itemInputs, false);
                 this.handler.getImportFluidTank().drain(fluid, true);
-                this.maxProgress = this.calculateOverclock(30, 2000, 2);
+                this.maxProgress = this.calculateOverclock(7, 4000, 2);
                 if (!this.handler.hasFreeParallels())
                     this.energyPerTick *= this.parallelsPerformed;
                 return true;

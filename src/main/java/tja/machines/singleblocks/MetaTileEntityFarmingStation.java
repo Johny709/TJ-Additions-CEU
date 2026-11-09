@@ -201,6 +201,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
                 .child(new ToggleButton()
                         .pos(133, 78)
                         .overlay(GTGuiTextures.BOX_OVERLAY)
+                        .addTooltipLine(IKey.lang("tja.machine.farming_station.harvest_area_box"))
                         .syncHandler("render_box"))
                 .child(new ProgressWidget()
                         .pos(77, 39)

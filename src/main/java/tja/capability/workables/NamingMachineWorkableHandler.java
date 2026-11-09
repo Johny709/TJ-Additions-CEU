@@ -56,7 +56,7 @@ public class NamingMachineWorkableHandler extends AbstractWorkableHandler<INameH
         }
         if (this.foundRecipe && this.handler.getInputEnergyContainer().getEnergyStored() >= GTValues.VA[this.handler.getTier()]) {
             this.findAndConsumeInputs(itemInputs, false);
-            this.setMaxProgress(this.calculateOverclock(30L, 50, 2.8F));
+            this.maxProgress = this.calculateOverclock(7, 100, 2.8F);
             if (!this.handler.hasFreeParallels())
                 this.energyPerTick *= this.parallelsPeformed;
             return true;

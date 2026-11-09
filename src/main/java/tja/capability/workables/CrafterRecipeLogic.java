@@ -96,7 +96,7 @@ public class CrafterRecipeLogic extends AbstractWorkableHandler<IMachineHandler>
             output.setCount(output.getCount() * parallelsPerformed);
             this.itemOutputs.add(output);
             this.previousRecipe.put(this.currentRecipe);
-            this.maxProgress = this.calculateOverclock(30, 50, 2);
+            this.maxProgress = this.calculateOverclock(7, 100, 2);
             if (!this.handler.hasFreeParallels())
                 this.energyPerTick *= parallelsPerformed;
             return true;

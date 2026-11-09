@@ -47,7 +47,7 @@ public class MetaTileEntityArchitectWorkbench extends TJATieredWorkableMetaTileE
 
     public MetaTileEntityArchitectWorkbench(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
-        this.parallel = this.getTier();
+        this.parallel = Math.max(1, this.getTier());
     }
 
     @Override

@@ -67,7 +67,7 @@ public class FluidSamplerWorkableHandler extends AbstractWorkableHandler<IMachin
             }
             compound.setTag("fluidInChunk", fluidCompound);
             this.itemOutputs.add(dataStick);
-            this.setMaxProgress(this.calculateOverclock(GTValues.VAOC[0], 1200, 2));
+            this.maxProgress = this.calculateOverclock(7, 1200, 2);
             return true;
         } else return false;
     }

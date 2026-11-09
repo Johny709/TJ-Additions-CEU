@@ -71,7 +71,7 @@ public class FisherWorkableHandler extends AbstractWorkableHandler<IPosHandler> 
                 }
             }
             this.itemOutputs.addAll(this.itemMapSorter.keySet());
-            this.setMaxProgress(this.calculateOverclock(30, 800, 2));
+            this.maxProgress = this.calculateOverclock(7, 1600, 2);
             if (!this.handler.hasFreeParallels())
                 this.energyPerTick *= amount;
             return true;

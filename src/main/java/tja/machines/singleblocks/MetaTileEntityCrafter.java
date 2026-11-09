@@ -83,7 +83,7 @@ public class MetaTileEntityCrafter extends TJATieredWorkableMetaTileEntity imple
     public MetaTileEntityCrafter(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
         this.encodingSlots = 6 + (tier * 3);
-        this.parallel = this.getTier();
+        this.parallel = Math.max(1, this.getTier());
         this.encodingInventory = new NotifiableItemStackHandler(this, this.encodingSlots, this, false);
         this.recipeLogic.initialize(1);
     }

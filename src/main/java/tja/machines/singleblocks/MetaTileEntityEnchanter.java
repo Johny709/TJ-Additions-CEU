@@ -53,7 +53,7 @@ public class MetaTileEntityEnchanter extends TJATieredWorkableMetaTileEntity {
 
     public MetaTileEntityEnchanter(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, tier);
-        this.parallel = this.getTier();
+        this.parallel = Math.max(1, this.getTier());
         this.fluidTank = new NotifiableFluidTank(64000, this, false);
         this.initializeInventory();
     }
