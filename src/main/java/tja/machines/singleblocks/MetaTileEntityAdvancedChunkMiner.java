@@ -139,7 +139,7 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                 this.importFluids.getTankAt(0).getFluid().getLocalizedName() : "");
         syncManager.syncValue("fluid_name", fluidName);
         final BooleanSyncValue renderBox = new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
-                bool -> this.addPlayerToSeeBoundingBox(data.getPlayer().getUniqueID()));
+                bool -> this.addPlayerToSeeBoundingBox(bool, data.getPlayer().getUniqueID()));
         syncManager.syncValue("render_box", renderBox);
         final BooleanSyncValue silktouch = new BooleanSyncValue(this.workableHandler::isSilkTouch, this.workableHandler::setSilkTouch);
         syncManager.syncValue("silktouch", silktouch);
@@ -151,16 +151,18 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
 
         final IPanelHandler oreDictPanel = syncManager.syncedPanel("ore_dict.panel", true,
                 (panel, handler) -> this.workableHandler.getOreDictFilter().createPopupPanel(panel, "ore_dict.panel"));
-        syncManager.syncValue("ore_dict", new BooleanSyncValue(() -> false, b -> {
-            if (!oreDictPanel.isPanelOpen()) {
+        syncManager.syncValue("ore_dict", new BooleanSyncValue(oreDictPanel::isPanelOpen, value -> {
+            if (!value && oreDictPanel.isPanelOpen()) {
+                oreDictPanel.closePanel();
+            } else if (value)
                 oreDictPanel.openPanel();
-            } else oreDictPanel.closePanel();
         }));
         final IPanelHandler filterPanel = syncManager.syncedPanel("filter.panel", true, this::createFilterPanel);
-        syncManager.syncValue("filter", new BooleanSyncValue(() -> false, b -> {
-            if (!filterPanel.isPanelOpen()) {
+        syncManager.syncValue("filter", new BooleanSyncValue(filterPanel::isPanelOpen, value -> {
+            if (!value && filterPanel.isPanelOpen()) {
+                filterPanel.closePanel();
+            } else if (value)
                 filterPanel.openPanel();
-            } else filterPanel.closePanel();
         }));
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
         return ModularPanel.defaultPanel("advanced_chunk_miner.gui", 176, 186)
@@ -295,11 +297,13 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         this.filterInventory.deserializeNBT(data.getCompoundTag("filterInventory"));
     }
 
-    private void addPlayerToSeeBoundingBox(UUID uuid) {
-        if (this.playersSeeBoundingBox.contains(uuid)) {
+    private void addPlayerToSeeBoundingBox(boolean value, UUID uuid) {
+        if (!value && this.playersSeeBoundingBox.contains(uuid)) {
             this.playersSeeBoundingBox.remove(uuid);
-        } else this.playersSeeBoundingBox.add(uuid);
-        this.writeCustomData(TJADataCodes.RENDER_BOX, buffer -> buffer.writeUniqueId(uuid));
+        } else if (value)
+            this.playersSeeBoundingBox.add(uuid);
+        this.writeCustomData(TJADataCodes.RENDER_BOX, buffer -> buffer.writeUniqueId(uuid)
+                .writeBoolean(value));
     }
 
     @Override
@@ -307,9 +311,11 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         super.receiveCustomData(dataId, buf);
         if (dataId == TJADataCodes.RENDER_BOX) {
             final UUID uuid = buf.readUniqueId();
-            if (this.playersSeeBoundingBox.contains(uuid)) {
+            final boolean value = buf.readBoolean();
+            if (!value && this.playersSeeBoundingBox.contains(uuid)) {
                 this.playersSeeBoundingBox.remove(uuid);
-            } else this.playersSeeBoundingBox.add(uuid);
+            } else if (value)
+                this.playersSeeBoundingBox.add(uuid);
         }
     }
 

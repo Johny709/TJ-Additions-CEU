@@ -54,6 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.TJAValues;
+import tja.capability.TJADataCodes;
 import tja.capability.handler.IFarmerHandler;
 import tja.capability.workables.FarmingStationWorkableHandler;
 import tja.event.RenderEventHandler;
@@ -151,7 +152,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
         final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
         syncManager.syncValue("item_auto_output", itemAutoOutput);
         syncManager.syncValue("render_box", new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
-                bool -> this.addPlayerToSeeBoundingBox(data.getPlayer().getUniqueID())));
+                bool -> this.addPlayerToSeeBoundingBox(bool, data.getPlayer().getUniqueID())));
         syncManager.registerSlotGroup(new SlotGroup("tool_input", 1, 1, true));
         syncManager.registerSlotGroup(new SlotGroup("fertilizer_input", 2, 2, true));
         syncManager.registerSlotGroup(new SlotGroup("seed_input", 2, 3, true));
@@ -222,21 +223,25 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
             Textures.FLUID_OUTPUT_OVERLAY.renderSided(this.getOutputFacing(), renderState, translation, pipeline);
     }
 
-    private void addPlayerToSeeBoundingBox(UUID uuid) {
-        if (this.playersSeeBoundingBox.contains(uuid)) {
+    private void addPlayerToSeeBoundingBox(boolean value, UUID uuid) {
+        if (!value && this.playersSeeBoundingBox.contains(uuid)) {
             this.playersSeeBoundingBox.remove(uuid);
-        } else this.playersSeeBoundingBox.add(uuid);
-        this.writeCustomData(20, buffer -> buffer.writeUniqueId(uuid));
+        } else if (value)
+            this.playersSeeBoundingBox.add(uuid);
+        this.writeCustomData(TJADataCodes.RENDER_BOX, buffer -> buffer.writeUniqueId(uuid)
+                .writeBoolean(value));
     }
 
     @Override
     public void receiveCustomData(int dataId, @Nonnull PacketBuffer buf) {
         super.receiveCustomData(dataId, buf);
-        if (dataId == 20) {
+        if (dataId == TJADataCodes.RENDER_BOX) {
             final UUID uuid = buf.readUniqueId();
-            if (this.playersSeeBoundingBox.contains(uuid)) {
+            final boolean value = buf.readBoolean();
+            if (!value && this.playersSeeBoundingBox.contains(uuid)) {
                 this.playersSeeBoundingBox.remove(uuid);
-            } else this.playersSeeBoundingBox.add(uuid);
+            } else if (value)
+                this.playersSeeBoundingBox.add(uuid);
         }
     }
 
