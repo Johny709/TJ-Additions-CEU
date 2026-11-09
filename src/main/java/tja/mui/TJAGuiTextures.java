@@ -29,13 +29,11 @@ public final class TJAGuiTextures {
     public static final UITexture BAR_YELLOW = UITexture.builder().location(resource("textures/gui/bar/bar_yellow"))
             .imageSize(16, 16).adaptable(1).build();
 
-    public static final UITexture TOGGLE_RESET_BUTTON = UITexture.fullImage(resource("textures/gui/widgets/reset_button_toggle"));
     public static final UITexture TOGGLE_BLOCKING_MODE = UITexture.fullImage(resource("textures/gui/widgets/block_mode_toggle"));
     public static final UITexture TOGGLE_INTERFACE_TERMINAL = UITexture.fullImage(resource("textures/gui/widgets/interface_terminal_toggle"));
     public static final UITexture TOGGLE_SEND_FLUID = UITexture.fullImage(resource( "textures/gui/widgets/send_fluid_toggle"));
     public static final UITexture TOGGLE_SPLITTING_ITEMS_FLUIDS = UITexture.fullImage(resource("textures/gui/widgets/splitting_items_fluids_toggle"));
     public static final UITexture TOGGLE_AUTO_PULL = UITexture.fullImage(resource("textures/gui/widgets/auto_pull_toggle"));
-    public static final UITexture TOGGLE_BOX = UITexture.fullImage(resource("textures/gui/widgets/toggle_box"));
     public static final UITexture CYCLE_LOCK_CRAFTING = UITexture.fullImage(resource("textures/gui/widgets/lock_crafting_cycle"));
     public static final UITexture CYCLE_BLOCKING_MODE_EX = UITexture.fullImage(resource("textures/gui/widgets/blocking_mode_ex_cycle"));
     public static final UITexture AE2_MULTIPLY2_BUTTON = UITexture.fullImage(resource("textures/gui/widgets/ae2_multiply2_button"));
@@ -47,6 +45,7 @@ public final class TJAGuiTextures {
 
     public static final UITexture UPGRADE_OVERLAY = UITexture.fullImage(resource("textures/gui/overlay/me.upgrade_overlay"));
     public static final UITexture PATTERN_OVERLAY = UITexture.fullImage(resource("textures/gui/overlay/me.pattern_overlay"));
+    public static final UITexture TOGGLE_RESET_BUTTON = UITexture.fullImage(resource("textures/gui/overlay/reset_overlay"));
 
     public static final IDrawable CERTUS_QUARTZ_WRENCH = TJAValues.isModLoaded(TJAValues.AE2_MOD_ID) ? new ItemDrawable(Api.INSTANCE.definitions().items().certusQuartzWrench().maybeStack(1).orElse(ItemStack.EMPTY)) : UITexture.EMPTY;
     public static final IDrawable CLOCK = new ItemDrawable(new ItemStack(Objects.requireNonNull(Item.getByNameOrId("minecraft:clock"))));

@@ -200,7 +200,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
                         .syncHandler("item_auto_output"))
                 .child(new ToggleButton()
                         .pos(133, 78)
-                        .stateBackground(TJAGuiTextures.TOGGLE_BOX)
+                        .overlay(GTGuiTextures.BOX_OVERLAY)
                         .syncHandler("render_box"))
                 .child(new ProgressWidget()
                         .pos(77, 39)
