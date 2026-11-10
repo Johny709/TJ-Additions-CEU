@@ -141,6 +141,8 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         final BooleanSyncValue renderBox = new BooleanSyncValue(() -> this.playersSeeBoundingBox.contains(data.getPlayer().getUniqueID()),
                 bool -> this.addPlayerToSeeBoundingBox(bool, data.getPlayer().getUniqueID()));
         syncManager.syncValue("render_box", renderBox);
+        syncManager.syncValue("reset", new BooleanSyncValue(this.workableHandler::isReset, this.workableHandler::setReset));
+        syncManager.syncValue("done", new BooleanSyncValue(this.workableHandler::isDone, this.workableHandler::setDone));
         final BooleanSyncValue silktouch = new BooleanSyncValue(this.workableHandler::isSilkTouch, this.workableHandler::setSilkTouch);
         syncManager.syncValue("silktouch", silktouch);
         final BooleanSyncValue itemAutoOutput = new BooleanSyncValue(this::isAutoOutputItems, this::setItemAutoOutput);
@@ -178,14 +180,15 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                         .pos(69, 58)
                         .syncHandler(this.importFluids.getTankAt(0)))
                 .child(new RichTextWidget()
-                        .pos(11, -15)
+                        .pos(11, -10)
                         .size(80)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(IKey.lang("gregtech.fluid.amount",
                                 this.importFluids.getTankAt(0).getFluidAmount(), this.importFluids.getTankAt(0).getCapacity()))
                                 .addLine(IKey.str(fluidName.getStringValue())
                                         .style(TextFormatting.WHITE))
-                                .addLine(IKey.lang(this.getDoneText()))))
+                                .addLine(IKey.lang(this.getDoneText())
+                                        .style(TextFormatting.GREEN))))
                 .child(new ItemSlot()
                         .pos(90, 8)
                         .background(GTGuiTextures.SLOT, GTGuiTextures.IN_SLOT_OVERLAY)
@@ -217,14 +220,17 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
                         .syncHandler("reset"))
                 .child(new ToggleButton()
                         .pos(43, 82)
-                        .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY)
-                        .syncHandler("filter"))
+                        .syncHandler("done"))
                 .child(new ToggleButton()
                         .pos(61, 82)
                         .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY)
-                        .syncHandler("ore_dict"))
+                        .syncHandler("filter"))
                 .child(new ToggleButton()
                         .pos(79, 82)
+                        .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY)
+                        .syncHandler("ore_dict"))
+                .child(new ToggleButton()
+                        .pos(97, 82)
                         .overlay(new ItemDrawable(Blocks.WEB))
                         .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(silktouch.getBoolValue() ?
                                 "tja.multiblock.advanced_large_miner.silktouch_true" : "tja.multiblock.advanced_large_miner.silktouch_false"))
@@ -253,14 +259,24 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
     }
 
     private ModularPanel createFilterPanel(PanelSyncManager syncManager, IPanelHandler panelHandler) {
+        final BooleanSyncValue filterBlacklist = new BooleanSyncValue(this.workableHandler::isBlacklistBlock, this.workableHandler::setBlacklistBlock);
+        syncManager.syncValue("filter_blacklist", filterBlacklist);
+
         return ModularPanel.defaultPanel("filter.panel", 174, 80)
                 .child(new Grid()
-                        .pos(4, 22)
+                        .pos(4, 23)
                         .size(166, 54)
                         .gridOfSizeWidth(this.filterInventory.size(), 9, (x, y, i) -> new TJAPhantomItemSlotWidget()
                                 .background(GTGuiTextures.SLOT, GTGuiTextures.FILTER_SLOT_OVERLAY)
                                 .syncHandler(new TJAPhantomItemSlotSH(this.filterInventory, i, this.workableHandler::addItemToFilter,
                                         this.workableHandler::removeItemFromFilter))))
+                .child(new ToggleButton()
+                        .pos(4, 4)
+                        .overlay(true, GTGuiTextures.BUTTON_BLACKLIST[1])
+                        .overlay(false, GTGuiTextures.BUTTON_BLACKLIST[0])
+                        .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(filterBlacklist.getBoolValue() ?
+                                "tja.multiblock.advanced_large_miner.blacklist_block.enabled" : "tja.multiblock.advanced_large_miner.blacklist_block.disabled")))
+                        .syncHandler("filter_blacklist"))
                 .child(new ButtonWidget<>()
                         .pos(157, 5)
                         .size(12)
@@ -431,7 +447,8 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
     }
 
     private String getDoneText() {
-        return this.workableHandler.isDone() ? I18n.format("gregtech.multiblock.large_miner.done") : "";
+        return I18n.format(this.workableHandler.isDone() ? "gregtech.multiblock.large_miner.done" :
+                this.workableHandler.isActive() ? "gregtech.multiblock.running" : "gregtech.multiblock.idling");
     }
 
     @Override
