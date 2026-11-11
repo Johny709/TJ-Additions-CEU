@@ -17,6 +17,8 @@ public final class TJAGuiTextures {
     public static final UITexture SLOT_DOWN = UITexture.fullImage(resource("textures/gui/widgets/slot_down"));
     public static final UITexture SELECTION_BOX = UITexture.builder().location(resource("textures/gui/base/select_box"))
             .imageSize(16, 16).adaptable(1).build();
+    public static final UITexture MACHINE_LABEL = UITexture.builder().location(resource("textures/gui/base/machine_label"))
+            .imageSize(18, 18).adaptable(1).build();
 
     public static final UITexture BAR_BLUE = UITexture.builder().location(resource("textures/gui/bar/bar_blue"))
             .imageSize(16, 16).adaptable(1).build();
