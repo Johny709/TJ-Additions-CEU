@@ -6,13 +6,13 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GTLargeItemStackHandler extends LargeItemStackHandler implements INotifiableHandler {
+public class NotifiableLargeItemStackHandler extends LargeItemStackHandler implements INotifiableHandler {
 
     final List<MetaTileEntity> notifiableEntities = new ArrayList<>();
     private final MetaTileEntity metaTileEntity;
     private final boolean isExport;
 
-    public GTLargeItemStackHandler(MetaTileEntity metaTileEntity, int slots, int capacity, MetaTileEntity entityToNotify, boolean isExport) {
+    public NotifiableLargeItemStackHandler(MetaTileEntity metaTileEntity, int slots, int capacity, MetaTileEntity entityToNotify, boolean isExport) {
         super(slots, capacity);
         this.metaTileEntity = metaTileEntity;
         this.isExport = isExport;

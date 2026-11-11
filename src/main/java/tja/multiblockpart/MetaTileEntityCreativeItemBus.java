@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import tja.TJAValues;
-import tja.items.handlers.GTLargeItemStackHandler;
+import tja.items.handlers.NotifiableLargeItemStackHandler;
 import tja.mui.MUIUtils;
 import tja.mui.sync.SelectionWidgetGroupSH;
 import tja.mui.sync.TJAPhantomItemSlotSH;
@@ -77,7 +77,7 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockNotif
 
     @Override
     protected IItemHandlerModifiable createImportItemHandler() {
-        return new GTLargeItemStackHandler(this, 16, Integer.MAX_VALUE,  this.getController(), false) {
+        return new NotifiableLargeItemStackHandler(this, 16, Integer.MAX_VALUE,  this.getController(), false) {
             @Nonnull
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {

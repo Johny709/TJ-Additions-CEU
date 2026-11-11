@@ -294,14 +294,6 @@ public class GTRecipes {
                     'E', new UnificationEntry(OrePrefix.circuit, circuitTiers[i]),
                     'W', new UnificationEntry(OrePrefix.cableGtSingle, cableMaterials[i]));
         }
-        // crafter hatch
-        for (int i = 0; i < TJAMetaTileEntities.CRAFTER_HATCHES.size(); i++) {
-            if (i > 8 && !isGregicalityLoaded) break;
-            ModHandler.addShapedRecipe("crafter_hatch." + GTValues.VN[i], TJAMetaTileEntities.CRAFTER_HATCHES.get(i).getStackForm(),
-                    "CCC", "CHC", "CCC",
-                    'C', new ItemStack(Blocks.CRAFTING_TABLE),
-                    'H', TJAMetaTileEntities.CRAFTERS.get(i).getStackForm());
-        }
         // farming station
         for (int i = 0; i < TJAMetaTileEntities.FARMING_STATION.size(); i++) {
             if (i > 8 && !isGregicalityLoaded) break;
@@ -328,6 +320,40 @@ public class GTRecipes {
                     'S', sensors[i].getStackForm(),
                     'R', pistons[i].getStackForm(),
                     'H', MetaTileEntities.HULL[i].getStackForm());
+        }
+        // crafter hatch
+        for (int i = 0; i < TJAMetaTileEntities.CRAFTER_HATCHES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded) break;
+            ModHandler.addShapedRecipe("crafter_hatch." + GTValues.VN[i], TJAMetaTileEntities.CRAFTER_HATCHES.get(i).getStackForm(),
+                    "CCC", "CHC", "CCC",
+                    'C', new ItemStack(Blocks.CRAFTING_TABLE),
+                    'H', TJAMetaTileEntities.CRAFTERS.get(i).getStackForm());
+        }
+        // super input bus
+        for (int i = 0; i < TJAMetaTileEntities.SUPER_INPUT_BUSES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded || i > 13) break;
+            RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .input(MetaTileEntities.ITEM_IMPORT_BUS[i], 64)
+                    .input(OrePrefix.gear, materials[i], 16)
+                    .input(robotArms[i], 4)
+                    .input(conveyors[i], 4)
+                    .fluidInputs(getPolymerByTier(i).getFluid(9216))
+                    .output(TJAMetaTileEntities.SUPER_INPUT_BUSES.get(i))
+                    .EUt(GTValues.VAOC[i]).duration(1200)
+                    .buildAndRegister();
+        }
+        // super input bus
+        for (int i = 0; i < TJAMetaTileEntities.SUPER_OUTPUT_BUSES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded || i > 13) break;
+            RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .input(MetaTileEntities.ITEM_EXPORT_BUS[i], 64)
+                    .input(OrePrefix.gear, materials[i], 16)
+                    .input(robotArms[i], 4)
+                    .input(conveyors[i], 4)
+                    .fluidInputs(getPolymerByTier(i).getFluid(9216))
+                    .output(TJAMetaTileEntities.SUPER_OUTPUT_BUSES.get(i))
+                    .EUt(GTValues.VAOC[i]).duration(1200)
+                    .buildAndRegister();
         }
         // mixed metal ingot
         ModHandler.addShapedRecipe("mixed_metal_ingot.1", TJAMetaItems.MIXED_METAL_INGOT.getStackForm(1), "A", "B", "C",
@@ -651,6 +677,30 @@ public class GTRecipes {
                     .output(TJAMetaTileEntities.INDUSTRIAL_FUSION_REACTOR_MK3)
                     .EUt(180000).duration(1000)
                     .buildAndRegister();
+        }
+    }
+
+    static Material getPolymerByTier(int tier) {
+        switch (tier) {
+            case 3:
+                return Materials.PolyvinylChloride;
+            case 4:
+                return Materials.Polytetrafluoroethylene;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                return Materials.Polybenzimidazole;
+            case 9:
+            case 10:
+                return GCYLMaterials.Polyetheretherketone;
+            case 11:
+            case 12:
+                return GCYLMaterials.Zylon;
+            case 13:
+            case 14:
+                return GCYLMaterials.FullerenePolymerMatrix;
+            default: return Materials.Polyethylene;
         }
     }
 }

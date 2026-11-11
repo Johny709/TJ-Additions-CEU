@@ -64,7 +64,7 @@ import tja.capability.TJADataCodes;
 import tja.capability.handler.IMinerHandler;
 import tja.capability.workables.MinerWorkableHandler;
 import tja.event.RenderEventHandler;
-import tja.items.handlers.GTLargeItemStackHandler;
+import tja.items.handlers.NotifiableLargeItemStackHandler;
 import tja.mui.TJAGuiTextures;
 import tja.mui.sync.TJAPhantomItemSlotSH;
 import tja.mui.widget.TJAPhantomItemSlotWidget;
@@ -77,8 +77,8 @@ import java.util.*;
 public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileEntity implements IMinerHandler {
 
     private final MinerWorkableHandler workableHandler = new MinerWorkableHandler(this);
-    private final GTLargeItemStackHandler filterInventory =
-            new GTLargeItemStackHandler(this, 27, 1, this, false);
+    private final NotifiableLargeItemStackHandler filterInventory =
+            new NotifiableLargeItemStackHandler(this, 27, 1, this, false);
     private final FluidStack drillingFluid;
     private final Set<UUID> playersSeeBoundingBox = new HashSet<>();
 

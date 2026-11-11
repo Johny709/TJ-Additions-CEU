@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-public class NotifiableFilteredItemStackHandler extends GTLargeItemStackHandler {
+public class NotifiableFilteredItemStackHandler extends NotifiableLargeItemStackHandler {
 
     private TriConsumer<Integer, ItemStack, Boolean> onContentsChangedPre;
     private BiConsumer<Integer, ItemStack> onContentsChangedPost;

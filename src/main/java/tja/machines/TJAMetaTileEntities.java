@@ -10,10 +10,7 @@ import tja.TJA;
 import tja.TJAValues;
 import tja.machines.multiblocks.*;
 import tja.machines.singleblocks.*;
-import tja.multiblockpart.MetaTileEntityCrafterHatch;
-import tja.multiblockpart.MetaTileEntityCreativeEnergyHatch;
-import tja.multiblockpart.MetaTileEntityCreativeFluidHatch;
-import tja.multiblockpart.MetaTileEntityCreativeItemBus;
+import tja.multiblockpart.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,20 +35,6 @@ public final class TJAMetaTileEntities {
     public static final MetaTileEntity LARGE_SUPER_FISHER = MetaTileEntities.registerMetaTileEntity(16, new MetaTileEntityLargeSuperFisher(resource("large_super_fisher")));
     public static final MetaTileEntity LARGE_CRAFTER = MetaTileEntities.registerMetaTileEntity(17, new MetaTileEntityLargeCrafter(resource("large_crafter")));
 
-    public static final MetaTileEntity COMPRESSED_CHEST = MetaTileEntities.registerMetaTileEntity(2000, new MetaTileEntityCompressedChest(resource("compressed_chest"), false));
-    public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));
-    public static final MetaTileEntity INFINITY_CHEST = MetaTileEntities.registerMetaTileEntity(2002, new MetaTileEntityCompressedChest(resource("infinity_chest"), true));
-    public static final MetaTileEntity INFINITY_CRATE = MetaTileEntities.registerMetaTileEntity(2003, new MetaTileEntityCompressedCrate(resource("infinity_crate"), true));
-
-    public static final MetaTileEntity CREATIVE_ITEM_BUS = MetaTileEntities.registerMetaTileEntity(3000, new MetaTileEntityCreativeItemBus(resource("creative_item_bus")));
-    public static final MetaTileEntity CREATIVE_FLUID_HATCH = MetaTileEntities.registerMetaTileEntity(3001, new MetaTileEntityCreativeFluidHatch(resource("creative_fluid_hatch")));
-    public static final MetaTileEntity CREATIVE_ENERGY_HATCH = MetaTileEntities.registerMetaTileEntity(3002, new MetaTileEntityCreativeEnergyHatch(resource("creative_energy_hatch")));
-    public static final MetaTileEntity WATER_RESERVOIR_HATCH = MetaTileEntities.registerMetaTileEntity(3003, new MetaTileEntityWaterReservoirHatch(resource("water_reservoir_hatch")));
-
-    public static final List<MetaTileEntity> CRAFTER_HATCHES = mteList(3010, i -> new MetaTileEntityCrafterHatch(resource("crafter_hatch." + GTValues.VN[i]), i));
-
-    public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
-    public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
     /** occupies id range 1000 - 1014 */
     public static final List<MetaTileEntity> FLUID_SAMPLERS = mteList(1000, i -> new MetaTileEntityFluidSampler(resource("fluid_sampler." + GTValues.VN[i]), i));
     /** occupies id range 1015 - 1029 */
@@ -72,6 +55,26 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> FARMING_STATION = mteList(1105, i -> new MetaTileEntityFarmingStation(resource("farming_station." + GTValues.VN[i]), i));
     /** occupies id range 1120 - 1134 */
     public static final List<MetaTileEntity> ADVANCED_CHUNK_MINERS = mteList(1120, i -> new MetaTileEntityAdvancedChunkMiner(resource("advanced_chunk_miner." + GTValues.VN[i]), i));
+
+    public static final MetaTileEntity COMPRESSED_CHEST = MetaTileEntities.registerMetaTileEntity(2000, new MetaTileEntityCompressedChest(resource("compressed_chest"), false));
+    public static final MetaTileEntity COMPRESSED_CRATE = MetaTileEntities.registerMetaTileEntity(2001, new MetaTileEntityCompressedCrate(resource("compressed_crate"), false));
+    public static final MetaTileEntity INFINITY_CHEST = MetaTileEntities.registerMetaTileEntity(2002, new MetaTileEntityCompressedChest(resource("infinity_chest"), true));
+    public static final MetaTileEntity INFINITY_CRATE = MetaTileEntities.registerMetaTileEntity(2003, new MetaTileEntityCompressedCrate(resource("infinity_crate"), true));
+
+    public static final MetaTileEntity CREATIVE_ITEM_BUS = MetaTileEntities.registerMetaTileEntity(3000, new MetaTileEntityCreativeItemBus(resource("creative_item_bus")));
+    public static final MetaTileEntity CREATIVE_FLUID_HATCH = MetaTileEntities.registerMetaTileEntity(3001, new MetaTileEntityCreativeFluidHatch(resource("creative_fluid_hatch")));
+    public static final MetaTileEntity CREATIVE_ENERGY_HATCH = MetaTileEntities.registerMetaTileEntity(3002, new MetaTileEntityCreativeEnergyHatch(resource("creative_energy_hatch")));
+    public static final MetaTileEntity WATER_RESERVOIR_HATCH = MetaTileEntities.registerMetaTileEntity(3003, new MetaTileEntityWaterReservoirHatch(resource("water_reservoir_hatch")));
+
+    /** occupies id range 3010 - 3024 */
+    public static final List<MetaTileEntity> CRAFTER_HATCHES = mteList(3010, i -> new MetaTileEntityCrafterHatch(resource("crafter_hatch." + GTValues.VN[i]), i));
+    /** occupies id range 3025 - 3039 */
+    public static final List<MetaTileEntity> SUPER_INPUT_BUSES = mteList(3025, i -> new MetaTileEntitySuperBus(resource("super_input_bus." + GTValues.VN[i]), i, false));
+    /** occupies id range 3040 - 3054 */
+    public static final List<MetaTileEntity> SUPER_OUTPUT_BUSES = mteList(3040, i -> new MetaTileEntitySuperBus(resource("super_output_bus." + GTValues.VN[i]), i, true));
+
+    public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
+    public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
 
     public static void init() {
         // call on initialization

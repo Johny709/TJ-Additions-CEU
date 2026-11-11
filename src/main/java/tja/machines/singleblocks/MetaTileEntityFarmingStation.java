@@ -58,9 +58,8 @@ import tja.capability.TJADataCodes;
 import tja.capability.handler.IFarmerHandler;
 import tja.capability.workables.FarmingStationWorkableHandler;
 import tja.event.RenderEventHandler;
-import tja.items.handlers.GTLargeItemStackHandler;
+import tja.items.handlers.NotifiableLargeItemStackHandler;
 import tja.items.handlers.NotifiableFilteredItemStackHandler;
-import tja.mui.TJAGuiTextures;
 import tja.rendering.TJARenderUtil;
 import tja.util.EnumFacingHelper;
 
@@ -129,7 +128,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
 
     @Override
     protected IItemHandlerModifiable createExportItemHandler() {
-        return new GTLargeItemStackHandler(this, 6 + (3 * this.getTier()),
+        return new NotifiableLargeItemStackHandler(this, 6 + (3 * this.getTier()),
                 this.getTier() >= GTValues.ZPM ? 256 : this.getTier() >= GTValues.EV ? 128 : 64, this, false);
     }
 
