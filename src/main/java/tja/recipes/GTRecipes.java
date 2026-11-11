@@ -7,6 +7,7 @@ import gregtech.api.GTValues;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.ModHandler;
+import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.ingredients.GTRecipeItemInput;
 import gregtech.api.unification.OreDictUnifier;
@@ -342,7 +343,7 @@ public class GTRecipes {
                     .EUt(GTValues.VAOC[i]).duration(1200)
                     .buildAndRegister();
         }
-        // super input bus
+        // super output bus
         for (int i = 0; i < TJAMetaTileEntities.SUPER_OUTPUT_BUSES.size(); i++) {
             if (i > 8 && !isGregicalityLoaded || i > 13) break;
             RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
@@ -352,6 +353,40 @@ public class GTRecipes {
                     .input(conveyors[i], 4)
                     .fluidInputs(getPolymerByTier(i).getFluid(9216))
                     .output(TJAMetaTileEntities.SUPER_OUTPUT_BUSES.get(i))
+                    .EUt(GTValues.VAOC[i]).duration(1200)
+                    .buildAndRegister();
+        }
+        // super input hatch
+        for (int i = 0; i < TJAMetaTileEntities.SUPER_INPUT_HATCHES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded || i > 13) break;
+            final RecipeBuilder<?> builder = RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .input(MetaTileEntities.FLUID_IMPORT_HATCH[i], 64);
+            if (i > GTValues.HV) {
+                builder.input(MetaTileEntities.QUADRUPLE_IMPORT_HATCH[i], 64);
+                builder.input(MetaTileEntities.NONUPLE_IMPORT_HATCH[i], 64);
+            }
+            builder.input(OrePrefix.gear, materials[i], 16)
+                    .input(robotArms[i], 4)
+                    .input(pumps[i], 4)
+                    .fluidInputs(getPolymerByTier(i).getFluid(9216))
+                    .output(TJAMetaTileEntities.SUPER_INPUT_HATCHES.get(i))
+                    .EUt(GTValues.VAOC[i]).duration(1200)
+                    .buildAndRegister();
+        }
+        // super output hatch
+        for (int i = 0; i < TJAMetaTileEntities.SUPER_OUTPUT_HATCHES.size(); i++) {
+            if (i > 8 && !isGregicalityLoaded || i > 13) break;
+            final RecipeBuilder<?> builder = RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                    .input(MetaTileEntities.FLUID_EXPORT_HATCH[i], 64);
+            if (i > GTValues.HV) {
+                builder.input(MetaTileEntities.QUADRUPLE_EXPORT_HATCH[i], 64);
+                builder.input(MetaTileEntities.NONUPLE_EXPORT_HATCH[i], 64);
+            }
+            builder.input(OrePrefix.gear, materials[i], 16)
+                    .input(robotArms[i], 4)
+                    .input(pumps[i], 4)
+                    .fluidInputs(getPolymerByTier(i).getFluid(9216))
+                    .output(TJAMetaTileEntities.SUPER_OUTPUT_HATCHES.get(i))
                     .EUt(GTValues.VAOC[i]).duration(1200)
                     .buildAndRegister();
         }

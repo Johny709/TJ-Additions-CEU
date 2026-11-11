@@ -72,6 +72,10 @@ public final class TJAMetaTileEntities {
     public static final List<MetaTileEntity> SUPER_INPUT_BUSES = mteList(3025, i -> new MetaTileEntitySuperBus(resource("super_input_bus." + GTValues.VN[i]), i, false));
     /** occupies id range 3040 - 3054 */
     public static final List<MetaTileEntity> SUPER_OUTPUT_BUSES = mteList(3040, i -> new MetaTileEntitySuperBus(resource("super_output_bus." + GTValues.VN[i]), i, true));
+    /** occupies id range 3055 - 3069 */
+    public static final List<MetaTileEntity> SUPER_INPUT_HATCHES = mteList(3055, i -> new MetaTileEntitySuperFluidHatch(resource("super_input_hatch." + GTValues.VN[i]), i, false));
+    /** occupies id range 3070 - 3084 */
+    public static final List<MetaTileEntity> SUPER_OUTPUT_HATCHES = mteList(3070, i -> new MetaTileEntitySuperFluidHatch(resource("super_output_hatch." + GTValues.VN[i]), i, true));
 
     public static final List<MetaTileEntity> LARGE_BOILERS = ImmutableList.of(MetaTileEntities.LARGE_BRONZE_BOILER, MetaTileEntities.LARGE_STEEL_BOILER, MetaTileEntities.LARGE_TITANIUM_BOILER, MetaTileEntities.LARGE_TUNGSTENSTEEL_BOILER);
     public static final List<MetaTileEntity> MEGA_BOILERS = ImmutableList.of(MEGA_BRONZE_BOILER, MEGA_STEEL_BOILER, MEGA_TITANIUM_BOILER, MEGA_TUNGSTENSTEEL_BOILER);
