@@ -224,7 +224,7 @@ public class BlockStockingDualInterface extends BlockInterface {
                                                 .pos(7, 7 + (18 * i))
                                                 .background(GuiTextures.SLOT_ITEM, TJAGuiTextures.UPGRADE_OVERLAY)
                                                 .slot(new TJAModularSlot(iface.getInterfaceDuality().getInventoryByName("upgrades"), i)
-                                                        .slotGroup("item_uprade_inventory"))))
+                                                        .slotGroup("item_upgrade_inventory"))))
                                 .child(new ToggleButton()
                                         .pos(-18, 60)
                                         .size(16)
