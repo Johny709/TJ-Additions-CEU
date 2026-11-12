@@ -219,7 +219,7 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
     @Override
     public void setTickTime(String tickTime) {
         if (tickTime == null || tickTime.isEmpty())
-            tickTime = String.valueOf(0);
+            tickTime = String.valueOf(1);
         this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.getTile().markDirty();
     }

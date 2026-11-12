@@ -251,6 +251,8 @@ public class PartStockingInterface extends PartInterface implements IGuiHolder<S
 
     @Override
     public void setTickTime(String tickTime) {
+        if (tickTime == null || tickTime.isEmpty())
+            tickTime = String.valueOf(1);
         this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
         this.getTile().markDirty();
     }
