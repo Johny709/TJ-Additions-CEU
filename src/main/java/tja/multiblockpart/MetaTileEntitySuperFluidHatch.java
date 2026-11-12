@@ -3,17 +3,20 @@ package tja.multiblockpart;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.google.common.collect.ImmutableList;
 import gregtech.api.GTValues;
 import gregtech.api.capability.*;
@@ -46,21 +49,26 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJAValues;
+import tja.integration.ae2.ITIckSetter;
+import tja.mui.MUIUtils;
 import tja.textures.TJATextures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotifiablePart implements IMetaTileEntityGuiHolder,
         IMultiblockAbilityPart<IFluidTank>,
         IGhostSlotConfigurable,
-        IControllable {
+        IControllable,
+        ITIckSetter {
 
     private final GhostCircuitItemStackHandler circuitSlot = new GhostCircuitItemStackHandler(this);
     private boolean workingEnabled;
+    private int tickTime = 1;
 
     public MetaTileEntitySuperFluidHatch(ResourceLocation metaTileEntityId, int tier, boolean isExportHatch) {
         super(metaTileEntityId, tier, isExportHatch);
@@ -101,7 +109,7 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
     @Override
     public void update() {
         super.update();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isRemote && this.getOffsetTimer() % this.tickTime == 0) {
             if (this.workingEnabled) {
                 if (this.isExportHatch) {
                     pushFluidsIntoNearbyHandlers(this.getFrontFacing());
@@ -121,7 +129,15 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
         final int slotLength = (int) Math.sqrt(tanks.getTanks());
         final int offsetX = Math.max(7, 88 - (9 * this.getTier()));
         final int offsetY = Math.min(9, this.getTier()) * 18;
-        return ModularPanel.defaultPanel("super_fluid_hatch.gui", 200, 133 + offsetY)
+        final IPanelHandler tickPanel = syncManager.syncedPanel("tick.panel", true,
+                (sync, handler) -> MUIUtils.createTicksPanel(sync, handler, this));
+        syncManager.syncValue("tick_open", new BooleanSyncValue(tickPanel::isPanelOpen, value -> {
+            if (!value && tickPanel.isPanelOpen()) {
+                tickPanel.closePanel();
+            } else if (value)
+                tickPanel.openPanel();
+        }));
+        return ModularPanel.defaultPanel("super_fluid_hatch.gui", 200, 145 + offsetY)
                 .child(IKey.lang(this.getMetaFullName()).asWidget()
                         .pos(7, 5))
                 .child(new Grid()
@@ -133,17 +149,32 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
                         .gridOfSizeWidth(tanks.getTanks(), slotLength, (x, y, i) -> new GTFluidSlot()
                                 .syncHandler(new GTFluidSyncHandler(tanks.getTankAt(i))
                                         .accessibility(true, !this.isExportHatch))))
+                .child(new TextFieldWidget()
+                        .pos(7, 40 + offsetY)
+                        .size(162, 18)
+                        .setMaxLength(10)
+                        .autoUpdateOnChange(true)
+                        .setValidator(MUIUtils::numberValidator)
+                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
+                        .addTooltipLine(IKey.lang("tja.machine.universal.ticks.operation"))
+                        .value(new StringSyncValue(() -> String.valueOf(this.getTickTime()), this::setTickTime)))
                 .child(Flow.col()
-                        .pos(174, 50 + offsetY)
+                        .pos(174, 40 + offsetY)
                         .size(18, 54)
+                        .child(new ToggleButton()
+                                .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY)
+                                .addTooltipLine(IKey.lang("tja.machine.universal.configure.ticks_operation"))
+                                .syncHandler("tick_open"))
                         .childIf(this.isExportHatch, () -> new Widget<>()
+                                .top(22)
                                 .background(GTGuiTextures.SLOT, GTGuiTextures.BUTTON_X)
                                 .addTooltipLine(IKey.lang("gregtech.gui.configurator_slot.unavailable.tooltip")))
                         .childIf(!this.isExportHatch, () -> new GhostCircuitSlotWidget()
+                                .top(22)
                                 .background(GTGuiTextures.SLOT, GTGuiTextures.INT_CIRCUIT_OVERLAY)
                                 .slot(this.circuitSlot, 0))
                         .child(new ToggleButton()
-                                .top(36)
+                                .top(58)
                                 .overlay(GTGuiTextures.BUTTON_FLUID_OUTPUT)
                                 .tooltipDynamic(richTooltip -> richTooltip.addLine(IKey.lang(this.isExportHatch ?
                                         workingEnabled.getBoolValue() ? "gregtech.gui.fluid_auto_output.tooltip.enabled" :
@@ -153,7 +184,7 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
                                 )))
                                 .syncHandler("working_enabled"))
                         .child(GTGuiTextures.GREGTECH_LOGO.asWidget()
-                                .top(58)))
+                                .top(80)))
                 .child(SlotGroupWidget.playerInventory(false)
                         .left(7).bottom(7));
     }
@@ -232,6 +263,7 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
         super.writeToNBT(data);
         this.circuitSlot.write(data);
         data.setBoolean("workingEnabled", this.workingEnabled);
+        data.setInteger("tickTime", this.tickTime);
         return data;
     }
 
@@ -240,6 +272,8 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
         super.readFromNBT(data);
         this.circuitSlot.read(data);
         this.workingEnabled = data.getBoolean("workingEnabled");
+        this.tickTime = Math.max(1, data.getInteger("tickTime"));
+
     }
 
     @Override
@@ -287,6 +321,16 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
         if (!this.getWorld().isRemote) {
             this.markDirty();
         }
+    }
+
+    @Override
+    public void setTickTime(String tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
+    }
+
+    @Override
+    public int getTickTime() {
+        return this.tickTime;
     }
 
     public int getTierGrid(int tier) {

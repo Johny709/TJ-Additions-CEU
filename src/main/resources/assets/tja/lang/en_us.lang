@@ -312,6 +312,7 @@ tja.machine.universal.running=§aRunning.
 tja.machine.universal.ticks=Ticks: §b%s
 tja.machine.universal.eut=Using §c%s §fEU/t §a(%s§a)
 tja.machine.universal.ticks.operation=Ticks Per Operation
+tja.machine.universal.configure.ticks_operation=Configure Ticks Per Operation
 tja.machine.universal.consuming=Consuming:
 tja.machine.universal.slots=Slots: §6%s§r
 tja.machine.universal.stack=Stack Size: §6%s§7 per slot
