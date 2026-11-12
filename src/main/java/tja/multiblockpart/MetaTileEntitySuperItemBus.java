@@ -1,5 +1,6 @@
 package tja.multiblockpart;
 
+import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -21,6 +22,7 @@ import gregtech.api.GTValues;
 import gregtech.api.capability.GregtechDataCodes;
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IControllable;
+import gregtech.api.capability.IGhostSlotConfigurable;
 import gregtech.api.capability.impl.GhostCircuitItemStackHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -37,11 +39,14 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockNotifiablePart;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,6 +63,7 @@ import java.util.List;
 
 public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiablePart implements IMetaTileEntityGuiHolder,
         IMultiblockAbilityPart<IItemHandlerModifiable>,
+        IGhostSlotConfigurable,
         IControllable {
 
     private final GhostCircuitItemStackHandler circuitSlot = new GhostCircuitItemStackHandler(this);
@@ -132,8 +138,8 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
         final int slotLength = (int) Math.sqrt(itemHandler.getSlots());
         syncManager.registerSlotGroup(new SlotGroup("item_input", slotLength, 1, true));
 
-        final int offsetY = Math.min(9, this.getTier()) * 18;
         final int offsetX = Math.max(7, 88 - (9 * this.getTier()));
+        final int offsetY = Math.min(9, this.getTier()) * 18;
         return ModularPanel.defaultPanel("super_bus.gui", 200, 133 + offsetY)
                 .child(IKey.lang(this.getMetaFullName()).asWidget()
                         .pos(7, 5))
@@ -146,6 +152,7 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
                         .gridOfSizeWidth(itemHandler.getSlots(), slotLength, (x, y, i) -> new ItemSlot()
                                 .slot(new ModularSlot(itemHandler, i)
                                         .ignoreMaxStackSize(true)
+                                        .canPut(!this.isExportHatch)
                                         .slotGroup("item_input"))))
                 .child(Flow.col()
                         .pos(174, 50 + offsetY)
@@ -206,6 +213,19 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
     }
 
     @Override
+    public boolean onScrewdriverClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing, CuboidRayTraceResult hitResult) {
+        this.setAutoCollapse(!this.autoCollapse);
+        if (!this.getWorld().isRemote) {
+            if (this.autoCollapse) {
+                playerIn.sendStatusMessage(new TextComponentTranslation("gregtech.bus.collapse_true"), true);
+            } else {
+                playerIn.sendStatusMessage(new TextComponentTranslation("gregtech.bus.collapse_false"), true);
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void receiveCustomData(int dataId, PacketBuffer buf) {
         super.receiveCustomData(dataId, buf);
         if (dataId == GregtechDataCodes.TOGGLE_COLLAPSE_ITEMS) {
@@ -233,6 +253,8 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         this.circuitSlot.write(data);
+        data.setBoolean("autoCollapse", this.autoCollapse);
+        data.setBoolean("workingEnabled", this.workingEnabled);
         return data;
     }
 
@@ -240,6 +262,8 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         this.circuitSlot.read(data);
+        this.autoCollapse = data.getBoolean("autoCollapse");
+        this.workingEnabled = data.getBoolean("workingEnabled");
     }
 
     @Override
@@ -311,12 +335,30 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
         }
     }
 
+    @Override
+    public boolean hasGhostCircuitInventory() {
+        return !this.isExportHatch;
+    }
+
+    @Override
+    public void setGhostCircuitConfig(int config) {
+        if (this.circuitSlot.getCircuitValue() == config) {
+            return;
+        }
+        this.circuitSlot.setCircuitValue(config);
+        if (!this.getWorld().isRemote) {
+            this.markDirty();
+        }
+    }
+
     public int getTierGrid(int tier) {
         tier++;
         return tier * tier;
     }
 
     public int getCapacity(int tier) {
+        if (tier >= GTValues.MAX)
+            return Integer.MAX_VALUE;
         return 64 * (64 << Math.max(0, tier - GTValues.UHV));
     }
 
