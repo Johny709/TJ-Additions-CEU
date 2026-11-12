@@ -69,9 +69,9 @@ public final class TJAMetaTileEntities {
     /** occupies id range 3010 - 3024 */
     public static final List<MetaTileEntity> CRAFTER_HATCHES = mteList(3010, i -> new MetaTileEntityCrafterHatch(resource("crafter_hatch." + GTValues.VN[i]), i));
     /** occupies id range 3025 - 3039 */
-    public static final List<MetaTileEntity> SUPER_INPUT_BUSES = mteList(3025, i -> new MetaTileEntitySuperBus(resource("super_input_bus." + GTValues.VN[i]), i, false));
+    public static final List<MetaTileEntity> SUPER_INPUT_BUSES = mteList(3025, i -> new MetaTileEntitySuperItemBus(resource("super_input_bus." + GTValues.VN[i]), i, false));
     /** occupies id range 3040 - 3054 */
-    public static final List<MetaTileEntity> SUPER_OUTPUT_BUSES = mteList(3040, i -> new MetaTileEntitySuperBus(resource("super_output_bus." + GTValues.VN[i]), i, true));
+    public static final List<MetaTileEntity> SUPER_OUTPUT_BUSES = mteList(3040, i -> new MetaTileEntitySuperItemBus(resource("super_output_bus." + GTValues.VN[i]), i, true));
     /** occupies id range 3055 - 3069 */
     public static final List<MetaTileEntity> SUPER_INPUT_HATCHES = mteList(3055, i -> new MetaTileEntitySuperFluidHatch(resource("super_input_hatch." + GTValues.VN[i]), i, false));
     /** occupies id range 3070 - 3084 */

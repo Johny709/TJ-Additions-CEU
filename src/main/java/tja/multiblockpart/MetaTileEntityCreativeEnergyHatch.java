@@ -189,7 +189,8 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
 
     @Override
     public void registerAbilities(@Nonnull AbilityInstances abilityInstances) {
-        abilityInstances.add(this.energyContainer);
+        if (abilityInstances.isKey(MultiblockAbility.INPUT_ENERGY))
+            abilityInstances.add(this.energyContainer);
     }
 
     @Override

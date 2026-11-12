@@ -174,8 +174,10 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
 
     @Override
     public void registerAbilities(@Nonnull AbilityInstances abilityInstances) {
-        abilityInstances.add(this.circuitSlot);
-        abilityInstances.add(this.importFluids);
+        if (abilityInstances.isKey(MultiblockAbility.IMPORT_ITEMS))
+            abilityInstances.add(this.circuitSlot);
+        if (abilityInstances.isKey(MultiblockAbility.IMPORT_FLUIDS))
+            abilityInstances.add(this.importFluids);
     }
 
     @Override

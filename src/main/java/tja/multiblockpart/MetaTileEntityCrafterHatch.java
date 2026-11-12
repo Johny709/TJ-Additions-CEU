@@ -267,7 +267,8 @@ public class MetaTileEntityCrafterHatch extends MetaTileEntityMultiblockNotifiab
 
     @Override
     public void registerAbilities(@Nonnull AbilityInstances abilityInstances) {
-        abilityInstances.add(this);
+        if (abilityInstances.isKey(TJAMultiblockAbility.CRAFTER_HATCH))
+            abilityInstances.add(this);
     }
 
     @Override

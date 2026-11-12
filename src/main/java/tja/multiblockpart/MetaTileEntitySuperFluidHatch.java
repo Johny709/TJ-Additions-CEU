@@ -127,8 +127,13 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
             renderState.baseColour = oldBaseColor;
             renderState.alphaOverride = oldAlphaOverride;
         }
-        Textures.PIPE_IN_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
-        Textures.ITEM_HATCH_INPUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+        if (this.isExportHatch) {
+            Textures.PIPE_OUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+            Textures.FLUID_HATCH_OUTPUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+        } else {
+            Textures.PIPE_IN_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+            Textures.FLUID_HATCH_INPUT_OVERLAY.renderSided(this.getFrontFacing(), renderState, translation, pipeline);
+        }
     }
 
     @Override

@@ -154,7 +154,8 @@ public class MetaTileEntityCreativeItemBus extends MetaTileEntityMultiblockNotif
 
     @Override
     public void registerAbilities(@Nonnull AbilityInstances abilityInstances) {
-        abilityInstances.add(this.combinedInventory);
+        if (abilityInstances.isKey(MultiblockAbility.IMPORT_ITEMS))
+            abilityInstances.add(this.combinedInventory);
     }
 
     @Override
