@@ -2,7 +2,7 @@ package tja.integration.hwyla.renderers;
 
 import mcp.mobius.waila.api.IWailaCommonAccessor;
 import mcp.mobius.waila.api.IWailaTooltipRenderer;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

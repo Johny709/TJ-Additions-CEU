@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 import tja.util.map.Strategies;
 import tja.util.wrappers.GTFluidStackWrapper;
 import tja.util.wrappers.GTItemStackWrapper;

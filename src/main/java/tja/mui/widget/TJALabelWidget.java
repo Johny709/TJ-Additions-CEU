@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import tja.TJAValues;
 import tja.mui.sync.TJALabelSH;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

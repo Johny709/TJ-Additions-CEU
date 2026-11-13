@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import tja.TJAValues;
 import tja.mui.sync.TJAPhantomFluidSlotSH;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

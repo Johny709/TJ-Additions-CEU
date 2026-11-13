@@ -68,7 +68,7 @@ import tja.items.handlers.NotifiableLargeItemStackHandler;
 import tja.mui.TJAGuiTextures;
 import tja.mui.sync.TJAPhantomItemSlotSH;
 import tja.mui.widget.TJAPhantomItemSlotWidget;
-import tja.rendering.TJARenderUtil;
+import tja.rendering.TJARenderUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -372,7 +372,7 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
             GlStateManager.translate(-playerX + chunk.x * 16, -playerY, -playerZ + chunk.z * 16);
             GlStateManager.color(1.0f, 1.0f, 1.0f, 0.3f);
 
-            TJARenderUtil.drawCube(2, 0, 256);
+            TJARenderUtils.drawCube(2, 0, 256);
 
             GlStateManager.disableBlend();
             GlStateManager.glLineWidth(4);

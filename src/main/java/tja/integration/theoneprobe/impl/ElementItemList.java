@@ -7,7 +7,7 @@ import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.item.ItemStack;
 import tja.integration.theoneprobe.TheOneProbeModule;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 import tja.util.map.Strategies;
 import tja.util.wrappers.GTItemStackWrapper;
 

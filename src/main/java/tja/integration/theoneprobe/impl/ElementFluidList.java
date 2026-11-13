@@ -8,7 +8,7 @@ import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import tja.integration.theoneprobe.TheOneProbeModule;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 import tja.util.wrappers.GTFluidStackWrapper;
 
 import java.util.Collection;

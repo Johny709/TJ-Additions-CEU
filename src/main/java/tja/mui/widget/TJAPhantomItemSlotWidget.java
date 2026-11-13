@@ -17,10 +17,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import tja.mui.sync.TJAPhantomItemSlotSH;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 
 public class TJAPhantomItemSlotWidget extends Widget<TJAPhantomItemSlotWidget> implements RecipeViewerGhostIngredientSlot<ItemStack>,
         RecipeViewerIngredientProvider,

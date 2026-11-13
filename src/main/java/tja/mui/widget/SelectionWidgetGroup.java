@@ -6,7 +6,7 @@ import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.widget.sizer.Area;
 import com.cleanroommc.modularui.widgets.layout.Grid;
-import tja.mui.TJAGuiTextures;
+import tja.mui.TJAGuiUtils;
 import tja.mui.sync.SelectionWidgetGroupSH;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public class SelectionWidgetGroup extends Grid {
         if (selectedIndex < 0 || selectedIndex >= widgetList.size()) return;
         final Area parentArea = this.getArea();
         final Area area = widgetList.get(selectedIndex).getArea();
-        TJAGuiTextures.SELECTION_BOX.draw(context, parentArea.x - area.x, parentArea.y - area.y, area.width, area.height, widgetTheme.getTheme());
+        TJAGuiUtils.drawRectangle(area.x - parentArea.x, area.y - parentArea.y, area.width, area.height, 2, 0xEBB434);
     }
 
     @Nonnull

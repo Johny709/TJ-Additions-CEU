@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import mcjty.theoneprobe.network.NetworkTools;
 import tja.integration.theoneprobe.TheOneProbeModule;
-import tja.rendering.TJAGuiUtils;
+import tja.mui.TJAGuiUtils;
 
 import java.awt.*;
 

@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
-public final class TJARenderUtil {
+public final class TJARenderUtils {
 
-    private TJARenderUtil() {}
+    private TJARenderUtils() {}
 
     public static void drawCube(int radius, int bottom, int top) {
         final Tessellator tessellator = Tessellator.getInstance();

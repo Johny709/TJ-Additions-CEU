@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import tja.TJAValues;
 
 import javax.annotation.Nullable;
@@ -209,6 +210,7 @@ public final class TJAGuiUtils {
             final String s = TextFormattingUtil.formatLongToCompactString(amount, 4);
             fontRenderer.drawStringWithShadow(s, (x + 6) * 2 - fontRenderer.getStringWidth(s) + 21, (y + 12) * 2, 0xFFFFFF);
         }
+        GlStateManager.enableDepth();
         GlStateManager.popMatrix();
         itemStack.setCount(prevAmount);
     }
@@ -295,7 +297,37 @@ public final class TJAGuiUtils {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void drawRectangle() {
+    public static void drawRectangle(int x, int y, int width, int height, float lineWidth, int color) {
+        GlStateManager.pushMatrix();
+        GlStateManager.disableCull();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
 
+        float red = (float) (color >> 16 & 255) / 255.0F;
+        float green = (float) (color >> 8 & 255) / 255.0F;
+        float blue = (float) (color & 255) / 255.0F;
+        float alpha = (float) (color >> 24 & 255) / 255.0F;
+        GlStateManager.glLineWidth(lineWidth);
+        GlStateManager.color(red, green, blue, alpha);
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        buffer.pos(x, y, 0).endVertex();
+        buffer.pos(x + width, y, 0).endVertex();
+
+        buffer.pos(x + width, y, 0).endVertex();
+        buffer.pos(x + width, y + height, 0).endVertex();
+
+        buffer.pos(x + width, y + height, 0).endVertex();
+        buffer.pos(x, y + height, 0).endVertex();
+
+        buffer.pos(x, y + height, 0).endVertex();
+        buffer.pos(x, y, 0).endVertex();
+
+        tessellator.draw();
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.popMatrix();
     }
 }
