@@ -179,6 +179,8 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 100))));
         syncManager.syncValue("priority_add_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 1000))));
+        syncManager.syncValue("priority_multiply_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() * 2))));
         syncManager.syncValue("priority_sub_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1))));
         syncManager.syncValue("priority_sub_10", new InteractionSyncHandler()
@@ -187,20 +189,22 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 100))));
         syncManager.syncValue("priority_sub_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1000))));
+        syncManager.syncValue("priority_divide_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() / 2))));
 
-        return ModularPanel.defaultPanel("me.interface.priority.panel", 162, 100)
+        return ModularPanel.defaultPanel("me.interface.priority.panel", 198, 100)
                 .child(IKey.lang("gui.appliedenergistics2.Priority").asWidget()
                         .pos(7, 7))
                 .child(new TextFieldWidget()
-                        .pos(7, 46)
-                        .size(148, 18)
+                        .pos(27, 46)
+                        .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), iface::setPriority)))
                 .child(new ButtonWidget<>()
-                        .pos(140, 4)
+                        .pos(182, 4)
                         .size(12)
                         .overlay(GuiTextures.CLOSE)
                         .onMousePressed(mouseButton -> {
@@ -209,44 +213,52 @@ public final class MUIUtils {
                         }))
                 .child(new ButtonWidget<>()
                         .pos(7, 20)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("+1"))
                         .syncHandler("priority_add_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 20)
-                        .size(30, 20)
+                        .pos(43, 20)
+                        .size(38, 20)
                         .overlay(IKey.str("+10"))
                         .syncHandler("priority_add_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 20)
-                        .size(35, 20)
+                        .pos(86, 20)
+                        .size(45, 20)
                         .overlay(IKey.str("+100"))
                         .syncHandler("priority_add_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 20)
-                        .size(40, 20)
+                        .pos(136, 20)
+                        .size(52, 20)
                         .overlay(IKey.str("+1000"))
                         .syncHandler("priority_add_1000"))
                 .child(new ButtonWidget<>()
+                        .pos(7, 46)
+                        .overlay(IKey.str("*2"))
+                        .syncHandler("priority_multiply_2"))
+                .child(new ButtonWidget<>()
                         .pos(7, 70)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("-1"))
                         .syncHandler("priority_sub_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 70)
-                        .size(30, 20)
+                        .pos(43, 70)
+                        .size(38, 20)
                         .overlay(IKey.str("-10"))
                         .syncHandler("priority_sub_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 70)
-                        .size(35, 20)
+                        .pos(86, 70)
+                        .size(45, 20)
                         .overlay(IKey.str("-100"))
                         .syncHandler("priority_sub_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 70)
-                        .size(40, 20)
+                        .pos(136, 70)
+                        .size(52, 20)
                         .overlay(IKey.str("-1000"))
-                        .syncHandler("priority_sub_1000"));
+                        .syncHandler("priority_sub_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(170, 46)
+                        .overlay(IKey.str("/2"))
+                        .syncHandler("priority_divide_2"));
     }
 
     public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ITIckSetter iface) {
@@ -336,7 +348,7 @@ public final class MUIUtils {
                         .syncHandler("tick_sub_1000"))
                 .child(new ButtonWidget<>()
                         .pos(170, 46)
-                        .overlay(IKey.str("/"))
+                        .overlay(IKey.str("/2"))
                         .syncHandler("tick_divide_2"));
     }
 
@@ -362,6 +374,10 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_multiply_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
@@ -378,8 +394,12 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("item_divide_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
 
-        return ModularPanel.defaultPanel("me.interface.item_config.panel", 162, 100)
+        return ModularPanel.defaultPanel("me.interface.item_config.panel", 198, 100)
                 .child(new RichTextWidget()
                         .pos(7, 7)
                         .size(162, 8)
@@ -387,8 +407,8 @@ public final class MUIUtils {
                         .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.item",
                                 itemCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
-                        .pos(7, 46)
-                        .size(148, 18)
+                        .pos(27, 46)
+                        .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
@@ -397,7 +417,7 @@ public final class MUIUtils {
                         .value(new StringSyncValue(() -> iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex()),
                                 string -> iface.setItemCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
-                        .pos(140, 4)
+                        .pos(182, 4)
                         .size(12)
                         .overlay(GuiTextures.CLOSE)
                         .onMousePressed(mouseButton -> {
@@ -406,44 +426,52 @@ public final class MUIUtils {
                         }))
                 .child(new ButtonWidget<>()
                         .pos(7, 20)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("+1"))
                         .syncHandler("item_add_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 20)
-                        .size(30, 20)
+                        .pos(43, 20)
+                        .size(38, 20)
                         .overlay(IKey.str("+10"))
                         .syncHandler("item_add_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 20)
-                        .size(35, 20)
+                        .pos(86, 20)
+                        .size(45, 20)
                         .overlay(IKey.str("+100"))
                         .syncHandler("item_add_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 20)
-                        .size(40, 20)
+                        .pos(136, 20)
+                        .size(52, 20)
                         .overlay(IKey.str("+1000"))
                         .syncHandler("item_add_1000"))
                 .child(new ButtonWidget<>()
+                        .pos(7, 46)
+                        .overlay(IKey.str("*2"))
+                        .syncHandler("item_multiply_2"))
+                .child(new ButtonWidget<>()
                         .pos(7, 70)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("-1"))
                         .syncHandler("item_sub_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 70)
-                        .size(30, 20)
+                        .pos(43, 70)
+                        .size(38, 20)
                         .overlay(IKey.str("-10"))
                         .syncHandler("item_sub_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 70)
-                        .size(35, 20)
+                        .pos(86, 70)
+                        .size(45, 20)
                         .overlay(IKey.str("-100"))
                         .syncHandler("item_sub_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 70)
-                        .size(40, 20)
+                        .pos(136, 70)
+                        .size(52, 20)
                         .overlay(IKey.str("-1000"))
-                        .syncHandler("item_sub_1000"));
+                        .syncHandler("item_sub_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(170, 46)
+                        .overlay(IKey.str("/2"))
+                        .syncHandler("item_divide_2"));
     }
 
     public static ModularPanel createFluidConfigPanel(PanelSyncManager syncManager,
@@ -468,6 +496,10 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData ->
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_multiply_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_sub_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
@@ -484,8 +516,12 @@ public final class MUIUtils {
                 .setOnMousePressed(mouseData ->
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
+        syncManager.syncValue("fluid_divide_2", new InteractionSyncHandler()
+                .setOnMousePressed(mouseData ->
+                        iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
+                                selectionWidgetGroupSH.getSelectedIndex())));
 
-        return ModularPanel.defaultPanel("me.interface.fluid_config.panel", 162, 100)
+        return ModularPanel.defaultPanel("me.interface.fluid_config.panel", 198, 100)
                 .child(new RichTextWidget()
                         .pos(7, 7)
                         .size(162, 8)
@@ -493,8 +529,8 @@ public final class MUIUtils {
                         .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.fluid",
                                 fluidCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
-                        .pos(7, 46)
-                        .size(148, 18)
+                        .pos(27, 46)
+                        .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
@@ -503,7 +539,7 @@ public final class MUIUtils {
                         .value(new StringSyncValue(() -> iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()),
                                 string -> iface.setFluidCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
-                        .pos(140, 4)
+                        .pos(182, 4)
                         .size(12)
                         .overlay(GuiTextures.CLOSE)
                         .onMousePressed(mouseButton -> {
@@ -512,44 +548,52 @@ public final class MUIUtils {
                         }))
                 .child(new ButtonWidget<>()
                         .pos(7, 20)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("+1"))
                         .syncHandler("fluid_add_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 20)
-                        .size(30, 20)
+                        .pos(43, 20)
+                        .size(38, 20)
                         .overlay(IKey.str("+10"))
                         .syncHandler("fluid_add_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 20)
-                        .size(35, 20)
+                        .pos(86, 20)
+                        .size(45, 20)
                         .overlay(IKey.str("+100"))
                         .syncHandler("fluid_add_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 20)
-                        .size(40, 20)
+                        .pos(136, 20)
+                        .size(52, 20)
                         .overlay(IKey.str("+1000"))
                         .syncHandler("fluid_add_1000"))
                 .child(new ButtonWidget<>()
+                        .pos(7, 46)
+                        .overlay(IKey.str("*2"))
+                        .syncHandler("fluid_multiply_2"))
+                .child(new ButtonWidget<>()
                         .pos(7, 70)
-                        .size(25, 20)
+                        .size(31, 20)
                         .overlay(IKey.str("-1"))
                         .syncHandler("fluid_sub_1"))
                 .child(new ButtonWidget<>()
-                        .pos(37, 70)
-                        .size(30, 20)
+                        .pos(43, 70)
+                        .size(38, 20)
                         .overlay(IKey.str("-10"))
                         .syncHandler("fluid_sub_10"))
                 .child(new ButtonWidget<>()
-                        .pos(72, 70)
-                        .size(35, 20)
+                        .pos(86, 70)
+                        .size(45, 20)
                         .overlay(IKey.str("-100"))
                         .syncHandler("fluid_sub_100"))
                 .child(new ButtonWidget<>()
-                        .pos(112, 70)
-                        .size(40, 20)
+                        .pos(136, 70)
+                        .size(52, 20)
                         .overlay(IKey.str("-1000"))
-                        .syncHandler("fluid_sub_1000"));
+                        .syncHandler("fluid_sub_1000"))
+                .child(new ButtonWidget<>()
+                        .pos(170, 46)
+                        .overlay(IKey.str("/2"))
+                        .syncHandler("fluid_divide_2"));
     }
 
     public static Widget<?> createPatternMultiToolWidget(PanelSyncManager syncManager, UISettings settings, ItemStack patternMultiTool) {
