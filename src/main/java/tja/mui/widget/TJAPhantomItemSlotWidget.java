@@ -1,9 +1,11 @@
 package tja.mui.widget;
 
+import com.cleanroommc.modularui.ModularUI;
 import com.cleanroommc.modularui.api.MCHelper;
 import com.cleanroommc.modularui.api.value.ISyncOrValue;
 import com.cleanroommc.modularui.api.widget.Interactable;
 import com.cleanroommc.modularui.drawable.GuiTextures;
+import com.cleanroommc.modularui.integration.jei.ModularUIJeiPlugin;
 import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerGhostIngredientSlot;
 import com.cleanroommc.modularui.integration.recipeviewer.RecipeViewerIngredientProvider;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
@@ -39,6 +41,15 @@ public class TJAPhantomItemSlotWidget extends Widget<TJAPhantomItemSlotWidget> i
     public void onInit() {
         super.onInit();
         this.getScreen().getContext().getRecipeViewerSettings().addGhostIngredientSlot(this);
+    }
+
+    @Override
+    public void drawOverlay(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        super.drawOverlay(context, widgetTheme);
+        if (ModularUI.Mods.JEI.isLoaded() && (ModularUIJeiPlugin.draggingValidIngredient(this) ||
+                ModularUIJeiPlugin.hoveringOverIngredient(this))) {
+            this.drawHighlight(this.getArea(), this.isHovering());
+        }
     }
 
     @Override
