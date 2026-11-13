@@ -1,4 +1,4 @@
-package tja.rendering;
+package tja.mui;
 
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.widgets.SlotWidget;
@@ -19,7 +19,6 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJAValues;
-import tja.mui.TJAGuiTextures;
 
 import javax.annotation.Nullable;
 
@@ -155,6 +154,32 @@ public final class TJAGuiUtils {
     }
 
     @SideOnly(Side.CLIENT)
+    public static void drawItemStackOverlay(int x, int y, ItemStack itemStack, long amount) {
+        drawItemStackOverlay(x, y, itemStack, amount, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawItemStackOverlay(int x, int y, ItemStack itemStack, long amount, @Nullable String altTxt) {
+        final Minecraft mc = Minecraft.getMinecraft();
+        final RenderItem itemRender = mc.getRenderItem();
+        final int prevAmount = itemStack.getCount();
+        itemStack.setCount(1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.0F, 0.0F, 32.0F);
+        GlStateManager.color(0.3F, 0.3F, 0.3F, 0.2F);
+        GlStateManager.colorMask(true, true, false, true);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.enableDepth();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
+        itemRender.renderItemAndEffectIntoGUI(itemStack, x, y);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.colorMask(true, true, true, true);
+        GlStateManager.popMatrix();
+        itemStack.setCount(prevAmount);
+    }
+
+    @SideOnly(Side.CLIENT)
     public static void drawItemStack(int x, int y, ItemStack itemStack, long amount) {
         drawItemStack(x, y, itemStack, amount, null);
     }
@@ -267,5 +292,10 @@ public final class TJAGuiUtils {
         Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(percentage,
                 x + offsetX + 3 + progressWidth + progressSuffixWidth + slashWidth + maxProgressWidth + maxProgressSuffixWidth + colonWidth,
                 y + 2, 0xFFFFFF);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawRectangle() {
+
     }
 }

@@ -38,6 +38,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemShears;
@@ -60,8 +61,10 @@ import tja.capability.workables.FarmingStationWorkableHandler;
 import tja.event.RenderEventHandler;
 import tja.items.handlers.NotifiableLargeItemStackHandler;
 import tja.items.handlers.NotifiableFilteredItemStackHandler;
-import tja.rendering.TJARenderUtil;
+import tja.mui.drawable.ItemOverlayDrawable;
+import tja.rendering.TJARenderUtils;
 import tja.util.EnumFacingHelper;
+import tja.util.TJAItemUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,6 +166,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
                         .pos(7, 22)
                         .size(36, 54)
                         .gridOfSizeWidth(this.seedInventory.getSlots(), 2, (x, y, i) -> new ItemSlot()
+                                .background(GTGuiTextures.SLOT, new ItemOverlayDrawable(Items.WHEAT_SEEDS))
                                 .slot(new ModularSlot(this.seedInventory, i)
                                         .slotGroup("seed_input"))))
                 .child(new Grid()
@@ -178,12 +182,16 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
                         .pos(52, 22)
                         .size(18, 54)
                         .children(this.toolInventory.getSlots(), i -> new ItemSlot()
+                                .background(GTGuiTextures.SLOT, new ItemOverlayDrawable(i == 0 ? Items.IRON_HOE
+                                        : i == 1 ? Items.IRON_AXE : Items.SHEARS))
                                 .slot(new ModularSlot(this.toolInventory, i)
                                         .slotGroup("tool_input"))))
                 .child(Flow.row()
                         .pos(34, 69)
                         .size(18, 36)
                         .children(this.fertilizerInventory.getSlots(), i -> new ItemSlot()
+                                .background(GTGuiTextures.SLOT,
+                                        new ItemOverlayDrawable(TJAItemUtils.getItemStackFromName("minecraft:dye", 1, 15)))
                                 .slot(new ModularSlot(this.fertilizerInventory, i)
                                         .slotGroup("fertilizer_input"))))
                 .child(new FluidSlot()
@@ -283,7 +291,7 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
             GlStateManager.color(0, 0, 1.0f, 0.3f);
 
             final int radius = (int) (9 + (2L * this.getTier())) / 2;
-            TJARenderUtil.drawCube(radius, -1, radius + 1);
+            TJARenderUtils.drawCube(radius, -1, radius + 1);
             GlStateManager.popMatrix();
         });
     }
