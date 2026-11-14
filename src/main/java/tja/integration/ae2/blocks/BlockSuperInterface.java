@@ -151,12 +151,12 @@ public class BlockSuperInterface extends BlockInterface {
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.super_interface.priority", true,
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, iface));
-        final IPanelHandler itemConfig = syncManager.syncedPanel("me.super_interface.item_config", true,
+        final IPanelHandler itemConfig = syncManager.syncedPanel("item_config.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createItemConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH));
         selectionWidgetGroupSH.setIndexListener(i -> {
-            if (!itemConfig.isPanelOpen())
+            if (!itemConfig.isPanelOpen() && syncManager.isClient())
                 itemConfig.openPanel();
         });
         return ModularPanel.defaultPanel("me.super_interface.gui", 176, 292)

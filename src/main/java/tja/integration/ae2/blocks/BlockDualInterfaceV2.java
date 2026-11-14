@@ -175,18 +175,18 @@ public class BlockDualInterfaceV2 extends BlockInterface {
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true,
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, iface));
-        final IPanelHandler itemConfig = syncManager.syncedPanel("me.super_interface.item_config", true,
+        final IPanelHandler itemConfig = syncManager.syncedPanel("item_config.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createItemConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH));
         selectionWidgetGroupSH.setIndexListener(i -> {
-            if (!itemConfig.isPanelOpen())
+            if (!itemConfig.isPanelOpen() && syncManager.isClient())
                 itemConfig.openPanel();
         });
-        final IPanelHandler fluidConfig = syncManager.syncedPanel("me.super_interface.fluid_config", true,
+        final IPanelHandler fluidConfig = syncManager.syncedPanel("fluid_config.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createFluidConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH2));
         selectionWidgetGroupSH2.setIndexListener(i -> {
-            if (!fluidConfig.isPanelOpen())
+            if (!fluidConfig.isPanelOpen() && syncManager.isClient())
                 fluidConfig.openPanel();
         });
         return ModularPanel.defaultPanel("me.dual_interface.gui", 176, 292)

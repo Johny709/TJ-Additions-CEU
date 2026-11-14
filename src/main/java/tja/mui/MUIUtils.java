@@ -283,7 +283,7 @@ public final class MUIUtils {
         syncManager.syncValue("tick_divide_2", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() / 2))));
 
-        return ModularPanel.defaultPanel("me.interface.tick.panel", 198, 100)
+        return ModularPanel.defaultPanel("tick.panel", 198, 100)
                 .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
                         .pos(7, 7))
                 .child(new TextFieldWidget()
@@ -356,8 +356,6 @@ public final class MUIUtils {
                                                      IPanelHandler panelHandler,
                                                      ISuperInterface iface,
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
-        final StringSyncValue itemCount = new StringSyncValue(() -> iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex()));
-        syncManager.syncValue("item_count", itemCount);
         syncManager.syncValue("item_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
@@ -399,13 +397,13 @@ public final class MUIUtils {
                         iface.setItemCount(String.valueOf(Long.parseLong(iface.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
-        return ModularPanel.defaultPanel("me.interface.item_config.panel", 198, 100)
+        return ModularPanel.defaultPanel("item_config.panel", 198, 100)
                 .child(new RichTextWidget()
                         .pos(7, 7)
                         .size(162, 8)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.item",
-                                itemCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
+                                selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
                         .pos(27, 46)
                         .size(141, 18)
@@ -478,8 +476,6 @@ public final class MUIUtils {
                                                      IPanelHandler panelHandler,
                                                      ISuperFluidInterface iface,
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
-        final StringSyncValue fluidCount = new StringSyncValue(() -> iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()));
-        syncManager.syncValue("fluid_count", fluidCount);
         syncManager.syncValue("fluid_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
@@ -521,13 +517,13 @@ public final class MUIUtils {
                         iface.setFluidCount(String.valueOf(Long.parseLong(iface.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
-        return ModularPanel.defaultPanel("me.interface.fluid_config.panel", 198, 100)
+        return ModularPanel.defaultPanel("fluid_config.panel", 198, 100)
                 .child(new RichTextWidget()
                         .pos(7, 7)
                         .size(162, 8)
                         .autoUpdate(true)
                         .textBuilder(richText -> richText.addLine(IKey.lang("tja.machine.universal.slot_amount.fluid",
-                                fluidCount.getStringValue(), selectionWidgetGroupSH.getSelectedIndex()))))
+                                selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new TextFieldWidget()
                         .pos(27, 46)
                         .size(141, 18)

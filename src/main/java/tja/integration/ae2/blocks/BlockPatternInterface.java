@@ -77,12 +77,23 @@ public class BlockPatternInterface extends BlockInterface {
     }
 
     @Override
-    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityLiving.SpawnPlacementType type) {
+    public boolean canCreatureSpawn(@Nonnull IBlockState state,
+                                    @Nonnull IBlockAccess world,
+                                    @Nonnull BlockPos pos,
+                                    @Nonnull EntityLiving.SpawnPlacementType type) {
         return false;
     }
 
     @Override
-    public boolean onActivated(final World world, final BlockPos pos, final EntityPlayer player, final EnumHand hand, final @Nullable ItemStack heldItem, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+    public boolean onActivated(final World world,
+                               final BlockPos pos,
+                               final EntityPlayer player,
+                               final EnumHand hand,
+                               final @Nullable ItemStack heldItem,
+                               final EnumFacing side,
+                               final float hitX,
+                               final float hitY,
+                               final float hitZ) {
         if (player.isSneaking())
             return false;
         if (!world.isRemote)
@@ -93,24 +104,38 @@ public class BlockPatternInterface extends BlockInterface {
     public static ModularPanel createInterfaceGUI(PosGuiData data, PanelSyncManager syncManager, UISettings settings, ISuperInterface superInterface) {
         final StringSyncValue interfaceName = new StringSyncValue(superInterface::getCustomInventoryName);
         syncManager.syncValue("interface_name", interfaceName);
-        final BooleanSyncValue blockingMode = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK).ordinal() == 0, superInterface::setBlockingMode);
+        final BooleanSyncValue blockingMode = new BooleanSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.BLOCK).ordinal() == 0, superInterface::setBlockingMode);
         syncManager.syncValue("blocking_mode", blockingMode);
-        final IntSyncValue lockCrafting = new IntSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.UNLOCK).ordinal(), i -> superInterface.setLockCrafting(LockCraftingMode.values()[i]));
+        final IntSyncValue lockCrafting = new IntSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.UNLOCK).ordinal(),
+                i -> superInterface.setLockCrafting(LockCraftingMode.values()[i]));
         syncManager.syncValue("lock_crafting", lockCrafting);
-        final BooleanSyncValue interfaceTerminal = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.INTERFACE_TERMINAL).ordinal() != 0, superInterface::setInterfaceTerminal);
+        final BooleanSyncValue interfaceTerminal = new BooleanSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.INTERFACE_TERMINAL).ordinal() != 0,
+                superInterface::setInterfaceTerminal);
         syncManager.syncValue("interface_terminal", interfaceTerminal);
-        final BooleanSyncValue fluidPacket = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.OPERATION_MODE).ordinal() == 0, superInterface::setFluidPacket);
+        final BooleanSyncValue fluidPacket = new BooleanSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.OPERATION_MODE).ordinal() == 0,
+                superInterface::setFluidPacket);
         syncManager.syncValue("fluid_packet", fluidPacket);
-        final BooleanSyncValue splittingItemsFluids = new BooleanSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.LEVEL_TYPE).ordinal() == 0, superInterface::setSplittingItemsFluids);
+        final BooleanSyncValue splittingItemsFluids = new BooleanSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.LEVEL_TYPE).ordinal() == 0,
+                superInterface::setSplittingItemsFluids);
         syncManager.syncValue("splitting_items_fluids", splittingItemsFluids);
-        final IntSyncValue blockingModeEx = new IntSyncValue(() -> superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.CONDENSER_OUTPUT).ordinal(), i -> superInterface.setBlockModeEx(CondenserOutput.values()[i]));
+        final IntSyncValue blockingModeEx = new IntSyncValue(() ->
+                superInterface.getInterfaceDuality().getConfigManager().getSetting(Settings.CONDENSER_OUTPUT).ordinal(),
+                i -> superInterface.setBlockModeEx(CondenserOutput.values()[i]));
         syncManager.syncValue("blocking_mode_ex", blockingModeEx);
-        final IntSyncValue patternUpgrades = new IntSyncValue(() -> ((DualitySuperInterface.DualityUpgradeInventory) superInterface.getInterfaceDuality().getInventoryByName("upgrades")).getInstalledUpgrades(Upgrades.PATTERN_EXPANSION));
+        final IntSyncValue patternUpgrades = new IntSyncValue(() ->
+                ((DualitySuperInterface.DualityUpgradeInventory) superInterface.getInterfaceDuality().getInventoryByName("upgrades"))
+                        .getInstalledUpgrades(Upgrades.PATTERN_EXPANSION));
         syncManager.syncValue("pattern_upgrades", patternUpgrades);
 
         final BooleanSyncValue intelligentBlocking;
         if (TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID)) {
-            intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superInterface.getInterfaceDuality()).r$getConfigManager().getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superInterface::setIntelligentBlocking);
+            intelligentBlocking = new BooleanSyncValue(() -> ((RCIConfigurableObject) superInterface.getInterfaceDuality()).r$getConfigManager()
+                    .getSetting(RCSettings.IntelligentBlocking).ordinal() == 0, superInterface::setIntelligentBlocking);
             syncManager.syncValue("intelligent_blocking", intelligentBlocking);
         } else intelligentBlocking = null;
 
@@ -124,7 +149,8 @@ public class BlockPatternInterface extends BlockInterface {
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
         final Pair<ItemStack, Integer> patternMultiTool = MUIUtils.getPatternMultiTool(data);
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true, (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority.panel", true,
+                (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, superInterface));
         return ModularPanel.defaultPanel("me.pattern_interface.gui", 176, 292)
                 .childIf(patternMultiTool.getValue() != -1, () -> MUIUtils.createPatternMultiToolWidget(syncManager, settings, patternMultiTool.getKey()))
                 .child(new RichTextWidget()
@@ -176,7 +202,8 @@ public class BlockPatternInterface extends BlockInterface {
                                 .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
                                 .tooltipDynamic(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.tooltips.appliedenergistics2.InterfaceBlockingMode"));
-                                    richTooltip.addLine(IKey.lang(blockingMode.getBoolValue() ? "gui.tooltips.appliedenergistics2.Blocking" : "gui.tooltips.appliedenergistics2.NonBlocking")
+                                    richTooltip.addLine(IKey.lang(blockingMode.getBoolValue() ?
+                                                    "gui.tooltips.appliedenergistics2.Blocking" : "gui.tooltips.appliedenergistics2.NonBlocking")
                                             .style(TextFormatting.GRAY));
                                 }))
                         .child(new CycleButtonWidget()
@@ -206,8 +233,10 @@ public class BlockPatternInterface extends BlockInterface {
                                 .syncHandler("fluid_packet")
                                 .stateBackground(TJAGuiTextures.TOGGLE_SEND_FLUID)
                                 .tooltipDynamic(richTooltip -> {
-                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet" : "ae2fc.tooltip.real_fluid"));
-                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ? "ae2fc.tooltip.fake_packet.hint" : "ae2fc.tooltip.real_fluid.hint")
+                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ?
+                                            "ae2fc.tooltip.fake_packet" : "ae2fc.tooltip.real_fluid"));
+                                    richTooltip.addLine(IKey.lang(fluidPacket.getBoolValue() ?
+                                                    "ae2fc.tooltip.fake_packet.hint" : "ae2fc.tooltip.real_fluid.hint")
                                             .style(TextFormatting.GRAY));
                                 }))
                         .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new ToggleButton()
@@ -217,7 +246,8 @@ public class BlockPatternInterface extends BlockInterface {
                                 .stateBackground(TJAGuiTextures.TOGGLE_SPLITTING_ITEMS_FLUIDS)
                                 .tooltipDynamic(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("ae2fc.tooltip.allow_splitting"));
-                                    richTooltip.addLine(IKey.lang(splittingItemsFluids.getBoolValue() ? "ae2fc.tooltip.prevent_splitting.hint" : "ae2fc.tooltip.allow_splitting.hint")
+                                    richTooltip.addLine(IKey.lang(splittingItemsFluids.getBoolValue() ?
+                                                    "ae2fc.tooltip.prevent_splitting.hint" : "ae2fc.tooltip.allow_splitting.hint")
                                             .style(TextFormatting.GRAY));
                                 }))
                         .childIf(TJAValues.isModLoaded(TJAValues.AE2FC_MOD_ID), () -> new CycleButtonWidget()
@@ -227,8 +257,12 @@ public class BlockPatternInterface extends BlockInterface {
                                 .syncHandler("blocking_mode_ex")
                                 .stateBackground(TJAGuiTextures.CYCLE_BLOCKING_MODE_EX)
                                 .tooltipDynamic(richTooltip -> {
-                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item" : "ae2fc.tooltip.block_fluid"));
-                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ? "ae2fc.tooltip.block_all.hint" : blockingModeEx.getIntValue() == 1 ? "ae2fc.tooltip.block_item.hint" : "ae2fc.tooltip.block_fluid.hint")
+                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ?
+                                            "ae2fc.tooltip.block_all" : blockingModeEx.getIntValue() == 1 ?
+                                            "ae2fc.tooltip.block_item" : "ae2fc.tooltip.block_fluid"));
+                                    richTooltip.addLine(IKey.lang(blockingModeEx.getIntValue() == 0 ?
+                                                    "ae2fc.tooltip.block_all.hint" : blockingModeEx.getIntValue() == 1 ?
+                                                    "ae2fc.tooltip.block_item.hint" : "ae2fc.tooltip.block_fluid.hint")
                                             .style(TextFormatting.GRAY));
                                 }))
                         .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ToggleButton()
@@ -238,14 +272,16 @@ public class BlockPatternInterface extends BlockInterface {
                                 .stateBackground(TJAGuiTextures.TOGGLE_BLOCKING_MODE)
                                 .tooltipDynamic(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.intelligent_blocking.name"));
-                                    richTooltip.addLine(IKey.lang(intelligentBlocking.getBoolValue() ? "gui.intelligent_blocking.OPEN.text" : "gui.intelligent_blocking.CLOSE.text")
+                                    richTooltip.addLine(IKey.lang(intelligentBlocking.getBoolValue() ?
+                                                    "gui.intelligent_blocking.OPEN.text" : "gui.intelligent_blocking.CLOSE.text")
                                             .style(TextFormatting.GRAY));
                                 }))
                         .childIf(TJAValues.isModLoaded(TJAValues.RANDOM_COMPLEMENT_MOD_ID), () -> new ButtonWidget<>()
                                 .top(126)
                                 .size(16)
                                 .background(TJAGuiTextures.AE2_MULTIPLY2_BUTTON)
-                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(),
+                                        m -> m * 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
                                 .tooltip(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_2.name"));
                                     richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_2.text")
@@ -255,7 +291,8 @@ public class BlockPatternInterface extends BlockInterface {
                                 .top(144)
                                 .size(16)
                                 .background(TJAGuiTextures.AE2_DIVIDE2_BUTTON)
-                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(),
+                                        m -> m / 2, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
                                 .tooltip(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.action.DIVIDE_2.name"));
                                     richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_2.text")
@@ -265,7 +302,8 @@ public class BlockPatternInterface extends BlockInterface {
                                 .top(162)
                                 .size(16)
                                 .background(TJAGuiTextures.AE2_MULTIPLY3_BUTTON)
-                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m * 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(),
+                                        m -> m * 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
                                 .tooltip(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.action.MULTIPLY_3.name"));
                                     richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.MULTIPLY_3.text")
@@ -275,7 +313,8 @@ public class BlockPatternInterface extends BlockInterface {
                                 .top(180)
                                 .size(16)
                                 .background(TJAGuiTextures.AE2_DIVIDE3_BUTTON)
-                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(), m -> m / 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
+                                .onMousePressed(mouseButton -> TJAUtility.changeInterfacePatternAmount(superInterface.getInterfaceDuality().getPatterns(),
+                                        m -> m / 3, () -> TJAUtility.updatePatterns(superInterface.getInterfaceDuality().getPatterns())))
                                 .tooltip(richTooltip -> {
                                     richTooltip.addLine(IKey.lang("gui.action.DIVIDE_3.name"));
                                     richTooltip.addLine(IKey.lang("gui.pattern_term.auto_fill_pattern.DIVIDE_3.text")

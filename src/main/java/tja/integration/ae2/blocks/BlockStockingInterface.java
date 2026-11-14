@@ -11,13 +11,11 @@ import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.PhantomItemSlotSH;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.*;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.layout.Grid;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.slot.PhantomItemSlot;
 import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -115,14 +113,14 @@ public class BlockStockingInterface extends BlockInterface {
         final Flow buttonArea = Flow.col();
         settings.getRecipeViewerSettings().addExclusionArea(buttonArea);
 
-        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority", true,
+        final IPanelHandler prioritySettings = syncManager.syncedPanel("me.interface.priority.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createPriorityPanel(panelBuilder, subPanel, iface));
-        final IPanelHandler ticksSettings = syncManager.syncedPanel("me.interface.ticks", true,
+        final IPanelHandler ticksSettings = syncManager.syncedPanel("tick.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createTicksPanel(panelBuilder, subPanel, iface));
-        final IPanelHandler itemConfig = syncManager.syncedPanel("me.super_interface.item_config", true,
+        final IPanelHandler itemConfig = syncManager.syncedPanel("item_config.panel", true,
                 (panelBuilder, subPanel) -> MUIUtils.createItemConfigPanel(panelBuilder, subPanel, iface, selectionWidgetGroupSH));
         selectionWidgetGroupSH.setIndexListener(i -> {
-            if (!itemConfig.isPanelOpen())
+            if (!itemConfig.isPanelOpen() && syncManager.isClient())
                 itemConfig.openPanel();
         });
         return ModularPanel.defaultPanel("me.stocking_interface.gui", 176, 292)
