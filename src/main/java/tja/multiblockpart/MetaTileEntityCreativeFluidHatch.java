@@ -3,16 +3,13 @@ package tja.multiblockpart;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
-import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.StringSyncValue;
-import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.GhostCircuitItemStackHandler;
@@ -27,7 +24,6 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.IMetaTileEntityGuiHolder;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.mui.widget.GhostCircuitSlotWidget;
-import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockNotifiablePart;
 import net.minecraft.client.resources.I18n;
@@ -41,6 +37,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tja.TJAValues;
+import tja.integration.ae2.IFluidConfigSetter;
 import tja.mui.MUIUtils;
 import tja.mui.sync.SelectionWidgetGroupSH;
 import tja.mui.sync.TJAPhantomFluidSlotSH;
@@ -52,12 +49,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNotifiablePart implements IMetaTileEntityGuiHolder,
-        IMultiblockAbilityPart<IFluidTank> {
+        IMultiblockAbilityPart<IFluidTank>,
+        IFluidConfigSetter {
 
     private final GhostCircuitItemStackHandler circuitSlot = new GhostCircuitItemStackHandler(this);
 
@@ -126,15 +123,14 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
     public @Nonnull ModularPanel buildUI(MetaTileEntityGuiData data, PanelSyncManager syncManager, UISettings settings) {
         final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
         syncManager.syncValue("selection", selectionWidgetGroupSH);
-        syncManager.syncValue("count_multiply", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setFluidCount(String.valueOf(Long.parseLong(this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("count_divide", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setFluidCount(String.valueOf(Long.parseLong(this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
 
+        final IPanelHandler fluidConfig = syncManager.syncedPanel("fluid_config.panel", true,
+                (panelBuilder, subPanel) ->
+                        MUIUtils.createFluidConfigPanel(panelBuilder, subPanel, this, selectionWidgetGroupSH));
+        selectionWidgetGroupSH.setIndexListener(i -> {
+            if (!fluidConfig.isPanelOpen() && syncManager.isClient())
+                fluidConfig.openPanel();
+        });
         return ModularPanel.defaultPanel("creative_fluid_hatch.gui", 196, 184)
                 .child(new TextWidget<>(IKey.lang(this.getMetaFullName()))
                         .pos(7, 5))
@@ -145,26 +141,6 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
                                 .syncHandler(new TJAPhantomFluidSlotSH(this.importFluids, i)
                                         .setSpecialDrainingMode(true)))
                         .syncHandler("selection"))
-                .child(new TextFieldWidget()
-                        .pos(26, 5)
-                        .size(124, 18)
-                        .setMaxLength(10)
-                        .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
-                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .value(new StringSyncValue(() -> this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()),
-                                string -> this.setFluidCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
-                .child(new ButtonWidget<>()
-                        .pos(7, 5)
-                        .overlay(KeyUtil.string("*2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_multiply"))
-                .child(new ButtonWidget<>()
-                        .pos(151, 5)
-                        .overlay(KeyUtil.string("/2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_divide"))
                 .child(new GhostCircuitSlotWidget()
                         .pos(162, 78)
                         .background(GuiTextures.SLOT_ITEM, GTGuiTextures.INT_CIRCUIT_OVERLAY)
@@ -215,7 +191,8 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
         this.circuitSlot.read(data);
     }
 
-    private void setFluidCount(String text, int index) {
+    @Override
+    public void setFluidCount(String text, int index) {
         if (index < 0 || index >= this.importFluids.getTanks()) return;
         final FluidStack fluidStack = this.importFluids.getTankAt(index).getFluid();
         if (fluidStack == null) return;
@@ -227,7 +204,8 @@ public class MetaTileEntityCreativeFluidHatch extends MetaTileEntityMultiblockNo
         this.markDirty();
     }
 
-    private String getFluidCount(int index) {
+    @Override
+    public String getFluidCount(int index) {
         return String.valueOf(index >= 0 && index < this.importFluids.getTanks() ? this.importFluids.getTankAt(index).getFluidAmount() : 0);
     }
 

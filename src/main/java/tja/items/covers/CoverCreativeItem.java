@@ -12,8 +12,6 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.*;
-import com.cleanroommc.modularui.widgets.ButtonWidget;
-import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -25,7 +23,6 @@ import gregtech.api.cover.CoverDefinition;
 import gregtech.api.cover.CoverWithUI;
 import gregtech.api.cover.CoverableView;
 import gregtech.api.mui.GTGuiTextures;
-import gregtech.api.util.KeyUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -36,6 +33,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import tja.integration.ae2.IItemConfigSetter;
 import tja.integration.ae2.ITIckSetter;
 import tja.items.handlers.LargeItemStackHandler;
 import tja.mui.MUIUtils;
@@ -50,9 +48,8 @@ import javax.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
-import static net.minecraft.util.text.TextFormatting.WHITE;
 
-public class CoverCreativeItem extends CoverBase implements ITickable, CoverWithUI, IWorkable, ITIckSetter {
+public class CoverCreativeItem extends CoverBase implements ITickable, CoverWithUI, IWorkable, ITIckSetter, IItemConfigSetter {
 
     private final LargeItemStackHandler itemFilter = new LargeItemStackHandler(9, Integer.MAX_VALUE);
     private final IItemHandler itemHandler;
@@ -83,14 +80,6 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
         syncManager.syncValue("is_working", isWorking);
         final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
         syncManager.syncValue("selection", selectionWidgetGroupSH);
-        syncManager.syncValue("count_multiply", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setItemCount(String.valueOf(Long.parseLong(this.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("count_divide", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setItemCount(String.valueOf(Long.parseLong(this.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
         final IPanelHandler tickPanel = syncManager.syncedPanel("tick.panel", true,
@@ -101,6 +90,13 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
             } else if (value)
                 tickPanel.openPanel();
         }));
+        final IPanelHandler itemConfig = syncManager.syncedPanel("item_config.panel", true,
+                (panelBuilder, subPanel) ->
+                        MUIUtils.createItemConfigPanel(panelBuilder, subPanel, this, selectionWidgetGroupSH));
+        selectionWidgetGroupSH.setIndexListener(i -> {
+            if (!itemConfig.isPanelOpen() && syncManager.isClient())
+                itemConfig.openPanel();
+        });
         return ModularPanel.defaultPanel("creative_item_cover_gui", 200, 187)
                 .child(new SelectionWidgetGroup()
                         .pos(61, 25)
@@ -108,26 +104,6 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
                         .gridOfSizeWidth(this.itemFilter.getSlots(), 3, (x, y, i) -> new TJAPhantomItemSlotWidget()
                                 .syncHandler(new TJAPhantomItemSlotSH(this.itemFilter, i)))
                         .syncHandler("selection"))
-                .child(new TextFieldWidget()
-                        .pos(26, 5)
-                        .size(124, 18)
-                        .setMaxLength(10)
-                        .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
-                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .value(new StringSyncValue(() -> this.getItemCount(selectionWidgetGroupSH.getSelectedIndex()),
-                                string -> this.setItemCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
-                .child(new ButtonWidget<>()
-                        .pos(7, 5)
-                        .overlay(KeyUtil.string("*2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_multiply"))
-                .child(new ButtonWidget<>()
-                        .pos(151, 5)
-                        .overlay(KeyUtil.string("/2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_divide"))
                 .child(new TextFieldWidget()
                         .pos(7, 82)
                         .size(162, 18)
@@ -212,7 +188,8 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
         return null;
     }
 
-    private void setItemCount(String text, int index) {
+    @Override
+    public void setItemCount(String text, int index) {
         if (index < 0 || index >= this.itemFilter.getSlots()) return;
         final ItemStack stack = this.itemFilter.getStackInSlot(index);
         if (stack.isEmpty()) return;
@@ -220,7 +197,8 @@ public class CoverCreativeItem extends CoverBase implements ITickable, CoverWith
         this.markAsDirty();
     }
 
-    private String getItemCount(int index) {
+    @Override
+    public String getItemCount(int index) {
         return String.valueOf(index >= 0 && index < this.itemFilter.getSlots() ? this.itemFilter.getStackInSlot(index).getCount() : 0);
     }
 

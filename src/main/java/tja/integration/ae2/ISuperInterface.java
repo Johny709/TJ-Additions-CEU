@@ -5,7 +5,7 @@ import appeng.api.config.LockCraftingMode;
 import appeng.helpers.ICustomNameObject;
 import appeng.helpers.IInterfaceHost;
 
-public interface ISuperInterface extends ICustomNameObject, IPrioritySetter, IInterfaceHost, ITIckSetter {
+public interface ISuperInterface extends ICustomNameObject, IPrioritySetter, IInterfaceHost, ITIckSetter, IItemConfigSetter {
 
     void setBlockingMode(boolean blockingMode);
 
@@ -20,10 +20,6 @@ public interface ISuperInterface extends ICustomNameObject, IPrioritySetter, IIn
     void setBlockModeEx(CondenserOutput blockModeEx);
 
     void setIntelligentBlocking(boolean intelligentBlocking);
-
-    void setItemCount(String size, int index);
-
-    String getItemCount(int index);
 
     default void setItemAutoPull(boolean autoPull) {}
 

@@ -12,11 +12,8 @@ import com.cleanroommc.modularui.factory.SidedPosGuiData;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
 import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
-import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
-import com.cleanroommc.modularui.widgets.ButtonWidget;
-import com.cleanroommc.modularui.widgets.RichTextWidget;
 import com.cleanroommc.modularui.widgets.SlotGroupWidget;
 import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -29,7 +26,6 @@ import gregtech.api.cover.CoverDefinition;
 import gregtech.api.cover.CoverWithUI;
 import gregtech.api.cover.CoverableView;
 import gregtech.api.mui.GTGuiTextures;
-import gregtech.api.util.KeyUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import tja.integration.ae2.IFluidConfigSetter;
 import tja.integration.ae2.ITIckSetter;
 import tja.mui.MUIUtils;
 import tja.mui.sync.SelectionWidgetGroupSH;
@@ -54,7 +51,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWithUI, IWorkable, ITIckSetter {
+public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWithUI, IWorkable, ITIckSetter, IFluidConfigSetter {
 
     private final FluidTankList fluidFilter = new FluidTankList(true, IntStream.range(0, 9)
             .mapToObj(i -> new FluidTank(Integer.MAX_VALUE))
@@ -87,14 +84,6 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
         syncManager.syncValue("is_working", isWorking);
         final SelectionWidgetGroupSH selectionWidgetGroupSH = new SelectionWidgetGroupSH();
         syncManager.syncValue("selection", selectionWidgetGroupSH);
-        syncManager.syncValue("count_multiply", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setFluidCount(String.valueOf(Long.parseLong(this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
-        syncManager.syncValue("count_divide", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData ->
-                        this.setFluidCount(String.valueOf(Long.parseLong(this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
-                                selectionWidgetGroupSH.getSelectedIndex())));
 
         final Icon detail = GTGuiTextures.BUTTON_POWER_DETAIL.asIcon().size(18, 6).marginTop(24);
         final IPanelHandler tickPanel = syncManager.syncedPanel("tick.panel", true,
@@ -105,6 +94,13 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
             } else if (value)
                 tickPanel.openPanel();
         }));
+        final IPanelHandler fluidConfig = syncManager.syncedPanel("fluid_config.panel", true,
+                (panelBuilder, subPanel) ->
+                        MUIUtils.createFluidConfigPanel(panelBuilder, subPanel, this, selectionWidgetGroupSH));
+        selectionWidgetGroupSH.setIndexListener(i -> {
+            if (!fluidConfig.isPanelOpen() && syncManager.isClient())
+                fluidConfig.openPanel();
+        });
         return ModularPanel.defaultPanel("creative_fluid_cover_gui", 200, 187)
                 .child(IKey.str(this.getDefinition().getDropItemStack().getDisplayName()).asWidget()
                         .pos(7, 5))
@@ -114,26 +110,6 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
                         .gridOfSizeWidth(this.fluidFilter.getTanks(), 3, (x, y, i) -> new TJAPhantomFluidSlotWidget()
                                 .syncHandler(new TJAPhantomFluidSlotSH(this.fluidFilter, i)))
                         .syncHandler("selection"))
-                .child(new TextFieldWidget()
-                        .pos(26, 5)
-                        .size(124, 18)
-                        .setMaxLength(10)
-                        .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
-                        .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .value(new StringSyncValue(() -> this.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()),
-                                string -> this.setFluidCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
-                .child(new ButtonWidget<>()
-                        .pos(7, 5)
-                        .overlay(KeyUtil.string("*2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_multiply"))
-                .child(new ButtonWidget<>()
-                        .pos(151, 5)
-                        .overlay(KeyUtil.string("/2"))
-                        .setEnabledIf(w -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .syncHandler("count_divide"))
                 .child(new TextFieldWidget()
                         .pos(7, 82)
                         .size(162, 18)
@@ -220,7 +196,8 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
         return null;
     }
 
-    private void setFluidCount(String text, int index) {
+    @Override
+    public void setFluidCount(String text, int index) {
         if (index < 0 || index >= this.fluidFilter.getTanks()) return;
         final FluidStack fluidStack = this.fluidFilter.getTankAt(index).getFluid();
         if (fluidStack == null) return;
@@ -228,7 +205,8 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
         this.markAsDirty();
     }
 
-    private String getFluidCount(int index) {
+    @Override
+    public String getFluidCount(int index) {
         return String.valueOf(index >= 0 && index < this.fluidFilter.getTanks() ? this.fluidFilter.getTankAt(index).getFluidAmount() : 0);
     }
 

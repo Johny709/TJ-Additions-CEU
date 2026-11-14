@@ -328,6 +328,7 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
         if (tickTime == null || tickTime.isEmpty())
             tickTime = String.valueOf(1);
         this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
+        this.markDirty();
     }
 
     @Override
