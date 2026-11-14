@@ -1,7 +1,7 @@
 package tja.mixin.gregtech;
 
 import com.cleanroommc.modularui.api.drawable.IDrawable;
-import com.cleanroommc.modularui.network.NetworkUtils;
+import com.cleanroommc.modularui.utils.serialization.ByteBufAdapters;
 import gregtech.api.capability.impl.AbstractRecipeLogic;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.Operation;
@@ -88,10 +88,8 @@ public abstract class MixinMultiblockUIBuilder {
         fluidInputs = this.getSyncer().syncCollection(fluidInputs,
                 GTByteBufAdapters.makeAdapter(buffer -> GTRecipeInput.readFromNBT(buffer.readCompoundTag()),
                         (buffer, value) -> buffer.writeCompoundTag(GTRecipeInput.writeToNBT(value))));
-        itemOutputs = this.getSyncer().syncCollection(itemOutputs,
-                GTByteBufAdapters.makeAdapter(NetworkUtils::readItemStack, NetworkUtils::writeItemStack));
-        fluidOutputs = this.getSyncer().syncCollection(fluidOutputs,
-                GTByteBufAdapters.makeAdapter(NetworkUtils::readFluidStack, NetworkUtils::writeFluidStack));
+        itemOutputs = this.getSyncer().syncCollection(itemOutputs, ByteBufAdapters.ITEM_STACK);
+        fluidOutputs = this.getSyncer().syncCollection(fluidOutputs, ByteBufAdapters.FLUID_STACK);
         chancedItemOutputs = this.getSyncer().syncCollection(chancedItemOutputs, GTByteBufAdapters.CHANCED_ITEM_OUTPUT);
         chancedFluidOutputs = this.getSyncer().syncCollection(chancedFluidOutputs, GTByteBufAdapters.CHANCED_FLUID_OUTPUT);
 
