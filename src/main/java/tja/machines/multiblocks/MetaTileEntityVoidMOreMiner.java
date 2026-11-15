@@ -19,6 +19,7 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -41,7 +42,6 @@ import tja.util.TJAFluidUtils;
 import tja.util.TJAUtility;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
@@ -49,9 +49,12 @@ import static tja.machines.multiblocks.MetaTileEntityInfiniteFluidDrill.DRILLING
 
 public class MetaTileEntityVoidMOreMiner extends TJAMultiblockControllerBase implements ProgressBarMultiblock {
 
-    public static final FluidStack USED_DRILLING_MUD = GCYLMaterials.UsedDrillingMud.getFluid(1);
-    public static final FluidStack PYROTHEUM = GCYLMaterials.Pyrotheum.getFluid(1);
-    public static final FluidStack CRYOTHEUM = GCYLMaterials.Cryotheum.getFluid(1);
+    public static final FluidStack USED_DRILLING_MUD = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID) ?
+            GCYLMaterials.UsedDrillingMud.getFluid(1) : Materials.DrillingFluid.getFluid(1);
+    public static final FluidStack PYROTHEUM = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID) ?
+            GCYLMaterials.Pyrotheum.getFluid(1) : Materials.Lava.getFluid(1);
+    public static final FluidStack CRYOTHEUM = TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID) ?
+            GCYLMaterials.Cryotheum.getFluid(1) : Materials.Ice.getFluid(1);
     private final VoidMOreMinerWorkableHandler workableHandler = new VoidMOreMinerWorkableHandler(this);
 
     public MetaTileEntityVoidMOreMiner(ResourceLocation metaTileEntityId) {
