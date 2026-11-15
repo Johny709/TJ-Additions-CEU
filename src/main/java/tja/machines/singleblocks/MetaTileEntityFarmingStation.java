@@ -31,6 +31,7 @@ import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.items.MetaItems;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -51,6 +52,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -72,6 +74,8 @@ import java.util.*;
 
 public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntity implements IFarmerHandler {
 
+    private static ItemStack FERTILIZER;
+    private static ItemStack ORGANIC_FERTILIZER;
     private final FarmingStationWorkableHandler workableHandler = new FarmingStationWorkableHandler(this);
 
     private final IItemHandlerModifiable seedInventory = new NotifiableFilteredItemStackHandler(this, 6,
@@ -81,9 +85,9 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
 
     private final IItemHandlerModifiable fertilizerInventory = new NotifiableFilteredItemStackHandler(this, 2,
             this.getTier() >= GTValues.ZPM ? 256 : this.getTier() >= GTValues.EV ? 128 : 64, this, false)
-            .setItemStackPredicate((slot, stack) -> ((stack.getItem() instanceof ItemDye && stack.getItem().getMetadata(stack) == 15) ||
-                    TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID)) &&
-                    stack.isItemEqual(OreDictUnifier.get(OrePrefix.dust, GCYLMaterials.OrganicFertilizer)));
+            .setItemStackPredicate((slot, stack) -> (stack.getItem() instanceof ItemDye && stack.getItem().getMetadata(stack) == 15) ||
+                    stack.isItemEqual(getFertilizer()) ||
+                    (TJAValues.isModLoaded(TJAValues.GCYL_MOD_ID) && stack.isItemEqual(getOrganicFertilizer())));
 
     private final IItemHandlerModifiable toolInventory = new NotifiableFilteredItemStackHandler(this, 3, 1, this, false)
             .setItemStackPredicate((slot, stack) -> {
@@ -331,5 +335,18 @@ public class MetaTileEntityFarmingStation extends TJATieredWorkableMetaTileEntit
     @SideOnly(Side.CLIENT)
     public SoundEvent getSound() {
         return GTSoundEvents.BATH;
+    }
+
+    private static ItemStack getFertilizer() {
+        if (FERTILIZER == null)
+            FERTILIZER = MetaItems.FERTILIZER.getStackForm();
+        return FERTILIZER;
+    }
+
+    @Optional.Method(modid = TJAValues.GCYL_MOD_ID)
+    private static ItemStack getOrganicFertilizer() {
+        if (ORGANIC_FERTILIZER == null)
+            ORGANIC_FERTILIZER = OreDictUnifier.get(OrePrefix.dust, GCYLMaterials.OrganicFertilizer);
+        return ORGANIC_FERTILIZER;
     }
 }
