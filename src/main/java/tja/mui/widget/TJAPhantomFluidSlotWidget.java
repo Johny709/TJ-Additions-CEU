@@ -12,10 +12,8 @@ import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widget.sizer.Area;
 import gregtech.api.util.FluidTooltipUtil;
-import gregtech.api.util.TextFormattingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -81,18 +79,8 @@ public class TJAPhantomFluidSlotWidget extends Widget<TJAPhantomFluidSlotWidget>
     public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         final Area area = this.getArea();
         final FluidStack fluidStack = this.getSyncHandler().getFluidStack();
-        if (fluidStack != null) {
-            final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-            TJAGuiUtils.drawFluidForGui(fluidStack, fluidStack.amount, fluidStack.amount, 1, 1, area.width - 1, area.height - 2);
-            GlStateManager.pushMatrix();
-            GlStateManager.disableBlend();
-            GlStateManager.scale(0.5, 0.5, 1);
-            final String s = TextFormattingUtil.formatLongToCompactString(fluidStack.amount, 4) + "L";
-            fontRenderer.drawStringWithShadow(s, 6 * 2 - fontRenderer.getStringWidth(s) + 21, 12 * 2, 0xFFFFFF);
-            GlStateManager.popMatrix();
-            GlStateManager.enableBlend();
-            GlStateManager.color(1.0f, 1.0f, 1.0f);
-        }
+        if (fluidStack != null)
+            TJAGuiUtils.drawFluidStack(0, 0, fluidStack, fluidStack.amount);
         if (this.isBelowMouse())
             TJAGuiUtils.drawSelectionOverlay(1, 1, area.width - 1, area.height - 1);
     }

@@ -1,16 +1,13 @@
 package tja.mui;
 
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.widgets.SlotWidget;
-import gregtech.api.gui.widgets.WidgetGroup;
-import gregtech.api.util.TextFormattingUtil;
+import com.cleanroommc.modularui.drawable.GuiTextures;
+import com.cleanroommc.modularui.utils.NumberFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -26,43 +23,10 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-import static gregtech.client.utils.RenderUtil.setGlColorFromInt;
-
 
 public final class TJAGuiUtils {
 
     private TJAGuiUtils() {}
-
-    /**
-     *
-     * @param widgetGroup widget group for slots to get added to
-     * @param inventoryPlayer inventory of player
-     * @param x X position
-     * @param y Y position
-     * @param stack the stack used to open this GUI. this prevents the item being taken out from slot while GUI is open.
-     * @return widget
-     */
-    public static WidgetGroup bindPlayerInventory(WidgetGroup widgetGroup, InventoryPlayer inventoryPlayer, int x, int y, ItemStack stack) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                final boolean interact = inventoryPlayer.player.inventory.getStackInSlot(col + (row + 1) * 9) != stack || stack.isEmpty();
-                widgetGroup.addWidget((new SlotWidget(inventoryPlayer, col + (row + 1) * 9, x + col * 18, y + row * 18, interact, interact))
-                        .setBackgroundTexture(GuiTextures.SLOT)
-                        .setLocationInfo(true, false));
-            }
-        }
-        return bindPlayerHotbar(widgetGroup, inventoryPlayer, x, y + 58, stack);
-    }
-
-    private static WidgetGroup bindPlayerHotbar(WidgetGroup widgetGroup, InventoryPlayer inventoryPlayer, int x, int y, ItemStack stack) {
-        for (int slot = 0; slot < 9; ++slot) {
-            final boolean interact = inventoryPlayer.player.inventory.getStackInSlot(slot) != stack || stack.isEmpty();
-            widgetGroup.addWidget((new SlotWidget(inventoryPlayer, slot, x + slot * 18, y, interact, interact))
-                    .setBackgroundTexture(GuiTextures.SLOT)
-                    .setLocationInfo(true, true));
-        }
-        return widgetGroup;
-    }
 
     public static void drawFluidForGui(FluidStack contents, long fluidAmount, long tankCapacity, long startX, long startY, long widthT, long heightT) {
         widthT--;
@@ -103,6 +67,13 @@ public final class TJAGuiUtils {
             }
         }
         GlStateManager.disableBlend();
+    }
+
+    public static void setGlColorFromInt(int colorValue, int opacity) {
+        int i = (colorValue & 0xFF0000) >> 16;
+        int j = (colorValue & 0xFF00) >> 8;
+        int k = (colorValue & 0xFF);
+        GlStateManager.color(i / 255.0f, j / 255.0f, k / 255.0f, opacity / 255.0f);
     }
 
     private static void drawFluidTexture(double xCoord, double yCoord, TextureAtlasSprite textureSprite, long maskTop, long maskRight, double zLevel) {
@@ -207,7 +178,7 @@ public final class TJAGuiUtils {
         GlStateManager.scale(0.5, 0.5, 1);
         if (amount > 1) {
             final FontRenderer fontRenderer = mc.fontRenderer;
-            final String s = TextFormattingUtil.formatLongToCompactString(amount, 4);
+            final String s = NumberFormat.AMOUNT_TEXT.format(amount);
             fontRenderer.drawStringWithShadow(s, (x + 6) * 2 - fontRenderer.getStringWidth(s) + 21, (y + 12) * 2, 0xFFFFFF);
         }
         GlStateManager.enableDepth();
@@ -221,7 +192,7 @@ public final class TJAGuiUtils {
         GlStateManager.pushMatrix();
         TJAGuiUtils.drawFluidForGui(fluidStack, amount, amount, x + 1, y + 1, 18 - 1, 18 - 2);
         GlStateManager.scale(0.5, 0.5, 1);
-        final String s = TextFormattingUtil.formatLongToCompactString(amount, 4) + "L";
+        final String s = NumberFormat.AMOUNT_TEXT.format(amount) + "L";
         fontRenderer.drawStringWithShadow(s, (x + 6) * 2 - fontRenderer.getStringWidth(s) + 21, (y + 12) * 2, 0xFFFFFF);
         GlStateManager.popMatrix();
     }

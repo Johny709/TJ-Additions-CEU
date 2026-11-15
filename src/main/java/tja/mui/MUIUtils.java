@@ -60,6 +60,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class MUIUtils {
+
+    private MUIUtils() {}
     
     public static void addRecipeInputOutputLine(KeyManager key, UISyncer syncer, IRecipeInfo recipeInfo, World world) {
         List<FluidStack> fluidInputs = new ArrayList<>();
