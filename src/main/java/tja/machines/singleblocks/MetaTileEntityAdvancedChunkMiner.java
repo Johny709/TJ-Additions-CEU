@@ -14,7 +14,6 @@ import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
-import com.cleanroommc.modularui.widget.Widget;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
@@ -27,15 +26,12 @@ import com.cleanroommc.modularui.widgets.slot.SlotGroup;
 import gregtech.api.capability.impl.FilteredFluidHandler;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.NotifiableItemStackHandler;
-import gregtech.api.cover.CoverWithUI;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.MetaTileEntityGuiData;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.items.MetaItems;
-import gregtech.common.items.behaviors.filter.OreDictFilterUIManager;
 import gregtech.common.mui.widget.GTFluidSlot;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.client.Minecraft;
@@ -156,12 +152,7 @@ public class MetaTileEntityAdvancedChunkMiner extends TJATieredWorkableMetaTileE
         syncManager.registerSlotGroup(new SlotGroup("item_input", 1, 1, true));
 
         final IPanelHandler oreDictPanel = syncManager.syncedPanel("ore_dict.panel", true,
-                (panel, handler) -> {
-                    final OreDictFilterUIManager uiManager = new OreDictFilterUIManager();
-                    return uiManager.createPopupPanel(this.workableHandler.getOreDictFilterStack(), panel, "ore_dict.panel")
-                            .child(CoverWithUI.createTitleRow(this.workableHandler.getOreDictFilterStack()))
-                            .child(uiManager.createWidgets(this.workableHandler.getOreDictFilterStack(), syncManager));
-                });
+                (panel, handler) -> this.workableHandler.getOreDictFilter().createPopupPanel(panel, "ore_dict.panel"));
         syncManager.syncValue("ore_dict", new BooleanSyncValue(oreDictPanel::isPanelOpen, value -> {
             if (!value && oreDictPanel.isPanelOpen()) {
                 oreDictPanel.closePanel();
