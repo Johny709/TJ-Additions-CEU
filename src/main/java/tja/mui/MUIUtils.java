@@ -199,9 +199,10 @@ public final class MUIUtils {
                         .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), s -> iface.setPriority(Long.parseLong(s)))))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), s ->
+                                iface.setPriority(Long.parseLong(MUIUtils.numberValidatorInt(s))))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
@@ -290,9 +291,10 @@ public final class MUIUtils {
                         .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(iface.getTickTime()), s -> iface.setTickTime(Long.parseLong(s)))))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getTickTime()), s ->
+                                iface.setTickTime(Long.parseLong(MUIUtils.numberValidatorInt(s))))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
@@ -408,11 +410,11 @@ public final class MUIUtils {
                         .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
                         .value(new StringSyncValue(() -> String.valueOf(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())),
-                                string -> config.setItemCount(Long.parseLong(string), selectionWidgetGroupSH.getSelectedIndex()))))
+                                s -> config.setItemCount(Long.parseLong(MUIUtils.numberValidatorInt(s)), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
@@ -528,11 +530,11 @@ public final class MUIUtils {
                         .size(141, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
                         .value(new StringSyncValue(() -> String.valueOf(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())),
-                                string -> config.setFluidCount(Long.parseLong(string), selectionWidgetGroupSH.getSelectedIndex()))))
+                                s -> config.setFluidCount(Long.parseLong(MUIUtils.numberValidatorInt(s)), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
@@ -782,7 +784,29 @@ public final class MUIUtils {
         }
     }
 
-    public static String numberValidator(String s) {
-        return s == null || s.isEmpty() || s.startsWith("0") && s.length() > 1 ? String.valueOf(0) : s;
+    public static String numberValidatorInt(String text) {
+        if (text == null || text.isEmpty() || text.startsWith("-") && text.length() == 1)
+            return String.valueOf(0);
+        if (text.startsWith("0") && text.length() > 1)
+            return String.valueOf(0);
+        if (text.length() > 10)
+            if (text.startsWith("-")) {
+                if (text.length() > 11)
+                    return String.valueOf(Integer.MIN_VALUE);
+            } else return String.valueOf(Integer.MAX_VALUE);
+        return text;
+    }
+
+    public static String numberValidatorLong(String text) {
+        if (text == null || text.isEmpty() || text.startsWith("-") && text.length() == 1)
+            return String.valueOf(0);
+        if (text.startsWith("0") && text.length() > 1)
+            return String.valueOf(0);
+        if (text.length() > 18)
+            if (text.startsWith("-")) {
+                if (text.length() > 19)
+                    return String.valueOf(Long.MIN_VALUE);
+            } else return String.valueOf(Long.MAX_VALUE);
+        return text;
     }
 }

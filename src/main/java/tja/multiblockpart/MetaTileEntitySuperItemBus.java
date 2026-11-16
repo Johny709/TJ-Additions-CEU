@@ -175,10 +175,11 @@ public class MetaTileEntitySuperItemBus extends MetaTileEntityMultiblockNotifiab
                         .size(162, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("tja.machine.universal.ticks.operation"))
-                        .value(new StringSyncValue(() -> String.valueOf(this.getTickTime()), s -> this.setTickTime(Long.parseLong(s)))))
+                        .value(new StringSyncValue(() -> String.valueOf(this.getTickTime()), s ->
+                                this.setTickTime(Long.parseLong(MUIUtils.numberValidatorInt(s))))))
                 .child(Flow.col()
                         .pos(174, 40 + offsetY)
                         .size(18, 54)

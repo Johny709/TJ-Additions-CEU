@@ -120,7 +120,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(18)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorLong)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.energy_rate"))
                         .syncHandler("energy_stored"))
@@ -129,7 +129,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.voltage"))
                         .syncHandler("input_voltage"))
@@ -138,7 +138,7 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
                         .size(124, 18)
                         .setMaxLength(10)
                         .autoUpdateOnChange(true)
-                        .setValidator(MUIUtils::numberValidator)
+                        .setValidator(MUIUtils::numberValidatorInt)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("metaitem.creative_energy_cover.set.amps"))
                         .syncHandler("input_amps"))
@@ -231,22 +231,19 @@ public class MetaTileEntityCreativeEnergyHatch extends MetaTileEntityMultiblockP
     }
 
     public void setEnergyStored(String amount) {
-        if (amount == null || amount.isEmpty())
-            amount = String.valueOf(0);
+        amount = MUIUtils.numberValidatorLong(amount);
         this.energyStored = (long) Math.max(0, Math.min(Long.MAX_VALUE, Double.parseDouble(amount)));
         this.markDirty();
     }
 
     public void setInputVoltage(String amount) {
-        if (amount == null || amount.isEmpty())
-            amount = String.valueOf(0);
+        amount = MUIUtils.numberValidatorLong(amount);
         this.inputVoltage = Math.max(0, Math.min(2147483648L, Long.parseLong(amount)));
         this.markDirty();
     }
 
     public void setInputAmps(String amount) {
-        if (amount == null || amount.isEmpty())
-            amount = String.valueOf(0);
+        amount = MUIUtils.numberValidatorLong(amount);
         this.inputAmps = Math.max(0, Math.min(4294967295L, Long.parseLong(amount)));
         this.markDirty();
     }
