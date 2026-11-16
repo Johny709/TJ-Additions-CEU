@@ -357,43 +357,43 @@ public final class MUIUtils {
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
         syncManager.syncValue("item_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() + 1),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_add_10", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 10),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() + 10),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_add_100", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 100),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() + 100),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_add_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() + 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_multiply_2", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() * 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_sub_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() - 1),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_sub_10", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 10),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() - 10),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_sub_100", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 100),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() - 100),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_sub_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() - 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("item_divide_2", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setItemCount(String.valueOf(Long.parseLong(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
+                        config.setItemCount(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex() / 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
         return ModularPanel.defaultPanel("item_config.panel", 198, 100)
@@ -411,8 +411,8 @@ public final class MUIUtils {
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .value(new StringSyncValue(() -> config.getItemCount(selectionWidgetGroupSH.getSelectedIndex()),
-                                string -> config.setItemCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
+                        .value(new StringSyncValue(() -> String.valueOf(config.getItemCount(selectionWidgetGroupSH.getSelectedIndex())),
+                                string -> config.setItemCount(Long.parseLong(string), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)

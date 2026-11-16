@@ -145,9 +145,9 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
     }
 
     @Override
-    public void setItemCount(String size, int index) {
+    public void setItemCount(long count, int index) {
         final int maxSize = this.getInterfaceDuality().getConfig().getSlotLimit(0);
-        final int stackSize = (int) Math.max(1, Math.min(Long.parseLong(size), maxSize));
+        final int stackSize = (int) Math.max(1, Math.min(count, maxSize));
         final ItemStack itemStack = this.getInterfaceDuality().getConfig().extractItem(index, Integer.MAX_VALUE, false);
         if (itemStack.isEmpty()) return;
         itemStack.setCount(stackSize);
@@ -156,9 +156,9 @@ public class PartSuperInterface extends PartInterface implements IGuiHolder<Side
     }
 
     @Override
-    public String getItemCount(int index) {
-        return String.valueOf(index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
-                this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0);
+    public int getItemCount(int index) {
+        return index >= 0 && index < this.getInterfaceDuality().getConfig().getSlots() ?
+                this.getInterfaceDuality().getConfig().getStackInSlot(index).getCount() : 0;
     }
 
     @Override

@@ -96,13 +96,13 @@ public class TilePatternInterface extends TileInterface implements IGuiHolder<Po
     }
 
     @Override
-    public void setItemCount(String size, int index) {
+    public void setItemCount(long count, int index) {
         // No config slots
     }
 
     @Override
-    public String getItemCount(int index) {
-        return null; // No config slots
+    public int getItemCount(int index) {
+        return 0; // No config slots
     }
 
     @Override
