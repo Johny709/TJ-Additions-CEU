@@ -223,8 +223,8 @@ public class PartStockingFluidInterface extends PartFluidInterface implements IG
     }
 
     @Override
-    public void setPriority(String priority) {
-        this.getDualityFluidInterface().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, Long.parseLong(priority))));
+    public void setPriority(long priority) {
+        this.getDualityFluidInterface().setPriority((int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, priority)));
         this.getTile().markDirty();
     }
 }

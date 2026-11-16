@@ -4,5 +4,5 @@ import appeng.helpers.IPriorityHost;
 
 public interface IPrioritySetter extends IPriorityHost {
 
-    void setPriority(String priority);
+    void setPriority(long priority);
 }

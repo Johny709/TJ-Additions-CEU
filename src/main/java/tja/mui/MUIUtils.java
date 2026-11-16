@@ -171,25 +171,25 @@ public final class MUIUtils {
 
     public static ModularPanel createPriorityPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, IPrioritySetter iface) {
         syncManager.syncValue("priority_add_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 1))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() + 1)));
         syncManager.syncValue("priority_add_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 10))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() + 10)));
         syncManager.syncValue("priority_add_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 100))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() + 100)));
         syncManager.syncValue("priority_add_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() + 1000))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() + 1000)));
         syncManager.syncValue("priority_multiply_2", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() * 2))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() * 2)));
         syncManager.syncValue("priority_sub_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() - 1)));
         syncManager.syncValue("priority_sub_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 10))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() - 10)));
         syncManager.syncValue("priority_sub_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 100))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() - 100)));
         syncManager.syncValue("priority_sub_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() - 1000))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() - 1000)));
         syncManager.syncValue("priority_divide_2", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setPriority(String.valueOf((long) iface.getPriority() / 2))));
+                .setOnMousePressed(mouseData -> iface.setPriority((long) iface.getPriority() / 2)));
 
         return ModularPanel.defaultPanel("me.interface.priority.panel", 198, 100)
                 .child(IKey.lang("gui.appliedenergistics2.Priority").asWidget()
@@ -201,7 +201,7 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), iface::setPriority)))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getPriority()), s -> iface.setPriority(Long.parseLong(s)))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
