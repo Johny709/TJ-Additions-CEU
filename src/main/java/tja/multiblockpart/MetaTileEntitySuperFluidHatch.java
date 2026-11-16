@@ -157,7 +157,7 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .addTooltipLine(IKey.lang("tja.machine.universal.ticks.operation"))
-                        .value(new StringSyncValue(() -> String.valueOf(this.getTickTime()), this::setTickTime)))
+                        .value(new StringSyncValue(() -> String.valueOf(this.getTickTime()), s -> this.setTickTime(Long.parseLong(s)))))
                 .child(Flow.col()
                         .pos(174, 40 + offsetY)
                         .size(18, 54)
@@ -324,10 +324,8 @@ public class MetaTileEntitySuperFluidHatch extends MetaTileEntityMultiblockNotif
     }
 
     @Override
-    public void setTickTime(String tickTime) {
-        if (tickTime == null || tickTime.isEmpty())
-            tickTime = String.valueOf(1);
-        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
+    public void setTickTime(long tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, tickTime));
         this.markDirty();
     }
 

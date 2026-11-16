@@ -385,10 +385,8 @@ public class PartSuperUltimateInterface extends PartInterface implements IGuiHol
     }
 
     @Override
-    public void setTickTime(String tickTime) {
-        if (tickTime == null || tickTime.isEmpty())
-            tickTime = String.valueOf(1);
-        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickTime)));
+    public void setTickTime(long tickTime) {
+        this.tickTime = (int) Math.max(1, Math.min(Integer.MAX_VALUE, tickTime));
         this.getTile().markDirty();
     }
 

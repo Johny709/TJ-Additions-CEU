@@ -6,5 +6,5 @@ public interface ITIckSetter {
         return 1;
     }
 
-    default void setTickTime(String tickTime) {}
+    default void setTickTime(long tickTime) {}
 }

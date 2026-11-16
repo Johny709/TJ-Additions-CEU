@@ -262,25 +262,25 @@ public final class MUIUtils {
 
     public static ModularPanel createTicksPanel(PanelSyncManager syncManager, IPanelHandler panelHandler, ITIckSetter iface) {
         syncManager.syncValue("tick_add_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 1))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() + 1)));
         syncManager.syncValue("tick_add_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 10))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() + 10)));
         syncManager.syncValue("tick_add_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 100))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() + 100)));
         syncManager.syncValue("tick_add_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() + 1000))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() + 1000)));
         syncManager.syncValue("tick_multiply_2", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() * 2))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() * 2)));
         syncManager.syncValue("tick_sub_1", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 1))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() - 1)));
         syncManager.syncValue("tick_sub_10", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 10))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() - 10)));
         syncManager.syncValue("tick_sub_100", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 100))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() - 100)));
         syncManager.syncValue("tick_sub_1000", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() - 1000))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() - 1000)));
         syncManager.syncValue("tick_divide_2", new InteractionSyncHandler()
-                .setOnMousePressed(mouseData -> iface.setTickTime(String.valueOf((long) iface.getTickTime() / 2))));
+                .setOnMousePressed(mouseData -> iface.setTickTime((long) iface.getTickTime() / 2)));
 
         return ModularPanel.defaultPanel("tick.panel", 198, 100)
                 .child(IKey.lang("tja.machine.universal.ticks.operation").asWidget()
@@ -292,7 +292,7 @@ public final class MUIUtils {
                         .autoUpdateOnChange(true)
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
-                        .value(new StringSyncValue(() -> String.valueOf(iface.getTickTime()), iface::setTickTime)))
+                        .value(new StringSyncValue(() -> String.valueOf(iface.getTickTime()), s -> iface.setTickTime(Long.parseLong(s)))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)
@@ -783,6 +783,6 @@ public final class MUIUtils {
     }
 
     public static String numberValidator(String s) {
-        return s.startsWith("0") && s.length() > 1 ? String.valueOf(0) : s;
+        return s == null || s.isEmpty() || s.startsWith("0") && s.length() > 1 ? String.valueOf(0) : s;
     }
 }
