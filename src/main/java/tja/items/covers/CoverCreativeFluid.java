@@ -197,17 +197,17 @@ public class CoverCreativeFluid extends CoverBase implements ITickable, CoverWit
     }
 
     @Override
-    public void setFluidCount(String text, int index) {
+    public void setFluidCount(long count, int index) {
         if (index < 0 || index >= this.fluidFilter.getTanks()) return;
         final FluidStack fluidStack = this.fluidFilter.getTankAt(index).getFluid();
         if (fluidStack == null) return;
-        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, count);
         this.markAsDirty();
     }
 
     @Override
-    public String getFluidCount(int index) {
-        return String.valueOf(index >= 0 && index < this.fluidFilter.getTanks() ? this.fluidFilter.getTankAt(index).getFluidAmount() : 0);
+    public int getFluidCount(int index) {
+        return index >= 0 && index < this.fluidFilter.getTanks() ? this.fluidFilter.getTankAt(index).getFluidAmount() : 0;
     }
 
     public void setWorking(boolean isWorking) {

@@ -477,43 +477,43 @@ public final class MUIUtils {
                                                      SelectionWidgetGroupSH selectionWidgetGroupSH) {
         syncManager.syncValue("fluid_add_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() + 1),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_add_10", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 10),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() + 10),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_add_100", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 100),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() + 100),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_add_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) + 1000),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() + 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_multiply_2", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) * 2),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() * 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_sub_1", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() - 1),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_sub_10", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 10),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() - 10),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_sub_100", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 100),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() - 100),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_sub_1000", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) - 1000),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() - 1000),
                                 selectionWidgetGroupSH.getSelectedIndex())));
         syncManager.syncValue("fluid_divide_2", new InteractionSyncHandler()
                 .setOnMousePressed(mouseData ->
-                        config.setFluidCount(String.valueOf(Long.parseLong(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())) / 2),
+                        config.setFluidCount(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex() / 2),
                                 selectionWidgetGroupSH.getSelectedIndex())));
 
         return ModularPanel.defaultPanel("fluid_config.panel", 198, 100)
@@ -531,8 +531,8 @@ public final class MUIUtils {
                         .setValidator(MUIUtils::numberValidator)
                         .setPattern(Pattern.compile("\\*?[0-9_]*\\*?"))
                         .setEnabledIf(textFieldWidget -> selectionWidgetGroupSH.getSelectedIndex() >= 0)
-                        .value(new StringSyncValue(() -> config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex()),
-                                string -> config.setFluidCount(string, selectionWidgetGroupSH.getSelectedIndex()))))
+                        .value(new StringSyncValue(() -> String.valueOf(config.getFluidCount(selectionWidgetGroupSH.getSelectedIndex())),
+                                string -> config.setFluidCount(Long.parseLong(string), selectionWidgetGroupSH.getSelectedIndex()))))
                 .child(new ButtonWidget<>()
                         .pos(182, 4)
                         .size(12)

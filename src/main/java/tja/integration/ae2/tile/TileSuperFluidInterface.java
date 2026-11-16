@@ -45,21 +45,21 @@ public class TileSuperFluidInterface extends TileFluidInterface implements IGuiH
     }
 
     @Override
-    public void setFluidCount(String text, int index) {
+    public void setFluidCount(long count, int index) {
         if (index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots()) return;
         final IAEFluidStack aeFluidStack = this.getDualityFluidInterface().getConfig().getFluidInSlot(index);
         if (aeFluidStack == null) return;
         final FluidStack fluidStack = aeFluidStack.getFluidStack();
-        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, Long.parseLong(text));
+        fluidStack.amount = (int) Math.min(Integer.MAX_VALUE, count);
         this.getDualityFluidInterface().getConfig().setFluidInSlot(index, AEFluidStack.fromFluidStack(fluidStack));
         this.markDirty();
     }
 
     @Override
-    public String getFluidCount(int index) {
-        return String.valueOf(index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
+    public int getFluidCount(int index) {
+        return index < 0 || index >= this.getDualityFluidInterface().getConfig().getSlots() ? 0 :
                 this.getDualityFluidInterface().getConfig().getFluidInSlot(index) == null ? 0 :
-                        this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize());
+                        (int) this.getDualityFluidInterface().getConfig().getFluidInSlot(index).getStackSize();
     }
 
     @Override
